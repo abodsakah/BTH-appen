@@ -1,0 +1,121 @@
+string,sv-sv,en,ar
+moSelectTime,Tids val,Time chosing,اختيار الوقت
+moSelectService,Tjänst,Service,الخدمات
+edirt,Tillägg,Addons,الإضافات
+moCustomerInformation,Din information,Your information,معلوماتك
+moConfirm,Bekräfta,Confirm,التأكيد
+moDone,Klart!,Done!,انتهى!
+SelectDate,Välj ett datum,Chose a date,اختر التاريخ
+selectTime,Välj tid,Chose a time,اختر الوقت
+price,Pris,Price,السعر
+total,Summa,Total,المجموع
+firstName,Förr namn,First name,الاسم الأول
+lastName,Efter namn,Last name,اسم العائلة
+email,Mail,Email,البريد الإلكتروني
+phoneNumber,Mobil nummer,Phone number,رقم الهاتف
+bookingSummary,Bokning sammanfattning,Booking summary,ملخص الحجز
+dear,Kära,dear,عزيزي
+bookingSumText,Här är din bokning sammanfattning för att bekräfta,Here is your booking details to confirm,إليك تفاصيل حجزك للتأكيد
+dtForBooking,Datum och tid för bokning,Date and time for booking,تاريخ ووقت الحجز
+at,vid,at,في الساعة
+servicesBooked,Tjänster bokade,Services booked,الخدمات المحجوزة
+totalPrice,Total summa,Total price,السعر الإجمالي
+tyBooking,Tack för din bokning!,Thank you for booking!,شكرا لك على الحجز!
+contactText,Vi kommer att kontakta dig snart för att bekräfta din bokning.,We will contact you shortly to confirm your booking.,سوف نتصل بك قريبًا لتأكيد حجزك.
+yourId,Din boknings id,Your booking id,رقم حجزك
+errorPleaseSelectDateTime,Vänligen välj en datum och tid,Please select a date and time,يرجى تحديد تاريخ ووقت
+errorPleaseSelectService,Vänligen välj en tjänst,Please select a service,الرجاء تحديد الخدمة
+errorInfoInvalid,Vänligen se till att informationen du angav är giltig,Please make sure the information you entered is valid,يرجى التأكد من صحة المعلومات التي أدخلتها
+errorMissingInfor,Vänligen se till att fylla i alla fält,Please fill in all the information,يرجى ملء جميع المعلومات
+amDashboard,Dashboard,Dashboard,لوحة المراقبة
+amBookings,Bokningar,Bookings,الحجوزات
+amServices,Tjänster,Services,الخدمات
+amAddons,Tillägg,Addons,الاضفات
+statusPending,Väntar på bekräftelse,Awaiting confirmation,بانتظار التأكيد
+statusAccepted,Bekräftad,Confirmed,تم التأكيد
+statusRejected,Avvisad,Rejected,مرفوض
+statusDone,Färdig,Done!,انتهى
+services,Tjänster,Services,الخدمات
+bookingAmount,Antal bokningar på tjänster,Booking amount for services,مقدار الحجز للخدمات
+bookingId,Boknings ID,Booking ID,رقم الحجز
+customerName,Kund namn,Customer name,اسم الزبون
+customerEmail,Kund mail,Customer email,البريد الإلكتروني للزبون
+customerPhone,Kund mobil nummer,Customer phone number,رقم هاتف الزبون
+bookingTime,Boknings tid,Booking time,وقت الحجز
+bookedService,Bokad tjänst,Booked service,الخدمة المحجوزة
+bookedAddons,Bokade tillägg,Booked addons,الاضفات المحجوزة
+bookingStatus,Boknings status,Booking status,حالة الحجز
+acceptBooking,Bekräfta bokning,Accept booking,قبول الحجز
+rejectBooking,Avvisa bokning,Reject booking,ارفض الحجز
+addService,Lägg till en tjänst,Add service,اضف خدمة
+deleteSelected,Radera markerade,Delete selected,احذف المختر
+serviceName,Tjänst namn,Service name,اسم الخدمة
+servicePrice,tjänst pris,Service price,سعر الخدمة
+addonName,Tilläggs namn,Addon name,اسم الاضفة
+addonPrice,Tilläggs pris,Addon price,سعر الاضافة
+submit,Skicka,Submit,تم
+serviceDuration,Tjänst varaktighet,Service duration,مدة الخدمة
+min,Minuter,Minutes,دقيقة
+hour,Timme,Hour,ساعة
+bookingDate,Boknings datum,Booking date,تاريخ الحجز
+bookingDuration,Boknings varaktighet,Booking duration,مدة الحجز
+welcomeBack,Välkomen tillbaka,Welcome back,مرحبًا بعودتك
+latestBookings,Senaste bookningar,Latest bookings,آخر الحجوزات
+stat_bookingsAllTime,Total anatal bokningar,Total amount bookings,إجمالي الحجوزات
+stat_bookingsToday,Total antal bokningar idag,Total amount bookings today,إجمالي الحجوزات اليوم
+changeBookingTitle,Är du säker?,Are you sure?,هل أنت متأكد؟
+changeBookingTimeText,Du kommer ändra tiden av bokning nr,you are about to change the time of booking ,أنت على وشك تغيير وقت الحجز
+to,till ,To,الى
+cancel,Avbryt,Cancel,إلغاء
+submit,Skicka,Submit,إرسال
+PENDING,Väntar på bekräftelse,Awaiting confirmation,بانتظار التأكيد
+ACCEPTED,Bekräftad,Confirmed,تم التأكيد
+REJECTED,Avvisad,Rejected,مرفوض
+more,Mer,More,المزيد
+save,Spara,Save,حفظ
+changeLanguage,Byt språk,Change language,غير اللغة
+language,Språk,Language,اللغة
+logout,Logga ut,Logout,تسجيل خروج
+connectionError,Fel vid anslutning till servern,Error connecting to server,خطأ في الاتصال بالخادم
+shopSettings,Butik inställningar,Shop settings,إعدادات المتجر
+shopName,Butikensnamn,Shop name,اسم المحل
+amountBookingsPerTimeSlot,Antal bokningar per tidslucka,Amount bookings per time slot,عدد الحجوزات لكل فترة زمنية
+spaceBetweenTimeSlots,Mellanrum mellan tidsluckor,Space between time slots,المسافة بين الفترات الزمنية
+dayStartTime,Öppnings tid,Opening time,وقت الافتتاح
+dayEndTime,Stägnings tid,Closing time,وقت الإغلاق
+logo,Logga,Logo,شعار المتجر
+cred1,Skapad med,Made with,صنعت مع
+cred2,av Abodsakka,by Abodsakka,من عبدالرحمن سقة
+notif_newBooking_title,Du har en ny bokning,You have a new booking,لديك حجز جديد
+notif_newBooking_text,Du har en ny bokning för datumet,You have a new booking for date,لديك حجز جديد للتاريخ
+settings,Inställningar,Settings,إعدادات
+settings_enableNotification,Ta emot notiser,Enable notification,تفعيل الإشعارات
+about,Om,About,عن
+version,Verison,Version,الإصدار
+editServiceName,Ändra tjänst namn,Edit service name,تحرير اسم الخدمة
+editServiceDuration,Ändra tjänst varaktighet,Edit service duration,تحرير مدة الخدمة
+editServicePrice,Ändra tjänst pris,Edit service price,تعديل سعر الخدمة
+servicePriceInfo,Service pris i svenska kr,The price of the service in Swedish kronas,سعر الخدمة بالكرونا السويدية
+serviceDurationInfo,Service varaktighet i minuter,Service duration in minutes,مدة الخدمة بالدقائق
+deleteService,Radera tjänst,Delete service,حذف الخدمة
+deleteServiceWarning,Är du säker att du vill radera tjänsten,Are you sure that you want to delete the service,هل أنت متأكد أنك تريد حذف الخدمة
+delete,Radera,Delete,احذف
+alertMissingFields,Var god fyll i alla fält,Please fill in all fields,يرجى تعبئة جميع الحقول
+editAddonName,Ändra tilläggs namn,Edit addon name,تحرير اسم الاضافة
+editAddonDuration,Ändra tilläggs varaktighet,Edit addon duration,تحرير مدة الملحق
+editAddonPrice,Ändra tilläggs pris,Edit addon price,تعديل سعر الملحق
+addonDuration,Tilläggs varaktighet,Addon duration,مدة الملحق
+addonPriceInfo,Tilläggs pris i svenska kr,The price of the addon in Swedish kronas,سعر الملحق بالكرونا السويدية
+addonDurationInfo,Tilläggs varaktighet i minuter,Addon duration in minutes,مدة الملحق بالدقائق
+deleteAddonWarning,Är du säker att du vill radera tillägget,Are you sure that you want to delete the addon,هل أنت متأكد أنك تريد حذف الملحق
+deleteService,Radera tillägg,Delete addon,حذف الملحق
+addAddon,Skapa tillägg,Create addon,قم بإنشاء الملحق
+holidays,Lediga dagar,Holidays,العطل
+addHoliday,Lägg till lediga dagar,Add holidays,أضف عطلات
+from,Från,From,من
+to,Till,To,الى
+multipleDays,Flera dagar,Multiple days,أيام متعددة
+deleteHolidayConfirm,Är du säker att du vill radera denna helgen?,Are you sure you want to delete this holiday?,هل أنت متأكد أنك تريد حذف هذه العطلة؟
+checkForUpdates,Sök efter uppdateringar,Check for updates,التحقق من التحديثات
+noUpdates,Inga uppdateringar. Du kör den senaste versionen av applikationen,No updates. You are running the latest version of the application,لا توجد تحديثات. أنت تقوم بتشغيل أحدث إصدار من التطبيق
+pendingBookings,Väntande bokningar,Pending bookings,الحجوزات المعلقة
