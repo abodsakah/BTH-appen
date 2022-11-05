@@ -1,4 +1,5 @@
 # BTH-appen
+A application for BTH
 This application is a development project which part of the course PA1469 Mobile application development
 
 ## Description
@@ -42,3 +43,4 @@ WIP
 
 ## License
 This project is NOT a open source project and is only for educational purposes.
+>>>>>>> main
