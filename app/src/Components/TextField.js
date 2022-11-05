@@ -2,6 +2,7 @@ import { StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 import React from 'react';
 import { Colors, Fonts } from '../style';
 import { Ionicons } from '@expo/vector-icons';
+
 const TextField = ({
 	style = {},
 	onChangeText = () => {},
