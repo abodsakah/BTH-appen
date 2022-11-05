@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React from 'react';
 import Container from '../Components/Container';
 import loginHeader from '../../assets/images/loginHeader.jpg';
@@ -96,7 +96,9 @@ const Login = () => {
 						/>
 					</View>
 				</View>
-				<Text style={styles.forgotPassword}>Problemes with login?</Text>
+				<TouchableOpacity>
+					<Text style={styles.forgotPassword}>Problemes with login?</Text>
+				</TouchableOpacity>
 				<Button
 					style={styles.button}
 					onPress={handleLogin}
