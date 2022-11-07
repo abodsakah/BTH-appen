@@ -6,7 +6,7 @@ import json
 import requests
 import sys
 
-res = requests.get('https://docs.google.com/spreadsheets/d/1B2-Uk-3C_yGEuCr1LaGOHfps8dVSqLggzc-mECCV_dU/export?format=csv') # get the data from google sheets
+res = requests.get('https://docs.google.com/spreadsheets/d/1hc_ckooHG4sEygqtoefxwQV2F6TwtfEdGGSbr5y0CJs/export?format=csv') # get the data from google sheets
 res.encoding = "utf-8"
 
 res.close()
