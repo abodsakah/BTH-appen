@@ -30,9 +30,11 @@ export default Button;
 const styles = StyleSheet.create({
 	container: {
 		padding: 10,
-		borderRadius: 5,
+		borderRadius: 10,
 		width: '100%',
 		marginVertical: 10,
+		justifyContent: 'center',
+		alignItems: 'center',
 	},
 	text: {
 		color: Colors.snowWhite,

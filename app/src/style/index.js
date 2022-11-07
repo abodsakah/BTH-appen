@@ -38,4 +38,14 @@ export const Fonts = {
 	Inter_Bold: 'Inter_700Bold',
 	Inter_ExtraBold: 'Inter_800ExtraBold',
 	Inter_Black: 'Inter_900Black',
+	size: {
+		h1: 32,
+		h2: 24,
+		h3: 20,
+		h4: 18,
+		h5: 16,
+		h6: 14,
+		p: 12,
+		label: 10,
+	},
 };
