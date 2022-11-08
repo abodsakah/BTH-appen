@@ -8,13 +8,44 @@ import {
 } from 'react-native';
 import React from 'react';
 import Container from '../Components/Container';
-import MapView from 'react-native-maps';
+import MapView, { Marker } from 'react-native-maps';
 import Title from '../Components/Title';
-import TextField from '../Components/TextField';
 import { AntDesign } from '@expo/vector-icons';
-import { Colors } from '../style';
-import { LinearGradient } from 'expo-linear-gradient';
+import { Colors, Fonts } from '../style';
 import { Buildings } from '../helpers/Constants';
+
+const buildingLocations = [
+	{
+		name: 'J',
+		latitude: 56.182806,
+		longitude: 15.59036,
+	},
+	{
+		name: 'H',
+		latitude: 56.182262,
+		longitude: 15.590875,
+	},
+	{
+		name: 'A',
+		latitude: 56.181928,
+		longitude: 15.590618,
+	},
+	{
+		name: 'G',
+		latitude: 56.181886,
+		longitude: 15.591348,
+	},
+	{
+		name: 'D',
+		latitude: 56.181607,
+		longitude: 15.592416,
+	},
+	{
+		name: 'C',
+		latitude: 56.181235,
+		longitude: 15.592357,
+	},
+];
 
 const Map = () => {
 	const [search, setSearch] = React.useState('');
@@ -36,6 +67,16 @@ const Map = () => {
 		} else {
 			// show error message
 		}
+	};
+
+	const CustomMarker = ({ title }) => {
+		return (
+			<View style={styles.markerOuter}>
+				<View style={styles.markerInner}>
+					<Text style={styles.markerText}>{title}</Text>
+				</View>
+			</View>
+		);
 	};
 
 	return (
@@ -73,7 +114,18 @@ const Map = () => {
 						zoom: 16.5,
 					}}
 					mapType="satellite"
-				/>
+				>
+					{buildingLocations.map((building, index) => (
+						<Marker
+							coordinate={{
+								latitude: building.latitude,
+								longitude: building.longitude,
+							}}
+						>
+							<CustomMarker title={building.name} />
+						</Marker>
+					))}
+				</MapView>
 			</View>
 		</Container>
 	);
@@ -90,6 +142,27 @@ const styles = StyleSheet.create({
 		alignSelf: 'flex-start',
 		marginLeft: 20,
 		marginBottom: 20,
+	},
+	markerOuter: {
+		backgroundColor: Colors.primary.light,
+		width: 40,
+		height: 40,
+		borderRadius: 100,
+		justifyContent: 'center',
+		alignItems: 'center',
+	},
+	markerInner: {
+		backgroundColor: Colors.primary.regular,
+		width: 33,
+		height: 33,
+		borderRadius: 100,
+		justifyContent: 'center',
+		alignItems: 'center',
+	},
+	markerText: {
+		fontFamily: Fonts.Inter_Bold,
+		fontSize: 16,
+		color: Colors.snowWhite,
 	},
 	mapContainer: {
 		flex: 1,
