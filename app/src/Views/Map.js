@@ -28,31 +28,26 @@ const Map = () => {
 						</TouchableOpacity>
 					</View>
 				</View>
-				<LinearGradient
-					colors={['rgba(0,0,0,0.5)', 'transparent']}
-					style={styles.gradient}
-				>
-					<MapView
-						style={styles.map}
-						initialRegion={{
+				<MapView
+					style={styles.map}
+					initialRegion={{
+						latitude: 56.181339,
+						longitude: 15.591412,
+						latitudeDelta: 0.0922,
+						longitudeDelta: 0.0421,
+					}}
+					initialCamera={{
+						center: {
 							latitude: 56.181339,
 							longitude: 15.591412,
-							latitudeDelta: 0.0922,
-							longitudeDelta: 0.0421,
-						}}
-						initialCamera={{
-							center: {
-								latitude: 56.181339,
-								longitude: 15.591412,
-							},
-							pitch: 0,
-							heading: 0,
-							altitude: 1000,
-							zoom: 17,
-						}}
-						mapType="satellite"
-					/>
-				</LinearGradient>
+						},
+						pitch: 0,
+						heading: 0,
+						altitude: 1000,
+						zoom: 16.5,
+					}}
+					mapType="satellite"
+				/>
 			</View>
 		</Container>
 	);
