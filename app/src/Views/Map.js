@@ -62,7 +62,6 @@ const Map = () => {
 			// TODO: edge cases m, lövsalen, biblioteket
 
 			if (!(building.toLowerCase() in Buildings)) {
-				console.log('Building not found');
 			}
 		} else {
 			// show error message
@@ -94,6 +93,7 @@ const Map = () => {
 							<AntDesign name="search1" size={24} color={Colors.snowWhite} />
 						</TouchableOpacity>
 					</View>
+					<View style={styles.searchResults}></View>
 				</View>
 				<MapView
 					style={styles.map}
@@ -207,14 +207,13 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		marginLeft: 10,
 	},
-	gradient: {
-		width: '100%',
-		height: '100%',
-		position: 'absolute',
-		top: 0,
-		left: 0,
-		right: 0,
-		bottom: 0,
+	searchResults: {
+		backgroundColor: Colors.snowWhite,
+		width: '80%',
+		height: 150,
+		borderBottomEndRadius: 25,
+		borderBottomStartRadius: 25,
+		marginTop: -10,
 	},
 	map: {
 		width: '100%',
