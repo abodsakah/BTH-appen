@@ -1,10 +1,10 @@
-from base64 import encode
 import codecs
 from urllib import response
 import csv
 import json
 import requests
-import sys
+import os
+
 
 res = requests.get('https://docs.google.com/spreadsheets/d/1hc_ckooHG4sEygqtoefxwQV2F6TwtfEdGGSbr5y0CJs/export?format=csv') # get the data from google sheets
 res.encoding = "utf-8"
@@ -37,3 +37,7 @@ with open(csvFilePath, 'r') as csvFile:
 with codecs.open(jsonFilePath, 'w', 'utf-8') as jsonFile:
     jsonFile.write(json.dumps(data, ensure_ascii=False, indent=4))
     jsonFile.close()
+
+
+# remove the csv file
+os.remove('src/locale/translation.csv')
