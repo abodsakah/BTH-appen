@@ -16,6 +16,7 @@ import {
 	useFonts,
 } from '@expo-google-fonts/inter';
 import Login from './src/Views/Login';
+import Map from './src/Views/Map';
 
 export default function App() {
 	let [fontsLoaded] = useFonts({
@@ -34,7 +35,7 @@ export default function App() {
 		return <ActivityIndicator />;
 	}
 
-	return <Login />;
+	return <Map />;
 }
 
 const styles = StyleSheet.create({
