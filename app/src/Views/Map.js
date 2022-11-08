@@ -14,15 +14,41 @@ import TextField from '../Components/TextField';
 import { AntDesign } from '@expo/vector-icons';
 import { Colors } from '../style';
 import { LinearGradient } from 'expo-linear-gradient';
+import { Buildings } from '../helpers/Constants';
 
 const Map = () => {
+	const [search, setSearch] = React.useState('');
+
+	const onSearch = (t) => {
+		const searchString = t.toUpperCase();
+
+		const regex = /^[A-Z][1-5][0-9]{2,4}$/;
+		if (regex.test(searchString)) {
+			const building = searchString[0];
+			const floor = Number(searchString[1]);
+			const room = searchString.substring(2);
+
+			// TODO: edge cases m, lövsalen, biblioteket
+
+			if (!(building.toLowerCase() in Buildings)) {
+				console.log('Building not found');
+			}
+		} else {
+			// show error message
+		}
+	};
+
 	return (
 		<Container style={styles.container}>
 			<Title style={styles.title}>Campus Map</Title>
 			<View style={styles.mapContainer}>
 				<View style={styles.searchFieldContainer}>
 					<View style={styles.searchField}>
-						<TextInput style={styles.searchInput} placeholder="Search" />
+						<TextInput
+							style={styles.searchInput}
+							onChangeText={onSearch}
+							placeholder="Search"
+						/>
 						<TouchableOpacity style={styles.searchButton}>
 							<AntDesign name="search1" size={24} color={Colors.snowWhite} />
 						</TouchableOpacity>
