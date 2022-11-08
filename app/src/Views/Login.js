@@ -110,7 +110,7 @@ const Login = () => {
 					</View>
 				</View>
 				<TouchableOpacity onPress={goToRestartPassword}>
-					<Text style={styles.forgotPassword}>{t('problemes_with_login')}</Text>
+					<Text style={styles.forgotPassword}>{t('problems_with_login')}</Text>
 				</TouchableOpacity>
 				<Button
 					style={styles.button}
