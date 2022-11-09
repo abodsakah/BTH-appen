@@ -1,4 +1,11 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+	Image,
+	Linking,
+	StyleSheet,
+	Text,
+	TouchableOpacity,
+	View,
+} from 'react-native';
 import React from 'react';
 import Container from '../Components/Container';
 import loginHeader from '../../assets/images/loginHeader.jpg';
@@ -7,6 +14,8 @@ import bthLogo from '../../assets/images/BTHLogo.png';
 import TextField from '../Components/TextField';
 import { useState, useRef } from 'react';
 import Button from '../Components/Button';
+import { t } from '../locale/translate';
+
 const Login = () => {
 	const [login, setLogin] = useState('');
 	const [password, setPassword] = useState('');
@@ -33,6 +42,10 @@ const Login = () => {
 		console.log('Password: ', password);
 	};
 
+	const goToRestartPassword = () => {
+		Linking.openURL('https://personalkonto.bth.se/employee/employee-start');
+	};
+
 	return (
 		<Container style={styles.container}>
 			<View style={styles.header}>
@@ -43,7 +56,7 @@ const Login = () => {
 				</View>
 			</View>
 			<View style={styles.content}>
-				<Text style={styles.title}>Login</Text>
+				<Text style={styles.title}>{t('login')}</Text>
 				<View style={styles.form}>
 					<View style={styles.input}>
 						<Text
@@ -56,7 +69,7 @@ const Login = () => {
 								},
 							]}
 						>
-							Username
+							{t('username')}
 						</Text>
 						<TextField
 							value={login}
@@ -64,7 +77,7 @@ const Login = () => {
 								passwordRef.current.focus();
 							}}
 							returnKeyType="next"
-							placeholder="Student acronym"
+							placeholder={t('student_acronym_ph')}
 							onChangeText={handleLoginChange}
 							autoCompleteType="username"
 							error={error}
@@ -81,12 +94,12 @@ const Login = () => {
 								},
 							]}
 						>
-							Password
+							{t('password')}
 						</Text>
 						<TextField
 							inputRef={passwordRef}
 							value={password}
-							placeholder="Your password"
+							placeholder={t('password_ph')}
 							returnKeyType="done"
 							onChangeText={handlePasswordChange}
 							onSubmitEditing={handleLogin}
@@ -96,15 +109,15 @@ const Login = () => {
 						/>
 					</View>
 				</View>
-				<TouchableOpacity>
-					<Text style={styles.forgotPassword}>Problemes with login?</Text>
+				<TouchableOpacity onPress={goToRestartPassword}>
+					<Text style={styles.forgotPassword}>{t('problems_with_login')}</Text>
 				</TouchableOpacity>
 				<Button
 					style={styles.button}
 					onPress={handleLogin}
 					textStyle={styles.buttonText}
 				>
-					Login
+					{t('login')}
 				</Button>
 			</View>
 		</Container>
@@ -126,14 +139,10 @@ const styles = StyleSheet.create({
 		width: '100%',
 		height: '100%',
 		resizeMode: 'cover',
-		borderBottomLeftRadius: 25,
-		borderBottomRightRadius: 25,
 	},
 	colorOverlay: {
 		...StyleSheet.absoluteFillObject,
 		backgroundColor: `rgba(5, 80, 100, .3)`,
-		borderBottomLeftRadius: 25,
-		borderBottomRightRadius: 25,
 	},
 	logoContainer: {
 		...StyleSheet.absoluteFillObject,
