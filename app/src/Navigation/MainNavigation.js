@@ -1,11 +1,21 @@
 import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import { createStackNavigator } from '@react-navigation/stack';
+
+import React from 'react';
+import Main from '../Views/Main';
 
 const MainNavigation = () => {
+	const Stack = createStackNavigator();
+
 	return (
-		<View>
-			<Text>MainNavigation</Text>
-		</View>
+		<Stack.Navigator
+			initialRouteName="Login"
+			screenOptions={{
+				headerShown: false,
+			}}
+		>
+			<Stack.Screen name="Login" component={Main} />
+		</Stack.Navigator>
 	);
 };
 

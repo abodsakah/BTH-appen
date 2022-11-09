@@ -1,0 +1,32 @@
+{
+    "login": {
+        "en": "Login",
+        "sv-sv": "Logga in",
+        "ar": "سجل دخولك"
+    },
+    "student_acronym": {
+        "en": "Student acronym",
+        "sv-sv": "Student akronym",
+        "ar": "اختصار اسم الطالب"
+    },
+    "student_acronym_ph": {
+        "en": "Your student acronym",
+        "sv-sv": "Ditt student akronym",
+        "ar": "أاسمك المختصر"
+    },
+    "password": {
+        "en": "Password",
+        "sv-sv": "Lösenord",
+        "ar": "كلمه السر"
+    },
+    "password_ph": {
+        "en": "Your password",
+        "sv-sv": "Ditt lösenord",
+        "ar": "أكلمة المرور الخاصة بك"
+    },
+    "problems_with_login": {
+        "en": "Problems with login?",
+        "sv-sv": "Problem med att logga in ?",
+        "ar": "هل تواجه مشاكل في تسجيل الدخول؟"
+    }
+}
