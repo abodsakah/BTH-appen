@@ -21,10 +21,10 @@
     },
     "password_ph": {
         "en": "Your password",
-        "sv-sv": "Dirr lösenord",
+        "sv-sv": "Ditt lösenord",
         "ar": "أكلمة المرور الخاصة بك"
     },
-    "problemes_with_login": {
+    "problems_with_login": {
         "en": "Problems with login?",
         "sv-sv": "Problem med att logga in ?",
         "ar": "هل تواجه مشاكل في تسجيل الدخول؟"
