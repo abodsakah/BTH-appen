@@ -5,67 +5,74 @@ import {
 	TextInput,
 	TouchableOpacity,
 	View,
+	Animated,
 } from 'react-native';
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import Container from '../Components/Container';
 import MapView, { Marker } from 'react-native-maps';
 import Title from '../Components/Title';
 import { AntDesign } from '@expo/vector-icons';
 import { Colors, Fonts } from '../style';
 import { Buildings } from '../helpers/Constants';
+import { t } from '../locale/translate';
 
-const buildingLocations = [
-	{
-		name: 'J',
-		latitude: 56.182806,
-		longitude: 15.59036,
-	},
-	{
-		name: 'H',
-		latitude: 56.182262,
-		longitude: 15.590875,
-	},
-	{
-		name: 'A',
-		latitude: 56.181928,
-		longitude: 15.590618,
-	},
-	{
-		name: 'G',
-		latitude: 56.181886,
-		longitude: 15.591348,
-	},
-	{
-		name: 'D',
-		latitude: 56.181607,
-		longitude: 15.592416,
-	},
-	{
-		name: 'C',
-		latitude: 56.181235,
-		longitude: 15.592357,
-	},
-];
+const SEARCH_RESULTS_HEIGHT = 120;
 
 const Map = () => {
-	const [search, setSearch] = React.useState('');
+	const [search, setSearch] = useState('');
+	const [searchFound, setSearchFound] = useState(false);
+	const [searchResults, setSearchResults] = useState('');
 
-	const onSearch = (t) => {
-		const searchString = t.toUpperCase();
+	const expandAnimation = useRef(new Animated.Value(0)).current;
+
+	const onSearch = (text) => {
+		const searchString = text.toUpperCase();
 
 		const regex = /^[A-Z][1-5][0-9]{2,4}$/;
+
+		// if empty close search
+		if (searchString.length === 0) {
+			setSearchFound(false);
+			setSearchResults('');
+			Animated.timing(expandAnimation, {
+				toValue: 0,
+				duration: 500,
+				useNativeDriver: false,
+			}).start();
+			return;
+		}
+
+		Animated.timing(expandAnimation, {
+			toValue: SEARCH_RESULTS_HEIGHT,
+			duration: 500,
+			useNativeDriver: false,
+		}).start();
+
 		if (regex.test(searchString)) {
 			const building = searchString[0];
 			const floor = Number(searchString[1]);
-			const room = searchString.substring(2);
-
-			// TODO: edge cases m, lövsalen, biblioteket
 
 			if (!(building.toLowerCase() in Buildings)) {
+				setSearchResults(t('map_not_found'));
+				setSearchFound(false);
+				return;
+			} else if (floor > Buildings[building.toLowerCase()].floors) {
+				setSearchFound(false);
+				setSearchResults(t('map_not_found'));
+				return;
+			} else {
+				setSearchFound(true);
+				setSearchResults(
+					`${t('go_to_building')} ${building}, ${t('room_in')} ${floor}.`
+				);
 			}
 		} else {
 			// show error message
+			setSearchFound(false);
+			setSearchResults(t('map_not_found'));
+			return;
 		}
+		setSearch(text);
 	};
 
 	const CustomMarker = ({ title }) => {
@@ -80,33 +87,38 @@ const Map = () => {
 
 	return (
 		<Container style={styles.container}>
-			<Title style={styles.title}>Campus Map</Title>
+			<Title style={styles.title}>{t('campus_map')}</Title>
 			<View style={styles.mapContainer}>
 				<View style={styles.searchFieldContainer}>
 					<View style={styles.searchField}>
 						<TextInput
 							style={styles.searchInput}
 							onChangeText={onSearch}
-							placeholder="Search"
+							placeholder={t('search_ph')}
 						/>
 						<TouchableOpacity style={styles.searchButton}>
 							<AntDesign name="search1" size={24} color={Colors.snowWhite} />
 						</TouchableOpacity>
 					</View>
-					<View style={styles.searchResults}></View>
+					<Animated.View
+						style={[styles.searchResults, { height: expandAnimation }]}
+					>
+						{searchFound && <Text style={styles.searchTitle}>{search}</Text>}
+						<Text style={styles.searchResText}>{searchResults}</Text>
+					</Animated.View>
 				</View>
 				<MapView
 					style={styles.map}
 					initialRegion={{
-						latitude: 56.181339,
-						longitude: 15.591412,
+						latitude: 56.182252,
+						longitude: 15.591309,
 						latitudeDelta: 0.0922,
 						longitudeDelta: 0.0421,
 					}}
 					initialCamera={{
 						center: {
-							latitude: 56.181339,
-							longitude: 15.591412,
+							latitude: 56.182252,
+							longitude: 15.591309,
 						},
 						pitch: 0,
 						heading: 0,
@@ -115,14 +127,15 @@ const Map = () => {
 					}}
 					mapType="satellite"
 				>
-					{buildingLocations.map((building, index) => (
+					{Object.keys(Buildings).map((i) => (
 						<Marker
+							key={i}
 							coordinate={{
-								latitude: building.latitude,
-								longitude: building.longitude,
+								latitude: Buildings[i].latitude,
+								longitude: Buildings[i].longitude,
 							}}
 						>
-							<CustomMarker title={building.name} />
+							<CustomMarker title={i.toUpperCase()} />
 						</Marker>
 					))}
 				</MapView>
@@ -210,10 +223,20 @@ const styles = StyleSheet.create({
 	searchResults: {
 		backgroundColor: Colors.snowWhite,
 		width: '80%',
-		height: 150,
 		borderBottomEndRadius: 25,
 		borderBottomStartRadius: 25,
 		marginTop: -10,
+		zIndex: -1,
+		justifyContent: 'center',
+		alignItems: 'center',
+	},
+	searchTitle: {
+		fontFamily: Fonts.Inter_Bold,
+		fontSize: 20,
+		marginTop: 10,
+	},
+	searchResText: {
+		padding: 10,
 	},
 	map: {
 		width: '100%',

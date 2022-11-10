@@ -28,5 +28,30 @@
         "en": "Problems with login?",
         "sv-sv": "Problem med att logga in ?",
         "ar": "هل تواجه مشاكل في تسجيل الدخول؟"
+    },
+    "campus_map": {
+        "en": "Campus Map",
+        "sv-sv": "Campus Karta",
+        "ar": "خريطة الحرم الجامعي"
+    },
+    "search_ph": {
+        "en": "Search for a hall...",
+        "sv-sv": "Sök efter ett sal...",
+        "ar": "ابحث عن قاعة ..."
+    },
+    "map_not_found": {
+        "en": "The hall could not be found, please check that you entered the hall number correctly",
+        "sv-sv": "Salen kunde inte hittas, vänligen kontrollera att du skrev sal numret korrekt",
+        "ar": "تعذر العثور على القاعة ، يرجى التأكد من إدخال رقم القاعة بشكل صحيح"
+    },
+    "go_to_building": {
+        "en": "Go to building",
+        "sv-sv": "Gå till byggnad",
+        "ar": "اذهب إلى المبنى"
+    },
+    "room_in": {
+        "en": "the room is going to be on floor",
+        "sv-sv": "rummet kommer att ligga på våning",
+        "ar": "ستكون الغرفة في الطابق"
     }
 }

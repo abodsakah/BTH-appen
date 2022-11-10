@@ -3,18 +3,20 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import React from 'react';
 import Main from '../Views/Main';
+import Login from '../Views/Login';
+import Map from '../Views/Map';
 
 const MainNavigation = () => {
 	const Stack = createStackNavigator();
 
 	return (
 		<Stack.Navigator
-			initialRouteName="Login"
 			screenOptions={{
 				headerShown: false,
 			}}
 		>
-			<Stack.Screen name="Login" component={Main} />
+			<Stack.Screen name="Maps" component={Map} />
+			<Stack.Screen name="Login" component={Login} />
 		</Stack.Navigator>
 	);
 };
