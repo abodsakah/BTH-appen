@@ -22,3 +22,10 @@ type Exam struct {
 	StartDate  time.Time `form:"start_date" binding:"required" json:"start_date"`
 	Users      []User    `gorm:"many2many:exam_users;"`
 }
+
+// News struct
+type News struct {
+	gorm.Model
+	Title string `form:"title" binding:"required" json:"title"`
+	Body  string `form:"body" binding:"required" json:"body"`
+}
