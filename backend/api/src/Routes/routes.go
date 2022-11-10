@@ -79,7 +79,7 @@ func createCommand(c *gin.Context) {
 }
 
 func listCommands(c *gin.Context) {
-	commands, err := db.ListCommands()
+	commands, err := db.ListExams()
 	if err != nil {
 		fmt.Println(err.Error())
 		c.JSON(500, gin.H{"error": "Internal server error"})
