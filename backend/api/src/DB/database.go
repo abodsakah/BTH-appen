@@ -62,38 +62,26 @@ func SetupDatabase() {
 
 	// migrate database models
 	db.AutoMigrate(&User{})
-	db.AutoMigrate(&Command{})
-
-	// create some commands
-	command := &Command{
-		Keyword:     "test",
-		Description: "some description what this command does",
-		Text:        "the actual output when running the command",
-		Link:        "https://github.com/NoahHakansson",
-	}
-	err := CreateCommand(command)
-	if err != nil {
-		fmt.Println(err.Error())
-	}
-	fmt.Printf("Command: %#v\n", command)
-
-	command = &Command{
-		Keyword:     "hello",
-		Description: "some description what this command does",
-		Text:        "the actual output when running the command",
-		Link:        "",
-	}
-	err = CreateCommand(command)
-	if err != nil {
-		fmt.Println(err.Error())
-	}
-	fmt.Printf("Command: %#v\n", command)
+	db.AutoMigrate(&Exam{})
 
 	// create admin account
-	err = CreateUser(&User{Username: "admin", Password: "pass"})
+	user := &User{Username: "admin", Password: "pass"}
+	err = CreateUser(user)
 	if err != nil {
 		fmt.Println(err.Error())
 	}
+
+	// create some commands
+	exam := &Exam{
+		CourseCode: "DV1337",
+		StartDate:  time.Now(),
+		Users:      []User{*user},
+	}
+	err := CreateExam(exam)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	fmt.Printf("Command: %#v\n", exam)
 
 	commands, err := ListCommands()
 	if err != nil {
@@ -135,19 +123,13 @@ func AuthUser(username string, password string) (userID string, err error) {
 	return userID, nil
 }
 
-// CreateCommand function
-// Leave link as an empty string if no link is needed for the command.
-func CreateCommand(command *Command) error {
-	// Disallow reserved command keyword "help"
-	if command.Keyword == "help" {
-		return errors.New(`Restricted keyword "help" is not allowed`)
-	}
-
+// CreateExam function
+func CreateExam(exam *Exam) error {
 	// set creation date
-	command.CreatedAt = time.Now()
+	exam.CreatedAt = time.Now()
 
-	// create command in database
-	result := db.Create(&command)
+	// create exam in database
+	result := db.Create(&exam)
 	if result.Error != nil {
 		return result.Error
 	}
@@ -157,7 +139,7 @@ func CreateCommand(command *Command) error {
 
 // ListCommands function
 // returns array with all commands from database
-func ListCommands() (commands []Command, err error) {
+func ListCommands() (commands []Exam, err error) {
 	result := db.Find(&commands)
 	if result.Error != nil {
 		return nil, result.Error

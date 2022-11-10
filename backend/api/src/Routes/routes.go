@@ -60,7 +60,7 @@ func authMiddleware(c *gin.Context) {
 }
 
 func createCommand(c *gin.Context) {
-	var command db.Command
+	var command db.Exam
 
 	if err := c.ShouldBind(&command); err != nil {
 		fmt.Println(err.Error())
@@ -69,7 +69,7 @@ func createCommand(c *gin.Context) {
 	}
 
 	fmt.Printf("Command: %#v\n", command)
-	if err := db.CreateCommand(&command); err != nil {
+	if err := db.CreateExam(&command); err != nil {
 		fmt.Println(err.Error())
 		c.JSON(401, gin.H{"error": err.Error()})
 		return
