@@ -16,7 +16,9 @@ import {
 	useFonts,
 } from '@expo-google-fonts/inter';
 import Login from './src/Views/Login';
-import Map from './src/Views/Map';
+import MainNavigation from './src/Navigation/MainNavigation';
+import { NavigationContainer } from '@react-navigation/native';
+
 
 export default function App() {
 	let [fontsLoaded] = useFonts({
@@ -35,7 +37,11 @@ export default function App() {
 		return <ActivityIndicator />;
 	}
 
-	return <Map />;
+	return (
+		<NavigationContainer>
+			<MainNavigation />
+		</NavigationContainer>
+	);
 }
 
 const styles = StyleSheet.create({
