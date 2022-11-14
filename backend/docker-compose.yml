@@ -4,14 +4,14 @@ version: '3'
 services:
   db:
     image: postgres
-    volumes:
-      - ./data/db:/var/lib/postgresql/data
     # environment:
     #   - POSTGRES_DB=bth-app
     #   - POSTGRES_USER=postgres
     #   - POSTGRES_PASSWORD=postgres
     env_file:
-      .env
+      - .env
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
     ports:
       - "5432:5432"
   pgadmin4:
