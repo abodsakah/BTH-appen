@@ -11,8 +11,9 @@ import (
 // User struct
 type User struct {
 	gorm.Model
-	Username string `gorm:"uniqueIndex" form:"username" binding:"required" json:"username"`
-	Password string `form:"password" binding:"required" json:"password"`
+	Username string  `gorm:"uniqueIndex" form:"username" binding:"required" json:"username"`
+	Password string  `form:"password" binding:"required" json:"password"`
+	Exams    []*Exam `gorm:"many2many:exam_users;"`
 }
 
 // Exam struct
@@ -20,7 +21,7 @@ type Exam struct {
 	gorm.Model
 	CourseCode string    `gorm:"uniqueIndex" form:"course_code" binding:"required" json:"course_code"`
 	StartDate  time.Time `form:"start_date" binding:"required" json:"start_date"`
-	Users      []User    `gorm:"many2many:exam_users;"`
+	Users      []*User   `gorm:"many2many:exam_users;"`
 }
 
 // News struct
