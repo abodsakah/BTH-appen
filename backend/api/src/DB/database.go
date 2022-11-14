@@ -51,6 +51,7 @@ func SetupDatabase() (*gorm.DB, error) {
 		log.Println(err)
 	}
 
+	// FIX: All tests/experiments should be removed from here eventually.
 	//**************************
 	// Some test DB operations.
 	//**************************
