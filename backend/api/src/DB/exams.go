@@ -33,7 +33,7 @@ func ListExams(db *gorm.DB) (exams []Exam, err error) {
 }
 
 // SearchExams function
-// returns a single exam object from database or an error
+// returns matching exams from database or an error
 func SearchExams(db *gorm.DB, wildcard string) (exams []Exam, err error) {
 	now := time.Now()
 	result := db.Where("course_code LIKE ? AND start_date >= ?", wildcard, now).Find(&exams)
@@ -47,17 +47,17 @@ func SearchExams(db *gorm.DB, wildcard string) (exams []Exam, err error) {
 // ApplyExam function
 // adds a user to an exams list of users, returns error if not
 func ApplyExam(db *gorm.DB, courseCode string, userEmail string) error {
-	var exam *Exam
+	var exam Exam
 	result := db.Where("course_code = ?", courseCode).Find(&exam).Limit(1)
 	if result.Error != nil {
 		return result.Error
 	}
-	var user *User
+	var user User
 	result = db.Where("username = ?", userEmail).Find(&user).Limit(1)
 	if result.Error != nil {
 		return result.Error
 	}
-	exam.Users = append(exam.Users, *user)
+	exam.Users = append(exam.Users, &user)
 	db.Save(&exam)
 	return nil
 }

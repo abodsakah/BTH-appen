@@ -70,7 +70,7 @@ func SetupDatabase() (*gorm.DB, error) {
 	err = CreateExam(db, &Exam{
 		CourseCode: "DV1337",
 		StartDate:  time.Now().AddDate(0, 2, 0),
-		Users:      []User{userOne},
+		Users:      []*User{&userOne},
 	})
 	if err != nil {
 		log.Println(err)
@@ -78,7 +78,7 @@ func SetupDatabase() (*gorm.DB, error) {
 	err = CreateExam(db, &Exam{
 		CourseCode: "PA6969",
 		StartDate:  time.Now().AddDate(0, 2, 5),
-		Users:      []User{userOne},
+		Users:      []*User{&userOne},
 	})
 	if err != nil {
 		log.Println(err)
@@ -90,6 +90,46 @@ func SetupDatabase() (*gorm.DB, error) {
 		log.Println(err)
 	}
 	fmt.Printf("\nExams: %#v\n", exams)
+
+	// get exams with users preloaded
+	// and print each exam and it's users
+	fmt.Println("\n------ exams with registered users preloaded -------")
+	var examsPreloaded []Exam
+	db.First(&examsPreloaded)
+	err = db.Model(&Exam{}).Preload("Users").Find(&examsPreloaded).Error
+	if err != nil {
+		log.Println(err)
+	} else {
+		for key, obj := range examsPreloaded {
+			fmt.Printf("--------- Exam %d ------------\n", key)
+			fmt.Printf("%#v\n", obj)
+			fmt.Printf("\nExam %d Users: \n", key)
+			for _, user := range obj.Users {
+				fmt.Printf("%#v\n", *user)
+			}
+			fmt.Printf("------------------------------\n")
+		}
+	}
+
+	// get users with registered exams preloaded
+	// and print each exam and it's users
+	fmt.Println("\n------ users with registered exams preloaded -------")
+	var usersPreloaded []User
+	db.First(&usersPreloaded)
+	err = db.Model(&User{}).Preload("Exams").Find(&usersPreloaded).Error
+	if err != nil {
+		log.Println(err)
+	} else {
+		for key, obj := range usersPreloaded {
+			fmt.Printf("--------- User %d ------------\n", key)
+			fmt.Printf("%#v\n", obj)
+			fmt.Printf("\nUser %d Exams: \n", key)
+			for _, exam := range obj.Exams {
+				fmt.Printf("%#v\n", *exam)
+			}
+			fmt.Printf("------------------------------\n")
+		}
+	}
 
 	//**************************
 	// End test DB operations.
