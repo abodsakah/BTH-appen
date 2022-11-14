@@ -1,6 +1,8 @@
 package db
 
 import (
+	"time"
+
 	"gorm.io/gorm"
 )
 
@@ -9,15 +11,22 @@ import (
 // User struct
 type User struct {
 	gorm.Model
-	Username string `gorm:"uniqueIndex" form:"username" binding:"required" json:"username"`
-	Password string `form:"password" binding:"required" json:"password"`
+	Username string  `gorm:"uniqueIndex" form:"username" binding:"required" json:"username"`
+	Password string  `form:"password" binding:"required" json:"password"`
+	Exams    []*Exam `gorm:"many2many:exam_users;"`
 }
 
-// Command struct
-type Command struct {
+// Exam struct
+type Exam struct {
 	gorm.Model
-	Keyword     string `gorm:"uniqueIndex" form:"keyword" binding:"required" json:"keyword"`
-	Description string `form:"description" binding:"required" json:"description"`
-	Text        string `form:"text" binding:"required" json:"text"`
-	Link        string `gorm:"default:none" form:"link" json:"link"`
+	CourseCode string    `gorm:"uniqueIndex" form:"course_code" binding:"required" json:"course_code"`
+	StartDate  time.Time `form:"start_date" binding:"required" json:"start_date"`
+	Users      []*User   `gorm:"many2many:exam_users;"`
+}
+
+// News struct
+type News struct {
+	gorm.Model
+	Title string `form:"title" binding:"required" json:"title"`
+	Body  string `form:"body" binding:"required" json:"body"`
 }
