@@ -24,7 +24,7 @@ func CreateExam(db *gorm.DB, exam *Exam) error {
 // returns array with all exams from database or an error
 func ListExams(db *gorm.DB) (exams []Exam, err error) {
 	now := time.Now()
-	result := db.Where("Startdate >= ?", now).Find(&exams)
+	result := db.Where("start_date >= ?", now).Find(&exams)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -36,7 +36,7 @@ func ListExams(db *gorm.DB) (exams []Exam, err error) {
 // returns a single exam object from database or an error
 func SearchExams(db *gorm.DB, wildcard string) (exams []Exam, err error) {
 	now := time.Now()
-	result := db.Where("CourseCode LIKE ? AND StartDate >= ?", wildcard, now).Find(&exams)
+	result := db.Where("course_code LIKE ? AND start_date >= ?", wildcard, now).Find(&exams)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -48,12 +48,12 @@ func SearchExams(db *gorm.DB, wildcard string) (exams []Exam, err error) {
 // adds a user to an exams list of users, returns error if not
 func ApplyExam(db *gorm.DB, courseCode string, userEmail string) error {
 	var exam *Exam
-	result := db.Where("CourseCode = ?", courseCode).Find(&exam).Limit(1)
+	result := db.Where("course_code = ?", courseCode).Find(&exam).Limit(1)
 	if result.Error != nil {
 		return result.Error
 	}
 	var user *User
-	result = db.Where("Username = ?", userEmail).Find(&user).Limit(1)
+	result = db.Where("username = ?", userEmail).Find(&user).Limit(1)
 	if result.Error != nil {
 		return result.Error
 	}
