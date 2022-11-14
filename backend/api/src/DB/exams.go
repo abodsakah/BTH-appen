@@ -12,9 +12,9 @@ func CreateExam(db *gorm.DB, exam *Exam) error {
 	exam.CreatedAt = time.Now()
 
 	// create exam in database
-	result := db.Create(&exam)
-	if result.Error != nil {
-		return result.Error
+	err := db.Create(&exam).Error
+	if err != nil {
+		return err
 	}
 
 	return nil

@@ -40,15 +40,15 @@ func SetupDatabase() (*gorm.DB, error) {
 	// migrate database models
 	err = db.AutoMigrate(&User{})
 	if err != nil {
-		log.Println(err)
+		return nil, err
 	}
 	err = db.AutoMigrate(&Exam{})
 	if err != nil {
-		log.Println(err)
+		return nil, err
 	}
 	err = db.AutoMigrate(&News{})
 	if err != nil {
-		log.Println(err)
+		return nil, err
 	}
 
 	// FIX: All tests/experiments should be removed from here eventually.
@@ -96,7 +96,6 @@ func SetupDatabase() (*gorm.DB, error) {
 	// and print each exam and it's users
 	fmt.Println("\n------ exams with registered users preloaded -------")
 	var examsPreloaded []Exam
-	db.First(&examsPreloaded)
 	err = db.Model(&Exam{}).Preload("Users").Find(&examsPreloaded).Error
 	if err != nil {
 		log.Println(err)
@@ -116,7 +115,6 @@ func SetupDatabase() (*gorm.DB, error) {
 	// and print each exam and it's users
 	fmt.Println("\n------ users with registered exams preloaded -------")
 	var usersPreloaded []User
-	db.First(&usersPreloaded)
 	err = db.Model(&User{}).Preload("Exams").Find(&usersPreloaded).Error
 	if err != nil {
 		log.Println(err)

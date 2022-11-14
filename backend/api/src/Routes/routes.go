@@ -31,12 +31,12 @@ func SetupRoutes() {
 	// routes
 	r.GET("/api/hello", hello)
 	r.POST("/api/login", login)
-	r.GET("/api/list-commands", listCommands)
+	r.GET("/api/list-exams", listExams)
 	// auth protected routes
 	auth := r.Group("/", authMiddleware)
 	auth.GET("/api/auth-hello", hello)
 	auth.POST("/api/create-user", createUser)
-	auth.POST("/api/create-command", createCommand)
+	auth.POST("/api/create-exam", createExam)
 
 	r.Run(":5000")
 }
@@ -70,34 +70,34 @@ func authMiddleware(c *gin.Context) {
 	fmt.Println("ID:", id)
 }
 
-func createCommand(c *gin.Context) {
-	var command db.Exam
+func createExam(c *gin.Context) {
+	var exam db.Exam
 
-	if err := c.ShouldBind(&command); err != nil {
+	if err := c.ShouldBind(&exam); err != nil {
 		fmt.Println(err.Error())
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	}
 
-	fmt.Printf("Command: %#v\n", command)
-	if err := db.CreateExam(dBase, &command); err != nil {
+	fmt.Printf("Command: %#v\n", exam)
+	if err := db.CreateExam(dBase, &exam); err != nil {
 		fmt.Println(err.Error())
 		c.JSON(401, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(200, command)
+	c.JSON(200, exam)
 }
 
-func listCommands(c *gin.Context) {
-	commands, err := db.ListExams(dBase)
+func listExams(c *gin.Context) {
+	exams, err := db.ListExams(dBase)
 	if err != nil {
 		fmt.Println(err.Error())
 		c.JSON(500, gin.H{"error": "Internal server error"})
 		return
 	}
 
-	c.JSON(200, commands)
+	c.JSON(200, exams)
 }
 
 func createUser(c *gin.Context) {
