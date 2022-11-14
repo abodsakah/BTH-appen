@@ -3,13 +3,15 @@ version: '3'
 
 services:
   db:
-    image: postgres:latest
+    image: postgres
+    # environment:
+    #   - POSTGRES_DB=bth-app
+    #   - POSTGRES_USER=postgres
+    #   - POSTGRES_PASSWORD=postgres
+    env_file:
+      - .env
     volumes:
       - ./data/db:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_DB=bth-app
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
     ports:
       - "5432:5432"
   pgadmin4:
@@ -22,8 +24,8 @@ services:
     ports:
       - "5050:80"
   
-  # backend
-    #TODO
+  # backend:
+  #TODO
 
   # frontend:
   #   image: node:16

@@ -8,21 +8,36 @@ import (
 	"gorm.io/gorm"
 )
 
-type dbMock struct {
+type dbExamMock struct {
 	mock.Mock
 }
 
-func (m *dbMock) Where(username string, password string) *gorm.DB {
-	var result *gorm.DB
-	result.Error = nil
-	return result
+func (m *dbExamMock) Create(exam *Exam) *gorm.DB {
+	args := m.Called(exam)
+	return args.Get(0).(*gorm.DB)
 }
 
-func TestMock_id1(t *testing.T) {
+func TestExam_Create_success(t *testing.T) {
 	// assert equality
 	assert := assert.New(t)
-	db = new(dbMock)
-	AuthUser("test", "test")
-	assert.Equal(a, b, "The two ")
+	dbMock := new(dbExamMock)
+	var exam Exam
+	var result gorm.DB
+	result.Error = nil
+	dbMock.On("Create", &exam).Return(&result)
+	dBase := dbMock
+	res := CreateExam(dBase, &exam)
+	assert.Equal(res, nil, "")
+}
 
+func TestExam_Create_failure(t *testing.T) {
+	// assert equality
+	assert := assert.New(t)
+	dbMock := new(dbExamMock)
+	var exam *Exam
+	var result *gorm.DB
+	result.Error = db.Error
+	dbMock.On("Create", exam).Return(result)
+	res := CreateExam(exam)
+	assert.Equal(res, nil, "")
 }

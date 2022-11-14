@@ -3,29 +3,40 @@ package routes
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 
 	"github.com/abodsakah/BTH-appen/backend/api/src/DB"
 	"github.com/abodsakah/BTH-appen/backend/api/src/JWTAuth"
 )
 
+// variables
+var (
+	dBase *gorm.DB
+	err   error
+)
+
 // SetupRoutes function
 func SetupRoutes() {
-	db.SetupDatabase()
+	dBase, err = db.SetupDatabase()
+	if err != nil {
+		log.Fatalln(err)
+	}
 	r := gin.Default()
 	r.SetTrustedProxies([]string{"127.0.0.1"})
 
 	// routes
 	r.GET("/api/hello", hello)
 	r.POST("/api/login", login)
-	r.GET("/api/list-commands", listCommands)
+	r.GET("/api/list-exams", listExams)
 	// auth protected routes
 	auth := r.Group("/", authMiddleware)
 	auth.GET("/api/auth-hello", hello)
 	auth.POST("/api/create-user", createUser)
-	auth.POST("/api/create-command", createCommand)
+	auth.POST("/api/create-exam", createExam)
 
 	r.Run(":5000")
 }
@@ -59,34 +70,34 @@ func authMiddleware(c *gin.Context) {
 	fmt.Println("ID:", id)
 }
 
-func createCommand(c *gin.Context) {
-	var command db.Command
+func createExam(c *gin.Context) {
+	var exam db.Exam
 
-	if err := c.ShouldBind(&command); err != nil {
+	if err := c.ShouldBind(&exam); err != nil {
 		fmt.Println(err.Error())
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	}
 
-	fmt.Printf("Command: %#v\n", command)
-	if err := db.CreateCommand(&command); err != nil {
+	fmt.Printf("Command: %#v\n", exam)
+	if err := db.CreateExam(dBase, &exam); err != nil {
 		fmt.Println(err.Error())
 		c.JSON(401, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(200, command)
+	c.JSON(200, exam)
 }
 
-func listCommands(c *gin.Context) {
-	commands, err := db.ListCommands()
+func listExams(c *gin.Context) {
+	exams, err := db.ListExams(dBase)
 	if err != nil {
 		fmt.Println(err.Error())
 		c.JSON(500, gin.H{"error": "Internal server error"})
 		return
 	}
 
-	c.JSON(200, commands)
+	c.JSON(200, exams)
 }
 
 func createUser(c *gin.Context) {
@@ -101,7 +112,7 @@ func createUser(c *gin.Context) {
 
 	// Create user
 	fmt.Printf("User: %#v\n", user)
-	if err := db.CreateUser(&user); err != nil {
+	if err := db.CreateUser(dBase, &user); err != nil {
 		fmt.Println(err.Error())
 		c.JSON(401, gin.H{"error": err.Error()})
 		return
@@ -122,7 +133,7 @@ func login(c *gin.Context) {
 
 	// Try to authenticate user
 	fmt.Printf("User: %#v\n", user)
-	userID, err := db.AuthUser(user.Username, user.Password)
+	userID, err := db.AuthUser(dBase, user.Username, user.Password)
 	if err != nil {
 		fmt.Println(err.Error())
 		c.JSON(401, gin.H{"error": "Failed to authenticate user, username or password is wrong."})
