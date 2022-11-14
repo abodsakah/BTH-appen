@@ -8,8 +8,6 @@ import (
 	"gorm.io/gorm"
 )
 
-
-
 type dbExamMock struct {
 	mock.Mock
 }
@@ -27,8 +25,8 @@ func TestExam_Create_success(t *testing.T) {
 	var result gorm.DB
 	result.Error = nil
 	dbMock.On("Create", &exam).Return(&result)
-	db = dbMock
-	res := CreateExam(&exam)
+	dBase := dbMock
+	res := CreateExam(dBase, &exam)
 	assert.Equal(res, nil, "")
 }
 

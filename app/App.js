@@ -19,6 +19,7 @@ import Login from './src/Views/Login';
 import MainNavigation from './src/Navigation/MainNavigation';
 import { NavigationContainer } from '@react-navigation/native';
 
+
 export default function App() {
 	let [fontsLoaded] = useFonts({
 		Inter_100Thin,
