@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gorm"
 )
 
 func checkInputLength(username string, password string) (err error) {
@@ -16,9 +17,9 @@ func checkInputLength(username string, password string) (err error) {
 }
 
 // CreateUser function
-func CreateUser(user *User) error {
+func CreateUser(db *gorm.DB, user *User) error {
 	// check username and password length
-	err = checkInputLength(user.Username, user.Password)
+	err := checkInputLength(user.Username, user.Password)
 	if err != nil {
 		return err
 	}
@@ -44,7 +45,7 @@ func CreateUser(user *User) error {
 }
 
 // AuthUser function
-func AuthUser(username string, password string) (userID string, err error) {
+func AuthUser(db *gorm.DB, username string, password string) (userID string, err error) {
 	// check username and password length
 	err = checkInputLength(username, password)
 	if err != nil {

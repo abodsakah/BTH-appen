@@ -3,17 +3,28 @@ package routes
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 
 	"github.com/abodsakah/BTH-appen/backend/api/src/DB"
 	"github.com/abodsakah/BTH-appen/backend/api/src/JWTAuth"
 )
 
+// variables
+var (
+	dBase *gorm.DB
+	err   error
+)
+
 // SetupRoutes function
 func SetupRoutes() {
-	db.SetupDatabase()
+	dBase, err = db.SetupDatabase()
+	if err != nil {
+		log.Fatalln(err)
+	}
 	r := gin.Default()
 	r.SetTrustedProxies([]string{"127.0.0.1"})
 
@@ -69,7 +80,7 @@ func createCommand(c *gin.Context) {
 	}
 
 	fmt.Printf("Command: %#v\n", command)
-	if err := db.CreateExam(&command); err != nil {
+	if err := db.CreateExam(dBase, &command); err != nil {
 		fmt.Println(err.Error())
 		c.JSON(401, gin.H{"error": err.Error()})
 		return
@@ -79,7 +90,7 @@ func createCommand(c *gin.Context) {
 }
 
 func listCommands(c *gin.Context) {
-	commands, err := db.ListExams()
+	commands, err := db.ListExams(dBase)
 	if err != nil {
 		fmt.Println(err.Error())
 		c.JSON(500, gin.H{"error": "Internal server error"})
@@ -101,7 +112,7 @@ func createUser(c *gin.Context) {
 
 	// Create user
 	fmt.Printf("User: %#v\n", user)
-	if err := db.CreateUser(&user); err != nil {
+	if err := db.CreateUser(dBase, &user); err != nil {
 		fmt.Println(err.Error())
 		c.JSON(401, gin.H{"error": err.Error()})
 		return
@@ -122,7 +133,7 @@ func login(c *gin.Context) {
 
 	// Try to authenticate user
 	fmt.Printf("User: %#v\n", user)
-	userID, err := db.AuthUser(user.Username, user.Password)
+	userID, err := db.AuthUser(dBase, user.Username, user.Password)
 	if err != nil {
 		fmt.Println(err.Error())
 		c.JSON(401, gin.H{"error": "Failed to authenticate user, username or password is wrong."})

@@ -15,15 +15,12 @@ import (
 const passMaxLength int = 50
 const userMaxLength int = 20
 
-// variables
-var db *gorm.DB
-
-var (
-	err        error
-	dbName     string
-	dbUser     string
-	dbPassword string
-)
+// structs
+type dbEnvs struct {
+	Name string
+	User string
+	Pass string
+}
 
 // Functions
 
@@ -31,16 +28,17 @@ var (
 // Returns the db session or an error.
 func SetupDatabase() (*gorm.DB, error) {
 	// get env variables
-	getEnvs()
+	var envs dbEnvs
+	getDbEnvs(&envs)
 	// connect to DB
-	dsn := fmt.Sprintf("host=localhost user=%s password=%s dbname=%s port=5432 sslmode=disable TimeZone=Europe/Stockholm", dbUser, dbPassword, dbName)
-	db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	dsn := fmt.Sprintf("host=localhost user=%s password=%s dbname=%s port=5432 sslmode=disable TimeZone=Europe/Stockholm", envs.User, envs.Pass, envs.Name)
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		return nil, err
 	}
 
 	// migrate database models
-	err := db.AutoMigrate(&User{})
+	err = db.AutoMigrate(&User{})
 	if err != nil {
 		log.Println(err)
 	}
@@ -53,9 +51,13 @@ func SetupDatabase() (*gorm.DB, error) {
 		log.Println(err)
 	}
 
+	//**************************
+	// Some test DB operations.
+	//**************************
+
 	// create admin account
 	user := &User{Username: "admin", Password: "pass"}
-	err = CreateUser(user)
+	err = CreateUser(db, user)
 	if err != nil {
 		log.Println(err)
 	}
@@ -65,7 +67,7 @@ func SetupDatabase() (*gorm.DB, error) {
 	db.First(&userOne)
 
 	// create some exams
-	err = CreateExam(&Exam{
+	err = CreateExam(db, &Exam{
 		CourseCode: "DV1337",
 		StartDate:  time.Now().AddDate(0, 2, 0),
 		Users:      []User{userOne},
@@ -73,7 +75,7 @@ func SetupDatabase() (*gorm.DB, error) {
 	if err != nil {
 		log.Println(err)
 	}
-	err = CreateExam(&Exam{
+	err = CreateExam(db, &Exam{
 		CourseCode: "PA6969",
 		StartDate:  time.Now().AddDate(0, 2, 5),
 		Users:      []User{userOne},
@@ -83,30 +85,35 @@ func SetupDatabase() (*gorm.DB, error) {
 	}
 
 	// list exams
-	exams, err := ListExams()
+	exams, err := ListExams(db)
 	if err != nil {
 		log.Println(err)
 	}
 	fmt.Printf("\nExams: %#v\n", exams)
 
+	//**************************
+	// End test DB operations.
+	//**************************
+
+	// return db object
 	return db, nil
 }
 
-// gets env variables and puts them in appropriate variables.
-func getEnvs() {
+// Takes a dbEnvs struct pointer and sets all the env vars.
+func getDbEnvs(dbEnvs *dbEnvs) {
 	var ok bool
 
-	dbName, ok = os.LookupEnv("POSTGRES_NAME")
+	dbEnvs.Name, ok = os.LookupEnv("POSTGRES_NAME")
 	if !ok {
 		log.Fatalln("POSTGRES_NAME: env variable not found")
 	}
 
-	dbUser, ok = os.LookupEnv("POSTGRES_USER")
+	dbEnvs.User, ok = os.LookupEnv("POSTGRES_USER")
 	if !ok {
 		log.Fatalln("POSTGRES_USER: env variable not found")
 	}
 
-	dbPassword, ok = os.LookupEnv("POSTGRES_PASSWORD")
+	dbEnvs.Pass, ok = os.LookupEnv("POSTGRES_PASSWORD")
 	if !ok {
 		log.Fatalln("POSTGRES_PASSWORD: env variable not found")
 	}

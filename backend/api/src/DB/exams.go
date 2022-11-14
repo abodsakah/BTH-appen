@@ -1,9 +1,13 @@
 package db
 
-import "time"
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
 
 // CreateExam function
-func CreateExam(exam *Exam) error {
+func CreateExam(db *gorm.DB, exam *Exam) error {
 	// set creation date
 	exam.CreatedAt = time.Now()
 
@@ -18,7 +22,7 @@ func CreateExam(exam *Exam) error {
 
 // ListExams function
 // returns array with all exams from database
-func ListExams() (exams []Exam, err error) {
+func ListExams(db *gorm.DB) (exams []Exam, err error) {
 	now := time.Now()
 	result := db.Where("Startdate >= ?", now).Find(&exams)
 	if result.Error != nil {
@@ -30,7 +34,7 @@ func ListExams() (exams []Exam, err error) {
 
 // SearchExams function
 // returns a single exam object from database
-func SearchExams(wildcard string) (exams []Exam, err error) {
+func SearchExams(db *gorm.DB, wildcard string) (exams []Exam, err error) {
 	now := time.Now()
 	result := db.Where("CourseCode LIKE ? AND StartDate >= ?", wildcard, now).Find(&exams)
 	if result.Error != nil {
@@ -42,7 +46,7 @@ func SearchExams(wildcard string) (exams []Exam, err error) {
 
 // ApplyExam function
 // returns none if successful, returns error if not
-func ApplyExam(courseCode string, userEmail string) error {
+func ApplyExam(db *gorm.DB, courseCode string, userEmail string) error {
 	var exam *Exam
 	result := db.Where("CourseCode = ?", courseCode).Find(&exam).Limit(1)
 	if result.Error != nil {
