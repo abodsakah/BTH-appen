@@ -36,7 +36,9 @@
     },
     "search_ph": {
         "en": "Search for a hall...",
-        "sv-sv": "Sök efter ett sal...",
+
+        "sv-sv": "Sök efter en sal...",
+
         "ar": "ابحث عن قاعة ..."
     },
     "map_not_found": {
@@ -53,5 +55,27 @@
         "en": "the room is going to be on floor",
         "sv-sv": "rummet kommer att ligga på våning",
         "ar": "ستكون الغرفة في الطابق"
+
+    },
+    "news": {
+        "en": "News",
+        "sv-sv": "Nyheter",
+        "ar": "الاخبار"
+    },
+    "map": {
+        "en": "Map",
+        "sv-sv": "Kartan",
+        "ar": "الخريطة"
+    },
+    "exams": {
+        "en": "Exams",
+        "sv-sv": "Tentor",
+        "ar": "الامتحانات"
+    },
+    "profile": {
+        "en": "Profile",
+        "sv-sv": "Profil",
+        "ar": "الملف الشخصي"
+
     }
 }
