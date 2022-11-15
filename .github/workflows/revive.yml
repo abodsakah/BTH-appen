@@ -9,15 +9,13 @@ on:
 
 jobs:
 
-  lint:
+  linter:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./backend/api
     steps:
-    - uses: actions/checkout@v3
+    - name: Check out code into the Go module directory
+      uses: actions/checkout@v2
 
     - name: Run Revive Linter
       uses: docker://morphy/revive-action:v2
       with:
-        config: ../../backend/api/revive/config.toml
+        config: revive-conf.toml
