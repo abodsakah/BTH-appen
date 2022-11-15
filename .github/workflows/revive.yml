@@ -20,4 +20,4 @@ jobs:
     - name: Run Revive Linter
       uses: docker://morphy/revive-action:v2
       with:
-        config: ./revive/config.toml
+        config: ../../backend/api/revive/config.toml
