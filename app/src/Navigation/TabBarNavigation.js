@@ -6,6 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '../style';
 import TabBarIcon from '../Components/TabBarIcon';
 import { t } from '../locale/translate';
+import Exams from '../Views/Exams';
 
 const TabBarNavigation = () => {
 	const Tab = createBottomTabNavigator();
@@ -52,7 +53,7 @@ const TabBarNavigation = () => {
 			/>
 			<Tab.Screen
 				name="Exams"
-				component={Main}
+				component={Exams}
 				options={{
 					tabBarShowLabel: false,
 					tabBarIcon: ({ focused }) => (
