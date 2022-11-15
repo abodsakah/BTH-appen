@@ -24,9 +24,9 @@ func CreateExam(db *gorm.DB, exam *Exam) error {
 // returns array with all exams from database or an error
 func ListExams(db *gorm.DB) (exams []Exam, err error) {
 	now := time.Now()
-	result := db.Where("start_date >= ?", now).Find(&exams)
-	if result.Error != nil {
-		return nil, result.Error
+	err = db.Where("start_date >= ?", now).Find(&exams).Error
+	if err != nil {
+		return nil, err
 	}
 
 	return exams, nil
@@ -36,9 +36,9 @@ func ListExams(db *gorm.DB) (exams []Exam, err error) {
 // returns matching exams from database or an error
 func SearchExams(db *gorm.DB, wildcard string) (exams []Exam, err error) {
 	now := time.Now()
-	result := db.Where("course_code LIKE ? AND start_date >= ?", wildcard, now).Find(&exams)
-	if result.Error != nil {
-		return nil, result.Error
+	err = db.Where("course_code LIKE ? AND start_date >= ?", wildcard, now).Find(&exams).Error
+	if err != nil {
+		return nil, err
 	}
 
 	return exams, nil
