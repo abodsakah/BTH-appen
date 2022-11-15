@@ -1,0 +1,7 @@
+severity = "warning"
+confidence = 0.8
+errorCode = 1
+warningCode = 1
+
+# Enable all available rules
+enableAllRules = true
