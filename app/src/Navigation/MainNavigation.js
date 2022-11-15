@@ -5,6 +5,7 @@ import React from 'react';
 import Main from '../Views/Main';
 import TabBarNavigation from './TabBarNavigation';
 
+
 const MainNavigation = () => {
 	const Stack = createStackNavigator();
 
@@ -15,6 +16,8 @@ const MainNavigation = () => {
 				headerShown: false,
 			}}
 		>
+
+
 			<Stack.Screen name="Main" component={TabBarNavigation} />
 		</Stack.Navigator>
 	);
