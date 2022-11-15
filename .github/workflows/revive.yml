@@ -9,7 +9,7 @@ on:
 
 jobs:
 
-  build:
+  lint:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -20,5 +20,4 @@ jobs:
     - name: Run Revive Linter
       uses: docker://morphy/revive-action:v2
       with:
-        # config: revive/config.toml
-        set_exit_status: ""
+        config: revive/config.toml
