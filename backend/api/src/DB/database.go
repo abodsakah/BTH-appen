@@ -12,8 +12,10 @@ import (
 )
 
 // constants
-const passMaxLength int = 50
-const userMaxLength int = 20
+const (
+	passMaxLength int = 50
+	userMaxLength int = 20
+)
 
 // structs
 type dbEnvs struct {

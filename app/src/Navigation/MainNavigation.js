@@ -3,18 +3,22 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import React from 'react';
 import Main from '../Views/Main';
+import TabBarNavigation from './TabBarNavigation';
+
 
 const MainNavigation = () => {
 	const Stack = createStackNavigator();
 
 	return (
 		<Stack.Navigator
-			initialRouteName="Login"
+			initialRouteName="Main"
 			screenOptions={{
 				headerShown: false,
 			}}
 		>
-			<Stack.Screen name="Login" component={Main} />
+
+
+			<Stack.Screen name="Main" component={TabBarNavigation} />
 		</Stack.Navigator>
 	);
 };

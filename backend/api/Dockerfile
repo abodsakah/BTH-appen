@@ -13,11 +13,11 @@ RUN go mod download && go mod verify
 COPY . ./
 
 # build
-RUN go build -o /go-badtemp
+RUN go build -o /runme
 
 EXPOSE 5000
 
-CMD [ "/go-badtemp" ]
+CMD [ "/runme" ]
 
 
 
