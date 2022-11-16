@@ -1,5 +1,5 @@
 ---
-name: Revive
+name: Go
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
 
 jobs:
 
-  linter:
+  revive-linter:
     runs-on: ubuntu-latest
     steps:
     - name: Check out code into the Go module directory

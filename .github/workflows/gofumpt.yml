@@ -1,5 +1,5 @@
 ---
-name: Gofumpt
+name: Go
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
 
 jobs:
 
-  formatting:
+  gofumpt-formatting:
     runs-on: ubuntu-latest
     defaults:
       run:
