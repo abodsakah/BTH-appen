@@ -12,9 +12,6 @@ jobs:
   golangci:
     name: lint
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./backend/api
     steps:
       - uses: actions/checkout@v3
 
@@ -30,7 +27,7 @@ jobs:
           version: latest
 
           # Optional: working directory, useful for monorepos
-          # working-directory: somedir
+          working-directory: backend/api
 
           # Optional: golangci-lint command line arguments.
           # args: --issues-exit-code=0
