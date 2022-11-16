@@ -13,7 +13,6 @@ func CreateExam(db *gorm.DB, exam *Exam) error {
 
 	// create exam in database
 	err := db.Create(&exam).Error
-
 	if err != nil {
 		return err
 	}
