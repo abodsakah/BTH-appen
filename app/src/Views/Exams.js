@@ -8,10 +8,10 @@ const Exams = () => {
   return (
     <Container>
       <Text style={styles.code}>Exams</Text>
-      <Text>Registered exams</Text>
+      <Text style={styles.textStyle}>Registered exams</Text>
       <Register />
       <Register2 />
-      <Text>Comming exams</Text>
+      <Text style={styles.textStyle}>Comming exams</Text>
       <Comming />
     </Container>
   )
@@ -20,7 +20,7 @@ const Exams = () => {
 const Register = () => {
     return (
     <View style={styles.examContainer}>
-        <Text>PA1469</Text>
+        <Text style={styles.code}>PA1469</Text>
         <Text>Applikation Utveckling</Text>
         <Text>Date: 2023-05-31</Text>
         <Text>Time: 13:00</Text>
@@ -33,7 +33,7 @@ const Register = () => {
 const Register2 = () => {
     return (
     <View style={styles.examContainer}>
-        <Text>MA1476</Text>
+        <Text style={styles.code}>MA1476</Text>
         <Text>Matimatik introduktion</Text>
         <Text>Date: 2023-05-31</Text>
         <Text>Time: 13:00</Text>
@@ -48,8 +48,8 @@ const Comming = () => {
     <View style={styles.examContainer}>
         <Text style={styles.code}>
             DV1628</Text>
-        <Text>Datorteknik</Text>
-        <Text>Date: 2023-05-31</Text>
+        <Text style={{flexDirection: 'row'}}>Datorteknik</Text>
+        <Text style={{flexDirection: 'row'}}>Date: 2023-05-31</Text>
         <Text>Time: 13:00</Text>
         <Text>Room: J1240</Text>
         <Button style={styles.buttonStyle}>Register</Button>
@@ -70,12 +70,18 @@ const styles = StyleSheet.create({
         margin:5
     },
     code:{
-        fontSize: Fonts.size.h1,
-        textAlign: 'left',
-        fontFamily: Fonts.Inter_Bold
+        fontSize: Fonts.size.h3,
+        alignSelf: 'flex-start', 
+        fontFamily: Fonts.Inter_Bold,
     },
     buttonStyle:{
         width: "50%",
         alignSelf: "flex-end"
+    }, 
+    textStyle:{
+        fontSize: Fonts.size.h3,
+        borderRadius: 15,
+        margin:5,
+        alignSelf: 'flex-start', 
     }
 })
