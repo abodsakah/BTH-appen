@@ -6,7 +6,6 @@ import (
 	"gorm.io/gorm"
 )
 
-// CreateExam function
 func CreateExam(db *gorm.DB, exam *Exam) error {
 	// set creation date
 	exam.CreatedAt = time.Now()
