@@ -72,7 +72,15 @@ func SetupDatabase() (*gorm.DB, error) {
 	// create some exams
 	err = CreateExam(db, &Exam{
 		CourseCode: "DV1337",
-		StartDate:  time.Now().AddDate(0, 2, 0),
+		StartDate:  time.Now(),
+		Users:      []*User{&userOne},
+	})
+	if err != nil {
+		log.Println(err)
+	}
+	err = CreateExam(db, &Exam{
+		CourseCode: "MA6666",
+		StartDate:  time.Now().Add(-(time.Hour * 2)),
 		Users:      []*User{&userOne},
 	})
 	if err != nil {
@@ -80,7 +88,7 @@ func SetupDatabase() (*gorm.DB, error) {
 	}
 	err = CreateExam(db, &Exam{
 		CourseCode: "PA6969",
-		StartDate:  time.Now().AddDate(0, 2, 5),
+		StartDate:  time.Now().AddDate(0, 0, -1),
 		Users:      []*User{&userOne},
 	})
 	if err != nil {
@@ -99,11 +107,11 @@ func SetupDatabase() (*gorm.DB, error) {
 	} else {
 		fmt.Println("userID: ", userID)
 	}
-	err = RegisterToExam(db, "DV1337", userID)
+	err = RegisterToExam(db, 1, userID)
 	if err != nil {
 		log.Println(err)
 	}
-	err = UnregisterFromExam(db, "DV1337", userOne.ID)
+	err = UnregisterFromExam(db, 1, userOne.ID)
 	if err != nil {
 		log.Println(err)
 	}
