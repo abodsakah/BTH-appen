@@ -2,7 +2,6 @@ package db
 
 import (
 	"errors"
-	"strconv"
 	"time"
 
 	"golang.org/x/crypto/bcrypt"
@@ -45,27 +44,26 @@ func CreateUser(db *gorm.DB, user *User) error {
 }
 
 // AuthUser function
-func AuthUser(db *gorm.DB, username string, password string) (userID string, err error) {
+func AuthUser(db *gorm.DB, username string, password string) (userID uint, err error) {
 	// check username and password length
 	err = checkInputLength(username, password)
 	if err != nil {
-		return "", err
+		return 0, err
 	}
 
 	// get user from database
 	var user User
 	result := db.Where("username = ?", username).First(&user)
 	if result.Error != nil {
-		return "", result.Error
+		return 0, result.Error
 	}
 
 	// compare password and hashedPassword
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
 	if err != nil {
-		return "", err // return if password doesn't match
+		return 0, err // return if password doesn't match
 	}
 
 	// return user ID
-	userID = strconv.Itoa(int(user.ID))
-	return userID, nil
+	return user.ID, nil
 }

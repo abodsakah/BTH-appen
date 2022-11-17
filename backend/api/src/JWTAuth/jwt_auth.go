@@ -4,6 +4,7 @@ package jwtauth
 import (
 	"fmt"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"
@@ -33,9 +34,9 @@ var signKey = getEnv()
 // var signKey = []byte("supersecretkey")
 
 // GenerateJWT function
-func GenerateJWT(id string) (string, error) {
+func GenerateJWT(id uint) (string, error) {
 	claims := &userClaims{
-		ID: id,
+		ID: strconv.Itoa(int(id)),
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 2)),
 			Issuer:    "webCLI",
