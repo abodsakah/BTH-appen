@@ -45,20 +45,48 @@ func SearchExams(db *gorm.DB, wildcard string) (exams []Exam, err error) {
 	return exams, nil
 }
 
-// ApplyExam function
-// adds a user to an exams list of users, returns error if not
-func ApplyExam(db *gorm.DB, courseCode string, userEmail string) error {
+// RegisterToExam function
+// Adds a user to an exams list of users, returns error if not
+func RegisterToExam(db *gorm.DB, courseCode string, userID uint) error {
+	// find exam
 	var exam Exam
-	result := db.Where("course_code = ?", courseCode).Find(&exam).Limit(1)
+	result := db.Where("course_code = ?", courseCode).First(&exam)
 	if result.Error != nil {
 		return result.Error
 	}
+	// find user
 	var user User
-	result = db.Where("username = ?", userEmail).Find(&user).Limit(1)
+	err := db.Where("id = ?", userID).First(&user).Error
+	if err != nil {
+		return err
+	}
+	// update user exams with exam
+	err = db.Model(&user).Association("Exams").Append([]Exam{exam})
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// UnregisterFromExam function
+// Removes a user from an exams list of users, returns error if not
+func UnregisterFromExam(db *gorm.DB, courseCode string, userID uint) error {
+	// find exam
+	var exam Exam
+	result := db.Where("course_code = ?", courseCode).First(&exam)
 	if result.Error != nil {
 		return result.Error
 	}
-	exam.Users = append(exam.Users, &user)
-	db.Save(&exam)
+	// find user
+	var user User
+	err := db.Where("id = ?", userID).First(&user).Error
+	if err != nil {
+		return err
+	}
+	// remove exam from user
+	err = db.Model(&user).Association("Exams").Delete([]Exam{exam})
+	if err != nil {
+		return err
+	}
 	return nil
 }
