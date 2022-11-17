@@ -25,7 +25,8 @@ func CreateExam(db *gorm.DB, exam *Exam) error {
 // returns array with all exams from database or an error
 func ListExams(db *gorm.DB) (exams []Exam, err error) {
 	now := time.Now()
-	err = db.Where("start_date >= ?", now).Find(&exams).Error
+	midnight := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, time.Local)
+	err = db.Where("start_date >= ?", midnight).Find(&exams).Error
 	if err != nil {
 		return nil, err
 	}
