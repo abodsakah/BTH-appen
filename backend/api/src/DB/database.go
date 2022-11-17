@@ -87,6 +87,27 @@ func SetupDatabase() (*gorm.DB, error) {
 		log.Println(err)
 	}
 
+	// create user account
+	err = CreateUser(db, &User{Username: "user", Password: "pass"})
+	if err != nil {
+		log.Println(err)
+	}
+	// auth user and get userID
+	userID, err := AuthUser(db, "user", "pass")
+	if err != nil {
+		log.Println(err)
+	} else {
+		fmt.Println("userID: ", userID)
+	}
+	err = RegisterToExam(db, "DV1337", userID)
+	if err != nil {
+		log.Println(err)
+	}
+	err = UnregisterFromExam(db, "DV1337", userOne.ID)
+	if err != nil {
+		log.Println(err)
+	}
+
 	// list exams
 	exams, err := ListExams(db)
 	if err != nil {
