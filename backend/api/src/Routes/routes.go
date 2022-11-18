@@ -42,8 +42,7 @@ func SetupRoutes() {
 	auth.POST("/api/create-user", createUser)
 	auth.POST("/api/create-exam", createExam)
 
-	err = r.Run(":5000")
-	if err != nil {
+	if err = r.Run(":5000"); err != nil {
 		log.Fatalln(err)
 	}
 }
@@ -155,7 +154,7 @@ func login(c *gin.Context) {
 	}
 
 	// create a cookie that's valid for 2 hours to match the JWT 2 hour expiration time
-	c.SetCookie("web_cli", token, 60*60*2, "/", "localhost", true, true)
+	c.SetCookie("BTH-app", token, 60*60*2, "/", "localhost", true, true)
 
 	fmt.Println("Token:", token)
 

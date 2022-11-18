@@ -34,10 +34,9 @@ func CreateUser(db *gorm.DB, user *User) error {
 	user.Password = string(hashedPass)
 
 	// create user in database
-	result := db.Create(&user)
-
-	if result.Error != nil {
-		return result.Error
+	err = db.Create(&user).Error
+	if err != nil {
+		return err
 	}
 
 	return nil
@@ -53,9 +52,9 @@ func AuthUser(db *gorm.DB, username string, password string) (userID uint, err e
 
 	// get user from database
 	var user User
-	result := db.Where("username = ?", username).First(&user)
-	if result.Error != nil {
-		return 0, result.Error
+	err = db.Where("username = ?", username).First(&user).Error
+	if err != nil {
+		return 0, err
 	}
 
 	// compare password and hashedPassword

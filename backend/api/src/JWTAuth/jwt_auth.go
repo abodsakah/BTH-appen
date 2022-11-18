@@ -3,6 +3,7 @@ package jwtauth
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"strconv"
 	"time"
@@ -34,12 +35,12 @@ var signKey = getEnv()
 // var signKey = []byte("supersecretkey")
 
 // GenerateJWT function
-func GenerateJWT(id uint) (string, error) {
+func GenerateJWT(userID uint) (string, error) {
 	claims := &userClaims{
-		ID: strconv.Itoa(int(id)),
+		ID: strconv.Itoa(int(userID)),
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 2)),
-			Issuer:    "webCLI",
+			Issuer:    "BTH-app",
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
 		},
 	}
@@ -47,7 +48,7 @@ func GenerateJWT(id uint) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	signedToken, err := token.SignedString([]byte(signKey))
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		return "", err
 	}
 
