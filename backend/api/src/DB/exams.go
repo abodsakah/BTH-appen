@@ -55,9 +55,9 @@ func ListExams(db *gorm.DB) (exams []Exam, err error) {
 //
 // Returns all exams due in five days with their users preloaded
 // to be used to get exams with users to notify.
-func GetExamsDueInFive(db *gorm.DB) (exams []Exam, err error) {
-	return nil, nil
-}
+// func GetExamsDueInFive(db *gorm.DB) (exams []Exam, err error) {
+// 	return nil, nil
+// }
 
 // SearchExams function
 // Returns matching exams from the database.
