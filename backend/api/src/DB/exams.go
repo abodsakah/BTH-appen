@@ -122,3 +122,16 @@ func UnregisterFromExam(db *gorm.DB, examID uint, userID uint) error {
 	}
 	return nil
 }
+
+// ListUserExams function
+// Lists the users exams which they have registered to
+//
+// Or an error
+func ListUserExams(db *gorm.DB, userID uint) ([]*Exam, error) {
+	var user User
+	err := db.Model(&User{}).Preload("Exams").Find(&user).Error
+	if err != nil {
+		return nil, err
+	}
+	return user.Exams, nil
+}

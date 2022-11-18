@@ -5,12 +5,13 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 
-	"github.com/abodsakah/BTH-appen/backend/api/src/DB"
-	"github.com/abodsakah/BTH-appen/backend/api/src/JWTAuth"
+	db "github.com/abodsakah/BTH-appen/backend/api/src/DB"
+	jwtauth "github.com/abodsakah/BTH-appen/backend/api/src/JWTAuth"
 )
 
 // variables
@@ -38,6 +39,7 @@ func SetupRoutes() {
 	r.GET("/api/list-exams", listExams)
 	// auth protected routes
 	auth := r.Group("/", authMiddleware)
+	auth.GET("/api/list-user-exams", ListUserExams)
 	auth.GET("/api/auth-hello", hello)
 	auth.POST("/api/create-user", createUser)
 	auth.POST("/api/create-exam", createExam)
@@ -54,7 +56,7 @@ func hello(c *gin.Context) {
 
 func authMiddleware(c *gin.Context) {
 	// check cookie for valid JWT to see if user is already logged in
-	cookie, err := c.Cookie("web_cli")
+	cookie, err := c.Cookie("BTH-app")
 	if err != nil {
 		fmt.Println("user NOT logged in")
 		fmt.Println(err.Error())
@@ -98,6 +100,27 @@ func listExams(c *gin.Context) {
 	exams, err := db.ListExams(dBase)
 	if err != nil {
 		fmt.Println(err.Error())
+		c.JSON(500, gin.H{"error": "Internal server error"})
+		return
+	}
+
+	c.JSON(200, exams)
+}
+
+func ListUserExams(c *gin.Context) {
+	cookie, err := c.Cookie("BTH-app")
+	if err != nil {
+		c.JSON(500, gin.H{"error": "Internal server error"})
+		return
+	}
+	id, err := jwtauth.ValidateJWT(cookie)
+	userID, err := strconv.Atoi(id)
+	if err != nil {
+		c.JSON(500, gin.H{"error": "Internal server error"})
+		return
+	}
+	exams, err := db.ListUserExams(dBase, uint(userID))
+	if err != nil {
 		c.JSON(500, gin.H{"error": "Internal server error"})
 		return
 	}

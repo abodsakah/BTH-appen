@@ -111,17 +111,30 @@ func SetupDatabase() (*gorm.DB, error) {
 	if err != nil {
 		log.Println(err)
 	}
-	err = UnregisterFromExam(db, 1, userOne.ID)
+	/*
+		err = UnregisterFromExam(db, 1, userOne.ID)
+		if err != nil {
+			log.Println(err)
+		}
+	*/
+	var exams []*Exam
+	exams, err = ListUserExams(db, userID)
 	if err != nil {
 		log.Println(err)
 	}
-
-	// list exams
-	exams, err := ListExams(db)
-	if err != nil {
-		log.Println(err)
+	fmt.Printf("--- Exams taken from specified user ---\n--------------------------------------------\n")
+	for _, obj := range exams {
+		fmt.Printf("%#v\n", *obj)
 	}
-	fmt.Printf("\nExams: %#v\n", exams)
+	fmt.Printf("--------------------------------------------\n")
+	/*
+		// list exams
+		exams, err := ListExams(db)
+		if err != nil {
+			log.Println(err)
+		}
+		fmt.Printf("\nExams: %#v\n", exams)
+	*/
 
 	// get exams with users preloaded
 	// and print each exam and it's users
