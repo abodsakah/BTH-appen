@@ -39,8 +39,10 @@ func SetupRoutes() {
 	// auth protected routes
 	auth := r.Group("/", authMiddleware)
 	auth.GET("/api/auth-hello", hello)
-	auth.POST("/api/create-user", createUser)
-	auth.POST("/api/create-exam", createExam)
+	auth.GET("/api/list-exam-users", listExamUsers) // TODO: should be adminMiddleware protected
+	auth.POST("/api/create-user", createUser)       // TODO: should be adminMiddleware protected
+	auth.POST("/api/create-exam", createExam)       // TODO: should be adminMiddleware protected
+	auth.POST("/api/delete-exam", deleteExam)       // TODO: should be adminMiddleware protected
 	auth.POST("/api/register-exam", registerToExam)
 	auth.POST("/api/unregister-exam", unregisterFromExam)
 
@@ -85,13 +87,14 @@ func authMiddleware(c *gin.Context) {
 func createExam(c *gin.Context) {
 	var exam db.Exam
 
+	// bind body data or return error if it fails
 	if err := c.ShouldBind(&exam); err != nil {
 		fmt.Println(err.Error())
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	}
 
-	fmt.Printf("Command: %#v\n", exam)
+	// create exam
 	if err := db.CreateExam(dBase, &exam); err != nil {
 		fmt.Println(err.Error())
 		c.JSON(401, gin.H{"error": err.Error()})
@@ -101,7 +104,28 @@ func createExam(c *gin.Context) {
 	c.JSON(200, exam)
 }
 
+func deleteExam(c *gin.Context) {
+	var reqObj examReqBody
+
+	// bind body data or return error if it fails
+	if err := c.ShouldBind(&reqObj); err != nil {
+		fmt.Println(err.Error())
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+
+	// delete exam
+	if err := db.DeleteExam(dBase, reqObj.ExamID); err != nil {
+		fmt.Println(err.Error())
+		c.JSON(401, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(200, gin.H{"Success": fmt.Sprintf("Exam %d was deleted", reqObj.ExamID)})
+}
+
 func listExams(c *gin.Context) {
+	// get exams from database
 	exams, err := db.ListExams(dBase)
 	if err != nil {
 		fmt.Println(err.Error())
@@ -112,17 +136,37 @@ func listExams(c *gin.Context) {
 	c.JSON(200, exams)
 }
 
-func registerToExam(c *gin.Context) {
-	var reqObj regExamBody
+func listExamUsers(c *gin.Context) {
+	var reqObj examReqBody
 
-	// bind form data and return error if it fails
+	// bind body data or return error if it fails
+	if err := c.ShouldBind(&reqObj); err != nil {
+		c.JSON(400, gin.H{"error": "No exam ID provided"})
+		return
+	}
+
+	// get users from database
+	users, err := db.ListExamUsers(dBase, reqObj.ExamID)
+	if err != nil {
+		fmt.Println(err.Error())
+		c.JSON(500, gin.H{"error": "Internal server error"})
+		return
+	}
+
+	c.JSON(200, users)
+}
+
+func registerToExam(c *gin.Context) {
+	var reqObj examReqBody
+
+	// bind body data or return error if it fails
 	if err := c.ShouldBind(&reqObj); err != nil {
 		c.JSON(400, gin.H{"error": "No exam ID provided"})
 		return
 	}
 	// register user to exam
 	userID := c.Keys["UserID"].(uint)
-	err := db.AddToExam(dBase, reqObj.ExamID, userID)
+	err := db.AddUserToExam(dBase, reqObj.ExamID, userID)
 	if err != nil {
 		c.JSON(500, gin.H{"error": "Internal server error"})
 		return
@@ -131,16 +175,16 @@ func registerToExam(c *gin.Context) {
 }
 
 func unregisterFromExam(c *gin.Context) {
-	var reqObj regExamBody
+	var reqObj examReqBody
 
-	// bind form data and return error if it fails
+	// bind body data or return error if it fails
 	if err := c.ShouldBind(&reqObj); err != nil {
 		c.JSON(400, gin.H{"error": "No exam ID provided"})
 		return
 	}
 	// unregister user to exam
 	userID := c.Keys["UserID"].(uint)
-	err := db.RemoveFromExam(dBase, reqObj.ExamID, userID)
+	err := db.RemoveUserFromExam(dBase, reqObj.ExamID, userID)
 	if err != nil {
 		c.JSON(500, gin.H{"error": "Internal server error"})
 		return
@@ -151,7 +195,7 @@ func unregisterFromExam(c *gin.Context) {
 func createUser(c *gin.Context) {
 	var user db.User
 
-	// bind form data and return error if it fails
+	// bind body data or return error if it fails
 	if err := c.ShouldBind(&user); err != nil {
 		fmt.Println(err.Error())
 		c.JSON(400, gin.H{"error": "Missing user credentials"})
@@ -172,7 +216,7 @@ func createUser(c *gin.Context) {
 func login(c *gin.Context) {
 	var user db.User
 
-	// bind form data and return error if it fails
+	// bind body data or return error if it fails
 	if err := c.ShouldBind(&user); err != nil {
 		fmt.Println(err.Error())
 		c.JSON(400, gin.H{"error": "Missing user credentials"})

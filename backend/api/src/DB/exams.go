@@ -24,7 +24,7 @@ func CreateExam(db *gorm.DB, exam *Exam) error {
 }
 
 // DeleteExam function
-// Takes a course_code and deletes the exam from the database.
+// Takes a exam ID and deletes the exam from the database.
 //
 // Or returns an error.
 func DeleteExam(db *gorm.DB, examID uint) error {
@@ -42,13 +42,29 @@ func DeleteExam(db *gorm.DB, examID uint) error {
 // a start date after today at midnight from the database.
 //
 // Or returns an error.
-func ListExams(db *gorm.DB) (exams []Exam, err error) {
-	err = db.Find(&exams).Error
+func ListExams(db *gorm.DB) ([]Exam, error) {
+	var exams []Exam
+	err := db.Find(&exams).Error
 	if err != nil {
 		return nil, err
 	}
 
 	return exams, nil
+}
+
+// ListExamUsers function
+// Returns an array with all users registered to an exam.
+// Takes an exam ID.
+//
+// Or returns an error.
+func ListExamUsers(db *gorm.DB, examID uint) ([]*User, error) {
+	var exam Exam
+	// get exam with users preloaded
+	err := db.Where("id = ?", examID).Preload("Users").First(&exam).Error
+	if err != nil {
+		return nil, err
+	}
+	return exam.Users, nil
 }
 
 // GetExamsDueSoon function
@@ -62,34 +78,20 @@ func GetExamsDueSoon(db *gorm.DB) (exams []Exam, err error) {
 	return nil, nil
 }
 
-// SearchExams function
-// Returns matching exams from the database.
-//
-// Or returns an error.
-func SearchExams(db *gorm.DB, wildcard string) (exams []Exam, err error) {
-	now := time.Now()
-	err = db.Where("course_code LIKE ? AND start_date >= ?", wildcard, now).Find(&exams).Error
-	if err != nil {
-		return nil, err
-	}
-
-	return exams, nil
-}
-
-// AddToExam function
+// AddUserToExam function
 // Adds a user to an exams list of users.
 //
 // Or returns an error.
-func AddToExam(db *gorm.DB, examID uint, userID uint) error {
+func AddUserToExam(db *gorm.DB, examID uint, userID uint) error {
 	// find exam
 	var exam Exam
-	result := db.Where("id = ?", examID).First(&exam)
-	if result.Error != nil {
-		return result.Error
+	err := db.Where("id = ?", examID).First(&exam).Error
+	if err != nil {
+		return err
 	}
 	// find user
 	var user User
-	err := db.Where("id = ?", userID).First(&user).Error
+	err = db.Where("id = ?", userID).First(&user).Error
 	if err != nil {
 		return err
 	}
@@ -101,20 +103,20 @@ func AddToExam(db *gorm.DB, examID uint, userID uint) error {
 	return nil
 }
 
-// RemoveFromExam function
+// RemoveUserFromExam function
 // Removes a user from an exams list of users.
 //
 // Or returns an error.
-func RemoveFromExam(db *gorm.DB, examID uint, userID uint) error {
+func RemoveUserFromExam(db *gorm.DB, examID uint, userID uint) error {
 	// find exam
 	var exam Exam
-	result := db.Where("id = ?", examID).First(&exam)
-	if result.Error != nil {
-		return result.Error
+	err := db.Where("id = ?", examID).First(&exam).Error
+	if err != nil {
+		return err
 	}
 	// find user
 	var user User
-	err := db.Where("id = ?", userID).First(&user).Error
+	err = db.Where("id = ?", userID).First(&user).Error
 	if err != nil {
 		return err
 	}
