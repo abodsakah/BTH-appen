@@ -71,6 +71,7 @@ func SetupDatabase() (*gorm.DB, error) {
 
 	// create some exams
 	err = CreateExam(db, &Exam{
+		Name:       "Data science",
 		CourseCode: "DV1337",
 		StartDate:  time.Now(),
 		Users:      []*User{&userOne},
@@ -79,6 +80,7 @@ func SetupDatabase() (*gorm.DB, error) {
 		log.Println(err)
 	}
 	err = CreateExam(db, &Exam{
+		Name:       "Math...",
 		CourseCode: "MA6666",
 		StartDate:  time.Now().Add(-(time.Hour * 2)),
 		Users:      []*User{&userOne},
@@ -87,6 +89,7 @@ func SetupDatabase() (*gorm.DB, error) {
 		log.Println(err)
 	}
 	err = CreateExam(db, &Exam{
+		Name:       "Funny sex number lol",
 		CourseCode: "PA6969",
 		StartDate:  time.Now().AddDate(0, 0, -1),
 		Users:      []*User{&userOne},
