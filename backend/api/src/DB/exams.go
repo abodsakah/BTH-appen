@@ -53,8 +53,9 @@ func ListExams(db *gorm.DB) (exams []Exam, err error) {
 
 // GetExamsDueSoon function
 //
-// Returns all exams due in five or one days with their users preloaded.
-// Made wiht intent to get exams with users to notify them in the app.
+// Returns all exams due in FIVE or ONE days
+// with their users preloaded from the database.
+// Made with intent to get exams with users to notify them in the app.
 //
 // Or an error.
 func GetExamsDueSoon(db *gorm.DB) (exams []Exam, err error) {
