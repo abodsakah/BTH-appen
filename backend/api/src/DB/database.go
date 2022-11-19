@@ -120,7 +120,7 @@ func SetupDatabase() (*gorm.DB, error) {
 	}
 
 	// list exams
-	exams, err := ListExams(db)
+	exams, err := GetExams(db)
 	if err != nil {
 		log.Println(err)
 	}

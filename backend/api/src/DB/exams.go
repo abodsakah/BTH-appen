@@ -37,12 +37,11 @@ func DeleteExam(db *gorm.DB, examID uint) error {
 	return nil
 }
 
-// ListExams function
-// Returns an array with all exams that have
-// a start date after today at midnight from the database.
+// GetExams function
+// Returns an array with all exams
 //
 // Or returns an error.
-func ListExams(db *gorm.DB) ([]Exam, error) {
+func GetExams(db *gorm.DB) ([]Exam, error) {
 	var exams []Exam
 	err := db.Find(&exams).Error
 	if err != nil {
@@ -59,11 +58,13 @@ func ListExams(db *gorm.DB) ([]Exam, error) {
 // Or returns an error.
 func ListExamUsers(db *gorm.DB, examID uint) ([]*User, error) {
 	var exam Exam
+
 	// get exam with users preloaded
 	err := db.Where("id = ?", examID).Preload("Users").First(&exam).Error
 	if err != nil {
 		return nil, err
 	}
+	// return users
 	return exam.Users, nil
 }
 
@@ -74,8 +75,22 @@ func ListExamUsers(db *gorm.DB, examID uint) ([]*User, error) {
 // Made with intent to get exams with users to notify them in the app.
 //
 // Or returns an error.
-func GetExamsDueSoon(db *gorm.DB) (exams []Exam, err error) {
-	return nil, nil
+func GetExamsDueSoon(db *gorm.DB) ([]Exam, error) {
+	var exams []Exam
+	t := time.Now()
+	midnight := time.Date(t.Year(), t.Month(), t.Day(), 0, 0, 0, 0, time.Local)
+	tomorrow := midnight.AddDate(0, 0, 1)
+	inTwoDays := midnight.AddDate(0, 0, 2)
+	inFiveDays := midnight.AddDate(0, 0, 5)
+	inSixDays := midnight.AddDate(0, 0, 6)
+
+	// get exams with users preloaded
+	err := db.Where("start_date BETWEEN ? AND ?", tomorrow, inTwoDays).
+		Or("start_date BETWEEN ? AND ?", inFiveDays, inSixDays).Preload("Users").Find(&exams).Error
+	if err != nil {
+		return nil, err
+	}
+	return exams, nil
 }
 
 // AddUserToExam function

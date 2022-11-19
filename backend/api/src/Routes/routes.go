@@ -36,6 +36,7 @@ func SetupRoutes() {
 	r.GET("/api/hello", hello)
 	r.POST("/api/login", login)
 	r.GET("/api/list-exams", listExams)
+	r.GET("/api/list-due-exams", listDueExams)
 	// auth protected routes
 	auth := r.Group("/", authMiddleware)
 	auth.GET("/api/auth-hello", hello)
@@ -126,7 +127,19 @@ func deleteExam(c *gin.Context) {
 
 func listExams(c *gin.Context) {
 	// get exams from database
-	exams, err := db.ListExams(dBase)
+	exams, err := db.GetExams(dBase)
+	if err != nil {
+		fmt.Println(err.Error())
+		c.JSON(500, gin.H{"error": "Internal server error"})
+		return
+	}
+
+	c.JSON(200, exams)
+}
+
+func listDueExams(c *gin.Context) {
+	// get exams from database
+	exams, err := db.GetExamsDueSoon(dBase)
 	if err != nil {
 		fmt.Println(err.Error())
 		c.JSON(500, gin.H{"error": "Internal server error"})
