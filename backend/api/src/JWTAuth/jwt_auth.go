@@ -2,7 +2,6 @@
 package jwtauth
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"time"
@@ -60,7 +59,6 @@ func ValidateJWT(tokenString string) (uint, error) {
 		return []byte(signKey), nil
 	})
 	if err != nil {
-		fmt.Println(err)
 		return 0, err
 	}
 
