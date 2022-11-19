@@ -56,7 +56,7 @@ func hello(c *gin.Context) {
 		c.IndentedJSON(http.StatusOK, msg)
 		return
 	}
-	msg := gin.H{"message": "Hello there!")}
+	msg := gin.H{"message": "Hello there!"}
 	c.IndentedJSON(http.StatusOK, msg)
 }
 
