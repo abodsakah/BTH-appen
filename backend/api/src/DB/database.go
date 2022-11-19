@@ -110,11 +110,11 @@ func SetupDatabase() (*gorm.DB, error) {
 	} else {
 		fmt.Println("userID: ", userID)
 	}
-	err = RegisterToExam(db, 1, userID)
+	err = AddToExam(db, 1, userID)
 	if err != nil {
 		log.Println(err)
 	}
-	err = UnregisterFromExam(db, 1, userOne.ID)
+	err = RemoveFromExam(db, 1, userOne.ID)
 	if err != nil {
 		log.Println(err)
 	}

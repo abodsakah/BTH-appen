@@ -41,8 +41,8 @@ func SetupRoutes() {
 	auth.GET("/api/auth-hello", hello)
 	auth.POST("/api/create-user", createUser)
 	auth.POST("/api/create-exam", createExam)
-	// auth.POST("/api/register-exam", registerExam)
-	// auth.POST("/api/unregister-exam", unregisterExam)
+	auth.POST("/api/register-exam", registerToExam)
+	auth.POST("/api/unregister-exam", unregisterFromExam)
 
 	if err = r.Run(":5000"); err != nil {
 		log.Fatalln(err)
@@ -78,10 +78,8 @@ func authMiddleware(c *gin.Context) {
 		c.AbortWithStatusJSON(401, gin.H{"error": "unauthorized"})
 		return
 	}
+	// create UserID key in c.Keys
 	c.Set("UserID", id)
-
-	fmt.Println("User logged in")
-	fmt.Println("ID:", id)
 }
 
 func createExam(c *gin.Context) {
@@ -112,6 +110,42 @@ func listExams(c *gin.Context) {
 	}
 
 	c.JSON(200, exams)
+}
+
+func registerToExam(c *gin.Context) {
+	var reqObj regExamBody
+
+	// bind form data and return error if it fails
+	if err := c.ShouldBind(&reqObj); err != nil {
+		c.JSON(400, gin.H{"error": "No exam ID provided"})
+		return
+	}
+	// register user to exam
+	userID := c.Keys["UserID"].(uint)
+	err := db.AddToExam(dBase, reqObj.ExamID, userID)
+	if err != nil {
+		c.JSON(500, gin.H{"error": "Internal server error"})
+		return
+	}
+	c.JSON(200, gin.H{"Success": fmt.Sprintf("User %d was registered to exam %d", userID, reqObj.ExamID)})
+}
+
+func unregisterFromExam(c *gin.Context) {
+	var reqObj regExamBody
+
+	// bind form data and return error if it fails
+	if err := c.ShouldBind(&reqObj); err != nil {
+		c.JSON(400, gin.H{"error": "No exam ID provided"})
+		return
+	}
+	// unregister user to exam
+	userID := c.Keys["UserID"].(uint)
+	err := db.RemoveFromExam(dBase, reqObj.ExamID, userID)
+	if err != nil {
+		c.JSON(500, gin.H{"error": "Internal server error"})
+		return
+	}
+	c.JSON(200, gin.H{"Success": fmt.Sprintf("User %d was unregistered from exam %d", userID, reqObj.ExamID)})
 }
 
 func createUser(c *gin.Context) {

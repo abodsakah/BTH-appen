@@ -5,14 +5,13 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"strconv"
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"
 )
 
 type userClaims struct {
-	ID string `json:"id"`
+	ID uint `json:"id"`
 	jwt.RegisteredClaims
 }
 
@@ -37,7 +36,7 @@ var signKey = getEnv()
 // GenerateJWT function
 func GenerateJWT(userID uint) (string, error) {
 	claims := &userClaims{
-		ID: strconv.Itoa(int(userID)),
+		ID: userID,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 2)),
 			Issuer:    "BTH-app",
@@ -56,13 +55,13 @@ func GenerateJWT(userID uint) (string, error) {
 }
 
 // ValidateJWT get user ID from JWT
-func ValidateJWT(tokenString string) (string, error) {
+func ValidateJWT(tokenString string) (uint, error) {
 	token, err := jwt.ParseWithClaims(tokenString, &userClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return []byte(signKey), nil
 	})
 	if err != nil {
 		fmt.Println(err)
-		return "", err
+		return 0, err
 	}
 
 	if claims, ok := token.Claims.(*userClaims); ok && token.Valid {
@@ -70,5 +69,6 @@ func ValidateJWT(tokenString string) (string, error) {
 		return claims.ID, nil
 	}
 
-	return "", err
+	// if claims not OK
+	return 0, err
 }

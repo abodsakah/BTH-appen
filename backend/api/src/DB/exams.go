@@ -9,7 +9,7 @@ import (
 // CreateExam function
 // Takes a Exam struct and creates a database entry in exams table.
 //
-// Or an error.
+// Or returns an error.
 func CreateExam(db *gorm.DB, exam *Exam) error {
 	// set creation date
 	exam.CreatedAt = time.Now()
@@ -26,7 +26,7 @@ func CreateExam(db *gorm.DB, exam *Exam) error {
 // DeleteExam function
 // Takes a course_code and deletes the exam from the database.
 //
-// Or an error.
+// Or returns an error.
 func DeleteExam(db *gorm.DB, examID uint) error {
 	// delete exam from database
 	err := db.Delete(&Exam{}, examID).Error
@@ -41,7 +41,7 @@ func DeleteExam(db *gorm.DB, examID uint) error {
 // Returns an array with all exams that have
 // a start date after today at midnight from the database.
 //
-// Or an error.
+// Or returns an error.
 func ListExams(db *gorm.DB) (exams []Exam, err error) {
 	err = db.Find(&exams).Error
 	if err != nil {
@@ -57,7 +57,7 @@ func ListExams(db *gorm.DB) (exams []Exam, err error) {
 // with their users preloaded from the database.
 // Made with intent to get exams with users to notify them in the app.
 //
-// Or an error.
+// Or returns an error.
 func GetExamsDueSoon(db *gorm.DB) (exams []Exam, err error) {
 	return nil, nil
 }
@@ -65,7 +65,7 @@ func GetExamsDueSoon(db *gorm.DB) (exams []Exam, err error) {
 // SearchExams function
 // Returns matching exams from the database.
 //
-// Or an error.
+// Or returns an error.
 func SearchExams(db *gorm.DB, wildcard string) (exams []Exam, err error) {
 	now := time.Now()
 	err = db.Where("course_code LIKE ? AND start_date >= ?", wildcard, now).Find(&exams).Error
@@ -76,11 +76,11 @@ func SearchExams(db *gorm.DB, wildcard string) (exams []Exam, err error) {
 	return exams, nil
 }
 
-// RegisterToExam function
+// AddToExam function
 // Adds a user to an exams list of users.
 //
-// Or an error.
-func RegisterToExam(db *gorm.DB, examID uint, userID uint) error {
+// Or returns an error.
+func AddToExam(db *gorm.DB, examID uint, userID uint) error {
 	// find exam
 	var exam Exam
 	result := db.Where("id = ?", examID).First(&exam)
@@ -101,11 +101,11 @@ func RegisterToExam(db *gorm.DB, examID uint, userID uint) error {
 	return nil
 }
 
-// UnregisterFromExam function
+// RemoveFromExam function
 // Removes a user from an exams list of users.
 //
-// Or an error.
-func UnregisterFromExam(db *gorm.DB, examID uint, userID uint) error {
+// Or returns an error.
+func RemoveFromExam(db *gorm.DB, examID uint, userID uint) error {
 	// find exam
 	var exam Exam
 	result := db.Where("id = ?", examID).First(&exam)
