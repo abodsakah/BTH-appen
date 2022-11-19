@@ -41,6 +41,8 @@ func SetupRoutes() {
 	auth.GET("/api/auth-hello", hello)
 	auth.POST("/api/create-user", createUser)
 	auth.POST("/api/create-exam", createExam)
+	// auth.POST("/api/register-exam", registerExam)
+	// auth.POST("/api/unregister-exam", unregisterExam)
 
 	if err = r.Run(":5000"); err != nil {
 		log.Fatalln(err)
@@ -48,13 +50,19 @@ func SetupRoutes() {
 }
 
 func hello(c *gin.Context) {
-	msg := gin.H{"message": "Hi there!"}
+	UserID := c.Keys["UserID"]
+	if UserID != nil {
+		msg := gin.H{"message": fmt.Sprint("Hello there user ", UserID, "!")}
+		c.IndentedJSON(http.StatusOK, msg)
+		return
+	}
+	msg := gin.H{"message": "Hello there!")}
 	c.IndentedJSON(http.StatusOK, msg)
 }
 
 func authMiddleware(c *gin.Context) {
 	// check cookie for valid JWT to see if user is already logged in
-	cookie, err := c.Cookie("web_cli")
+	cookie, err := c.Cookie("BTH-app")
 	if err != nil {
 		fmt.Println("user NOT logged in")
 		fmt.Println(err.Error())
@@ -70,6 +78,7 @@ func authMiddleware(c *gin.Context) {
 		c.AbortWithStatusJSON(401, gin.H{"error": "unauthorized"})
 		return
 	}
+	c.Set("UserID", id)
 
 	fmt.Println("User logged in")
 	fmt.Println("ID:", id)
