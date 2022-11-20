@@ -18,6 +18,9 @@ import {
 import Login from './src/Views/Login';
 import MainNavigation from './src/Navigation/MainNavigation';
 import { NavigationContainer } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { setLanguage } from './src/locale/translate';
+import { useEffect } from 'react';
 
 
 export default function App() {
@@ -32,6 +35,17 @@ export default function App() {
 		Inter_800ExtraBold,
 		Inter_900Black,
 	});
+
+	const getPreferredLanguageAndApply = async () => {
+		const lang = await AsyncStorage.getItem('language');
+		if (lang) {
+			setLanguage(lang);
+		}
+	};
+
+	useEffect(() => {
+		getPreferredLanguageAndApply();
+	}, []);
 
 	if (!fontsLoaded) {
 		return <ActivityIndicator />;
