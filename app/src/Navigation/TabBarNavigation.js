@@ -7,6 +7,7 @@ import { Colors } from '../style';
 import TabBarIcon from '../Components/TabBarIcon';
 import { t } from '../locale/translate';
 import Exams from '../Views/Exams';
+import Map from '../Views/Map';
 
 const TabBarNavigation = () => {
 	const Tab = createBottomTabNavigator();
@@ -37,7 +38,7 @@ const TabBarNavigation = () => {
 			/>
 			<Tab.Screen
 				name="Map"
-				component={Main}
+				component={Map}
 				options={{
 					tabBarShowLabel: false,
 					tabBarIcon: ({ focused }) => (
