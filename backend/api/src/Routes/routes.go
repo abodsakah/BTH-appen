@@ -26,7 +26,11 @@ func SetupRoutes() {
 		log.Fatalln(err)
 	}
 	r := gin.Default()
-	r.SetTrustedProxies([]string{"127.0.0.1"})
+	// set trusted proxy to localhost
+	err := r.SetTrustedProxies([]string{"127.0.0.1"})
+	if err != nil {
+		log.Fatalln(err)
+	}
 
 	// routes
 	r.GET("/api/hello", hello)
@@ -38,7 +42,10 @@ func SetupRoutes() {
 	auth.POST("/api/create-user", createUser)
 	auth.POST("/api/create-exam", createExam)
 
-	r.Run(":5000")
+	err = r.Run(":5000")
+	if err != nil {
+		log.Fatalln(err)
+	}
 }
 
 func hello(c *gin.Context) {
@@ -52,7 +59,6 @@ func authMiddleware(c *gin.Context) {
 	if err != nil {
 		fmt.Println("user NOT logged in")
 		fmt.Println(err.Error())
-		cookie = "NotSet"
 		c.AbortWithStatusJSON(401, gin.H{"error": "unauthorized"})
 		return
 	}

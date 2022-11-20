@@ -7,6 +7,7 @@ import (
 )
 
 // CreateExam function
+// Takes a Exam struct and creates a database entry in exams table.
 func CreateExam(db *gorm.DB, exam *Exam) error {
 	// set creation date
 	exam.CreatedAt = time.Now()
