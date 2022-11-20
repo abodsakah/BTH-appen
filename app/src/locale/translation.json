@@ -75,8 +75,8 @@
         "ar": "الملف الشخصي"
     },
     "appLanguage": {
-        "en": "Application Language",
-        "sv-sv": "Språket på applikationen",
-        "ar": "لغة التطبيق"
+        "en": "Language",
+        "sv-sv": "Språk",
+        "ar": "اللغة"
     }
 }
