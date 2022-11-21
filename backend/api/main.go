@@ -4,7 +4,8 @@ package main
 import (
 	"log"
 
-	"github.com/abodsakah/BTH-appen/backend/api/src/Routes"
+	//routes "github.com/abodsakah/BTH-appen/backend/api/src/Routes"
+	scraper "github.com/abodsakah/BTH-appen/backend/api/src/Scraper"
 	"github.com/joho/godotenv"
 )
 
@@ -15,5 +16,6 @@ func main() {
 		log.Println("DEV: Could not load .env file")
 	}
 
-	routes.SetupRoutes()
+	scraper.GetNews()
+	//routes.SetupRoutes()
 }
