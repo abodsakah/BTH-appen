@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"time"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -53,120 +52,12 @@ func SetupDatabase() (*gorm.DB, error) {
 		return nil, err
 	}
 
-	// FIX: All tests/experiments should be removed from here eventually.
-	//**************************
-	// Some test DB operations.
-	//**************************
-
-	// create admin account
+	// NOTE: Create admin account so there is something to authenticate with when using the API.
 	user := &User{Username: "admin", Password: "pass"}
 	err = CreateUser(db, user)
 	if err != nil {
 		log.Println(err)
 	}
-
-	// get first user
-	var userOne User
-	db.First(&userOne)
-
-	// create some exams
-	err = CreateExam(db, &Exam{
-		Name:       "Data science",
-		CourseCode: "DV1337",
-		StartDate:  time.Now(),
-		Users:      []*User{&userOne},
-	})
-	if err != nil {
-		log.Println(err)
-	}
-	err = CreateExam(db, &Exam{
-		Name:       "Math...",
-		CourseCode: "MA6666",
-		StartDate:  time.Now().Add(-(time.Hour * 2)),
-		Users:      []*User{&userOne},
-	})
-	if err != nil {
-		log.Println(err)
-	}
-	err = CreateExam(db, &Exam{
-		Name:       "Funny sex number lol",
-		CourseCode: "PA6969",
-		StartDate:  time.Now().AddDate(0, 0, -1),
-		Users:      []*User{&userOne},
-	})
-	if err != nil {
-		log.Println(err)
-	}
-
-	// create user account
-	err = CreateUser(db, &User{Username: "user", Password: "pass"})
-	if err != nil {
-		log.Println(err)
-	}
-	// auth user and get userID
-	userID, err := AuthUser(db, "user", "pass")
-	if err != nil {
-		log.Println(err)
-	} else {
-		fmt.Println("userID: ", userID)
-	}
-	err = AddUserToExam(db, 1, userID)
-	if err != nil {
-		log.Println(err)
-	}
-	err = RemoveUserFromExam(db, 1, userOne.ID)
-	if err != nil {
-		log.Println(err)
-	}
-
-	// list exams
-	exams, err := GetExams(db)
-	if err != nil {
-		log.Println(err)
-	}
-	fmt.Printf("\nExams: %#v\n", exams)
-
-	// get exams with users preloaded
-	// and print each exam and it's users
-	fmt.Println("\n------ exams with registered users preloaded -------")
-	var examsPreloaded []Exam
-	err = db.Model(&Exam{}).Preload("Users").Find(&examsPreloaded).Error
-	if err != nil {
-		log.Println(err)
-	} else {
-		for key, obj := range examsPreloaded {
-			fmt.Printf("--------- Exam %d ------------\n", key)
-			fmt.Printf("%#v\n", obj)
-			fmt.Printf("\nExam %d Users: \n", key)
-			for _, user := range obj.Users {
-				fmt.Printf("%#v\n", *user)
-			}
-			fmt.Printf("------------------------------\n")
-		}
-	}
-
-	// get users with registered exams preloaded
-	// and print each exam and it's users
-	fmt.Println("\n------ users with registered exams preloaded -------")
-	var usersPreloaded []User
-	err = db.Model(&User{}).Preload("Exams").Find(&usersPreloaded).Error
-	if err != nil {
-		log.Println(err)
-	} else {
-		for key, obj := range usersPreloaded {
-			fmt.Printf("--------- User %d ------------\n", key)
-			fmt.Printf("%#v\n", obj)
-			fmt.Printf("\nUser %d Exams: \n", key)
-			for _, exam := range obj.Exams {
-				fmt.Printf("%#v\n", *exam)
-			}
-			fmt.Printf("------------------------------\n")
-		}
-	}
-
-	//**************************
-	// End test DB operations.
-	//**************************
 
 	// return db object
 	return db, nil
