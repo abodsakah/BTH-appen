@@ -2,7 +2,7 @@
 package jwtauth
 
 import (
-	"fmt"
+	"log"
 	"os"
 	"time"
 
@@ -10,7 +10,7 @@ import (
 )
 
 type userClaims struct {
-	ID string `json:"id"`
+	ID uint `json:"id"`
 	jwt.RegisteredClaims
 }
 
@@ -33,12 +33,12 @@ var signKey = getEnv()
 // var signKey = []byte("supersecretkey")
 
 // GenerateJWT function
-func GenerateJWT(id string) (string, error) {
+func GenerateJWT(userID uint) (string, error) {
 	claims := &userClaims{
-		ID: id,
+		ID: userID,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 2)),
-			Issuer:    "webCLI",
+			Issuer:    "BTH-app",
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
 		},
 	}
@@ -46,7 +46,7 @@ func GenerateJWT(id string) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	signedToken, err := token.SignedString([]byte(signKey))
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		return "", err
 	}
 
@@ -54,13 +54,12 @@ func GenerateJWT(id string) (string, error) {
 }
 
 // ValidateJWT get user ID from JWT
-func ValidateJWT(tokenString string) (string, error) {
+func ValidateJWT(tokenString string) (uint, error) {
 	token, err := jwt.ParseWithClaims(tokenString, &userClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return []byte(signKey), nil
 	})
 	if err != nil {
-		fmt.Println(err)
-		return "", err
+		return 0, err
 	}
 
 	if claims, ok := token.Claims.(*userClaims); ok && token.Valid {
@@ -68,5 +67,6 @@ func ValidateJWT(tokenString string) (string, error) {
 		return claims.ID, nil
 	}
 
-	return "", err
+	// if claims not OK
+	return 0, err
 }
