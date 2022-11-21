@@ -43,7 +43,7 @@ func DeleteExam(db *gorm.DB, examID uint) error {
 // Or returns an error.
 func GetExams(db *gorm.DB) ([]Exam, error) {
 	var exams []Exam
-	err := db.Find(&exams).Error
+	err := db.Order("start_date ASC").Find(&exams).Error
 	if err != nil {
 		return nil, err
 	}
@@ -51,12 +51,12 @@ func GetExams(db *gorm.DB) ([]Exam, error) {
 	return exams, nil
 }
 
-// ListExamUsers function
+// GetExamUsers function
 // Returns an array with all users registered to an exam.
 // Takes an exam ID.
 //
 // Or returns an error.
-func ListExamUsers(db *gorm.DB, examID uint) ([]*User, error) {
+func GetExamUsers(db *gorm.DB, examID uint) ([]*User, error) {
 	var exam Exam
 
 	// get exam with users preloaded
@@ -85,8 +85,11 @@ func GetExamsDueSoon(db *gorm.DB) ([]Exam, error) {
 	inSixDays := midnight.AddDate(0, 0, 6)
 
 	// get exams with users preloaded
-	err := db.Where("start_date BETWEEN ? AND ?", tomorrow, inTwoDays).
-		Or("start_date BETWEEN ? AND ?", inFiveDays, inSixDays).Preload("Users").Find(&exams).Error
+	err := db.Order("start_date ASC").
+		Where("start_date BETWEEN ? AND ?", tomorrow, inTwoDays).
+		Or("start_date BETWEEN ? AND ?", inFiveDays, inSixDays).
+		Preload("Users").
+		Find(&exams).Error
 	if err != nil {
 		return nil, err
 	}

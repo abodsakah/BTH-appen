@@ -156,7 +156,7 @@ func listExamUsers(c *gin.Context) {
 	}
 
 	// get users from database
-	users, err := db.ListExamUsers(dBase, reqObj.ExamID)
+	users, err := db.GetExamUsers(dBase, reqObj.ExamID)
 	if err != nil {
 		log.Println(err.Error())
 		c.JSON(500, gin.H{"error": "Internal server error"})
