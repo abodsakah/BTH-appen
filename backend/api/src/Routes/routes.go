@@ -15,16 +15,14 @@ import (
 
 // variables
 var (
-	dBase *gorm.DB
-	err   error
+	gormDB *gorm.DB
 )
 
 // SetupRoutes function
-func SetupRoutes() {
-	dBase, err = db.SetupDatabase()
-	if err != nil {
-		log.Fatalln(err)
-	}
+func SetupRoutes(gormObj *gorm.DB) {
+	// setup GORM database object
+	gormDB = gormObj
+
 	r := gin.Default()
 	// set trusted proxy to localhost
 	err := r.SetTrustedProxies([]string{"127.0.0.1"})
@@ -51,7 +49,6 @@ func SetupRoutes() {
 			adminAuth.POST("/api/create-exam", createExam)
 		}
 	}
-	// Admin routes under auth protection
 
 	if err = r.Run(":5000"); err != nil {
 		log.Fatalln(err)
@@ -118,7 +115,7 @@ func createExam(c *gin.Context) {
 	}
 
 	// create exam
-	if err := db.CreateExam(dBase, &exam); err != nil {
+	if err := db.CreateExam(gormDB, &exam); err != nil {
 		log.Println(err.Error())
 		c.JSON(401, gin.H{"error": err.Error()})
 		return
@@ -138,7 +135,7 @@ func deleteExam(c *gin.Context) {
 	}
 
 	// delete exam
-	if err := db.DeleteExam(dBase, reqObj.ExamID); err != nil {
+	if err := db.DeleteExam(gormDB, reqObj.ExamID); err != nil {
 		log.Println(err.Error())
 		c.JSON(401, gin.H{"error": err.Error()})
 		return
@@ -149,7 +146,7 @@ func deleteExam(c *gin.Context) {
 
 func listExams(c *gin.Context) {
 	// get exams from database
-	exams, err := db.GetExams(dBase)
+	exams, err := db.GetExams(gormDB)
 	if err != nil {
 		log.Println(err.Error())
 		c.JSON(500, gin.H{"error": "Internal server error"})
@@ -161,7 +158,7 @@ func listExams(c *gin.Context) {
 
 func listDueExams(c *gin.Context) {
 	// get exams from database
-	exams, err := db.GetExamsDueSoon(dBase)
+	exams, err := db.GetExamsDueSoon(gormDB)
 	if err != nil {
 		log.Println(err.Error())
 		c.JSON(500, gin.H{"error": "Internal server error"})
@@ -181,7 +178,7 @@ func listExamUsers(c *gin.Context) {
 	}
 
 	// get users from database
-	users, err := db.GetExamUsers(dBase, reqObj.ExamID)
+	users, err := db.GetExamUsers(gormDB, reqObj.ExamID)
 	if err != nil {
 		log.Println(err.Error())
 		c.JSON(500, gin.H{"error": "Internal server error"})
@@ -189,6 +186,24 @@ func listExamUsers(c *gin.Context) {
 	}
 
 	c.JSON(200, users)
+}
+
+func addUserExpoPushToken(c *gin.Context) {
+	var expoToken db.Token
+
+	// bind body data or return error if it fails
+	if err := c.ShouldBind(&expoToken); err != nil {
+		c.JSON(400, gin.H{"error": "No Expo token provided"})
+		return
+	}
+	// add expo push token to user
+	userID := c.Keys["UserID"].(uint)
+	err := db.AddExpoPushToken(gormDB, userID, expoToken.ExpoPushToken)
+	if err != nil {
+		c.JSON(500, gin.H{"error": "Internal server error"})
+		return
+	}
+	c.JSON(200, gin.H{"Success": fmt.Sprintf("Token: %s was added to user %d", expoToken.ExpoPushToken, userID)})
 }
 
 func registerToExam(c *gin.Context) {
@@ -201,7 +216,7 @@ func registerToExam(c *gin.Context) {
 	}
 	// register user to exam
 	userID := c.Keys["UserID"].(uint)
-	err := db.AddUserToExam(dBase, reqObj.ExamID, userID)
+	err := db.AddUserToExam(gormDB, reqObj.ExamID, userID)
 	if err != nil {
 		c.JSON(500, gin.H{"error": "Internal server error"})
 		return
@@ -219,7 +234,7 @@ func unregisterFromExam(c *gin.Context) {
 	}
 	// unregister user to exam
 	userID := c.Keys["UserID"].(uint)
-	err := db.RemoveUserFromExam(dBase, reqObj.ExamID, userID)
+	err := db.RemoveUserFromExam(gormDB, reqObj.ExamID, userID)
 	if err != nil {
 		c.JSON(500, gin.H{"error": "Internal server error"})
 		return
@@ -238,7 +253,7 @@ func createUser(c *gin.Context) {
 	}
 
 	// Create user
-	if err := db.CreateUser(dBase, &user); err != nil {
+	if err := db.CreateUser(gormDB, &user); err != nil {
 		log.Println(err.Error())
 		c.JSON(401, gin.H{"error": err.Error()})
 		return
@@ -258,7 +273,7 @@ func login(c *gin.Context) {
 	}
 
 	// Try to authenticate user
-	userID, err := db.AuthUser(dBase, user.Username, user.Password)
+	userID, err := db.AuthUser(gormDB, user.Username, user.Password)
 	if err != nil {
 		log.Println(err.Error())
 		c.JSON(401, gin.H{"error": "Failed to authenticate user, username or password is wrong."})
