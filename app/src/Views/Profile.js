@@ -13,12 +13,12 @@ const Profile = ({ navigation }) => {
 
 	return (
 		<Container style={styles.container}>
-			<Text style={styles.heading}>Profile</Text>
+			<Text style={styles.heading}>{t('profile')}</Text>
 			<OptionContainer
 				text="Student Name"
 				Icon={() => <Ionicons name="md-person" size={30}></Ionicons>}
 			/>
-			<Text style={styles.heading}>More</Text>
+			<Text style={styles.heading}>{t('more')}</Text>
 			<OptionContainer
 				text={t('settings')}
 				Icon={() => (
@@ -27,7 +27,7 @@ const Profile = ({ navigation }) => {
 			/>
 			<OptionContainer
 				onPress={navigateToLanguages}
-				text={t('language')}
+				text={t('appLanguage')}
 				Icon={() => (
 					<Entypo name="language" size={30} color={Colors.primary.regular} />
 				)}
