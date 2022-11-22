@@ -4,14 +4,11 @@ package main
 import (
 	"log"
 
-<<<<<<< HEAD
 	//routes "github.com/abodsakah/BTH-appen/backend/api/src/Routes"
+	db "github.com/abodsakah/BTH-appen/backend/api/src/DB"
+	notifications "github.com/abodsakah/BTH-appen/backend/api/src/Notifications"
+	routes "github.com/abodsakah/BTH-appen/backend/api/src/Routes"
 	scraper "github.com/abodsakah/BTH-appen/backend/api/src/Scraper"
-=======
-	"github.com/abodsakah/BTH-appen/backend/api/src/DB"
-	"github.com/abodsakah/BTH-appen/backend/api/src/Notifications"
-	"github.com/abodsakah/BTH-appen/backend/api/src/Routes"
->>>>>>> main
 	"github.com/joho/godotenv"
 )
 
@@ -22,10 +19,8 @@ func main() {
 		log.Println("DEV: Could not load .env file")
 	}
 
-<<<<<<< HEAD
 	scraper.GetNews()
 	//routes.SetupRoutes()
-=======
 	gormDB, err := db.SetupDatabase()
 	if err != nil {
 		log.Fatalln(err)
@@ -40,5 +35,4 @@ func main() {
 
 	// start API web server main routine
 	routes.SetupRoutes(gormDB)
->>>>>>> main
 }
