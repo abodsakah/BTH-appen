@@ -51,7 +51,7 @@ func CreateUser(db *gorm.DB, user *User) error {
 	return nil
 }
 
-// isAdmin function
+// IsRole function
 //
 // Tests if user has the admin role
 func IsRole(db *gorm.DB, id uint, role string) (isAdmin bool, err error) {
