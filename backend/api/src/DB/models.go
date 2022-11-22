@@ -20,7 +20,8 @@ type User struct {
 // Exam struct
 type Exam struct {
 	gorm.Model
-	CourseCode string    `gorm:"uniqueIndex" form:"course_code" binding:"required" json:"course_code"`
+	Name       string    `form:"name" binding:"required" json:"name"`
+	CourseCode string    `form:"course_code" binding:"required" json:"course_code"`
 	StartDate  time.Time `form:"start_date" binding:"required" json:"start_date"`
 	Users      []*User   `gorm:"many2many:exam_users;"`
 }

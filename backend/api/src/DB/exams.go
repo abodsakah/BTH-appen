@@ -9,7 +9,7 @@ import (
 // CreateExam function
 // Takes a Exam struct and creates a database entry in exams table.
 //
-// Or an error.
+// Or returns an error.
 func CreateExam(db *gorm.DB, exam *Exam) error {
 	// set creation date
 	exam.CreatedAt = time.Now()
@@ -24,9 +24,9 @@ func CreateExam(db *gorm.DB, exam *Exam) error {
 }
 
 // DeleteExam function
-// Takes a course_code and deletes the exam from the database.
+// Takes a exam ID and deletes the exam from the database.
 //
-// Or an error.
+// Or returns an error.
 func DeleteExam(db *gorm.DB, examID uint) error {
 	// delete exam from database
 	err := db.Delete(&Exam{}, examID).Error
@@ -37,13 +37,13 @@ func DeleteExam(db *gorm.DB, examID uint) error {
 	return nil
 }
 
-// ListExams function
-// Returns an array with all exams that have
-// a start date after today at midnight from the database.
+// GetExams function
+// Returns an array with all exams
 //
-// Or an error.
-func ListExams(db *gorm.DB) (exams []Exam, err error) {
-	err = db.Find(&exams).Error
+// Or returns an error.
+func GetExams(db *gorm.DB) ([]Exam, error) {
+	var exams []Exam
+	err := db.Order("start_date ASC").Find(&exams).Error
 	if err != nil {
 		return nil, err
 	}
@@ -51,47 +51,95 @@ func ListExams(db *gorm.DB) (exams []Exam, err error) {
 	return exams, nil
 }
 
-// GetExamsDueInFive function
+// GetExamUsers function
+// Returns an array with all users registered to an exam.
+// Takes an exam ID.
 //
-// Returns all exams due in five days with their users preloaded
-// to be used to get exams with users to notify.
-// func GetExamsDueInFive(db *gorm.DB) (exams []Exam, err error) {
-// 	return nil, nil
-// }
+// Or returns an error.
+func GetExamUsers(db *gorm.DB, examID uint) ([]*User, error) {
+	var exam Exam
 
-// SearchExams function
-// Returns matching exams from the database.
-//
-// Or an error.
-func SearchExams(db *gorm.DB, wildcard string) (exams []Exam, err error) {
-	now := time.Now()
-	err = db.Where("course_code LIKE ? AND start_date >= ?", wildcard, now).Find(&exams).Error
+	// get exam with users preloaded
+	err := db.Where("id = ?", examID).Preload("Users").First(&exam).Error
 	if err != nil {
 		return nil, err
 	}
+	// return users
+	return exam.Users, nil
+}
 
+// GetExamsDueSoon function
+//
+// Returns all exams due in FIVE or ONE days
+// with their users preloaded from the database.
+// Made with intent to get exams with users to notify them in the app.
+//
+// Or returns an error.
+func GetExamsDueSoon(db *gorm.DB) ([]Exam, error) {
+	var exams []Exam
+	t := time.Now()
+	midnight := time.Date(t.Year(), t.Month(), t.Day(), 0, 0, 0, 0, time.Local)
+	tomorrow := midnight.AddDate(0, 0, 1)
+	inTwoDays := midnight.AddDate(0, 0, 2)
+	inFiveDays := midnight.AddDate(0, 0, 5)
+	inSixDays := midnight.AddDate(0, 0, 6)
+
+	// get exams with users preloaded
+	err := db.Order("start_date ASC").
+		Where("start_date BETWEEN ? AND ?", tomorrow, inTwoDays).
+		Or("start_date BETWEEN ? AND ?", inFiveDays, inSixDays).
+		Preload("Users").
+		Find(&exams).Error
+	if err != nil {
+		return nil, err
+	}
 	return exams, nil
 }
 
-// RegisterToExam function
+// AddUserToExam function
 // Adds a user to an exams list of users.
 //
-// Or an error.
-func RegisterToExam(db *gorm.DB, examID uint, userID uint) error {
+// Or returns an error.
+func AddUserToExam(db *gorm.DB, examID uint, userID uint) error {
 	// find exam
 	var exam Exam
-	result := db.Where("id = ?", examID).First(&exam)
-	if result.Error != nil {
-		return result.Error
+	err := db.Where("id = ?", examID).First(&exam).Error
+	if err != nil {
+		return err
 	}
 	// find user
 	var user User
-	err := db.Where("id = ?", userID).First(&user).Error
+	err = db.Where("id = ?", userID).First(&user).Error
 	if err != nil {
 		return err
 	}
 	// update user exams with exam
 	err = db.Model(&user).Association("Exams").Append([]Exam{exam})
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// RemoveUserFromExam function
+// Removes a user from an exams list of users.
+//
+// Or returns an error.
+func RemoveUserFromExam(db *gorm.DB, examID uint, userID uint) error {
+	// find exam
+	var exam Exam
+	err := db.Where("id = ?", examID).First(&exam).Error
+	if err != nil {
+		return err
+	}
+	// find user
+	var user User
+	err = db.Where("id = ?", userID).First(&user).Error
+	if err != nil {
+		return err
+	}
+	// remove exam from user
+	err = db.Model(&user).Association("Exams").Delete([]Exam{exam})
 	if err != nil {
 		return err
 	}
