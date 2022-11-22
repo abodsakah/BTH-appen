@@ -6,7 +6,11 @@ import { AntDesign, Ionicons, Entypo } from '@expo/vector-icons';
 import OptionContainer from '../Components/OptionContainer';
 import { t } from '../locale/translate';
 
-const Profile = () => {
+const Profile = ({ navigation }) => {
+	const navigateToLanguages = () => {
+		navigation.navigate('Languages');
+	};
+
 	return (
 		<Container style={styles.container}>
 			<Text style={styles.heading}>Profile</Text>
@@ -22,6 +26,7 @@ const Profile = () => {
 				)}
 			/>
 			<OptionContainer
+				onPress={navigateToLanguages}
 				text={t('language')}
 				Icon={() => (
 					<Entypo name="language" size={30} color={Colors.primary.regular} />
