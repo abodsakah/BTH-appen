@@ -1,6 +1,7 @@
-import { StyleSheet, Text, TouchableHighlight, View } from 'react-native';
+import { StyleSheet, Text } from 'react-native';
 import React from 'react';
 import { Colors, Fonts } from '../style';
+import { TouchableRipple } from 'react-native-paper';
 
 const Button = ({
 	style = {},
@@ -10,9 +11,7 @@ const Button = ({
 	onPress = () => {},
 }) => {
 	return (
-		<TouchableHighlight
-			activeOpacity={0.5}
-			underlayColor={Colors[type].light}
+		<TouchableRipple
 			onPress={onPress}
 			style={[
 				styles.container,
@@ -21,7 +20,7 @@ const Button = ({
 			]}
 		>
 			<Text style={[styles.text, textStyle]}>{children}</Text>
-		</TouchableHighlight>
+		</TouchableRipple>
 	);
 };
 

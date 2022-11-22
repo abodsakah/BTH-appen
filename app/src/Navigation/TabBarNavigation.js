@@ -7,6 +7,7 @@ import { Colors } from '../style';
 import TabBarIcon from '../Components/TabBarIcon';
 import { t } from '../locale/translate';
 import Exams from '../Views/Exams';
+import Profile from '../Views/Profile';
 import Map from '../Views/Map';
 
 const TabBarNavigation = () => {
@@ -74,7 +75,7 @@ const TabBarNavigation = () => {
 			/>
 			<Tab.Screen
 				name="Profile"
-				component={Main}
+				component={Profile}
 				options={{
 					tabBarShowLabel: false,
 					tabBarIcon: ({ focused }) => (
