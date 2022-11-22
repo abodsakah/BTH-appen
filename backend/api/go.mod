@@ -11,6 +11,7 @@ require (
 )
 
 require (
+<<<<<<< HEAD
 	github.com/PuerkitoBio/goquery v1.8.0 // indirect
 	github.com/andybalholm/cascadia v1.3.1 // indirect
 	github.com/antchfx/htmlquery v1.2.5 // indirect
@@ -26,6 +27,10 @@ require (
 	github.com/stretchr/testify v1.8.1 // indirect
 	github.com/temoto/robotstxt v1.1.2 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
+=======
+	github.com/oliveroneill/exponent-server-sdk-golang v0.0.0-20210823140141-d050598be512 // indirect
+	github.com/stretchr/testify v1.8.1 // indirect
+>>>>>>> main
 )
 
 require (

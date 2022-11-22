@@ -4,7 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 import Main from '../Views/Main';
 import TabBarNavigation from './TabBarNavigation';
-
+import Languages from '../Views/Languages';
 
 const MainNavigation = () => {
 	const Stack = createStackNavigator();
@@ -16,9 +16,8 @@ const MainNavigation = () => {
 				headerShown: false,
 			}}
 		>
-
-
 			<Stack.Screen name="Main" component={TabBarNavigation} />
+			<Stack.Screen name="Languages" component={Languages} />
 		</Stack.Navigator>
 	);
 };

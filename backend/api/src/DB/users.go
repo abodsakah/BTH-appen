@@ -66,3 +66,24 @@ func AuthUser(db *gorm.DB, username string, password string) (userID uint, err e
 	// return user ID
 	return user.ID, nil
 }
+
+// AddExpoPushToken function
+// Adds a expo push token to the user.
+// ExpoPushToken example: `ExponentPushToken[xxxxxxxxxxxxxxxxxxxxxx]`
+//
+// Or returns an error.
+func AddExpoPushToken(db *gorm.DB, userID uint, pushToken string) error {
+	// find user
+	var user User
+	err := db.Where("id = ?", userID).First(&user).Error
+	if err != nil {
+		return err
+	}
+
+	// update user exams with exam
+	err = db.Model(&user).Association("Tokens").Append(&Token{ExpoPushToken: pushToken})
+	if err != nil {
+		return err
+	}
+	return nil
+}
