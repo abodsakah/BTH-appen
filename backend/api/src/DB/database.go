@@ -51,6 +51,10 @@ func SetupDatabase() (*gorm.DB, error) {
 	if err != nil {
 		return nil, err
 	}
+	err = db.AutoMigrate(&Token{})
+	if err != nil {
+		return nil, err
+	}
 
 	// NOTE: Create admin account so there is something to authenticate with when using the API.
 	user := &User{Username: "admin", Password: "pass"}
