@@ -14,6 +14,7 @@ type User struct {
 	Username string  `gorm:"uniqueIndex" form:"username" binding:"required" json:"username"`
 	Password string  `form:"password" binding:"required" json:"password"`
 	Exams    []*Exam `gorm:"many2many:exam_users;"`
+	Tokens   []Token
 }
 
 // Exam struct
@@ -30,4 +31,11 @@ type News struct {
 	gorm.Model
 	Title string `form:"title" binding:"required" json:"title"`
 	Body  string `form:"body" binding:"required" json:"body"`
+}
+
+// Token struct
+type Token struct {
+	gorm.Model
+	ExpoPushToken string `gorm:"uniqueIndex" form:"expo_push_token" binding:"required" json:"expo_push_token"`
+	UserID        uint
 }

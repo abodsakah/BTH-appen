@@ -10,7 +10,10 @@ require (
 	gorm.io/gorm v1.24.1
 )
 
-require github.com/stretchr/testify v1.8.1 // indirect
+require (
+	github.com/oliveroneill/exponent-server-sdk-golang v0.0.0-20210823140141-d050598be512 // indirect
+	github.com/stretchr/testify v1.8.1 // indirect
+)
 
 require (
 	github.com/gin-contrib/sse v0.1.0 // indirect
