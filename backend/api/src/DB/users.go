@@ -17,12 +17,21 @@ func checkInputLength(username string, password string) (err error) {
 
 // CreateUser function
 func CreateUser(db *gorm.DB, user *User) error {
-	// check username and password length
-	err := checkInputLength(user.Username, user.Password)
+	// Check if user already exists, if so return error created by function
+	var userTest []User
+	err := db.Where("username = ?", user.Username).Find(&userTest).Error
 	if err != nil {
 		return err
 	}
-
+	if len(userTest) != 0 {
+		err = errors.New("Error; user already exists in database")
+		return err
+	}
+	// check username and password length
+	err = checkInputLength(user.Username, user.Password)
+	if err != nil {
+		return err
+	}
 	// set creation date
 	user.CreatedAt = time.Now()
 
@@ -40,6 +49,18 @@ func CreateUser(db *gorm.DB, user *User) error {
 	}
 
 	return nil
+}
+
+// isAdmin function
+//
+// Tests if user has the admin role
+func IsRole(db *gorm.DB, id uint, role string) (isAdmin bool, err error) {
+	var user User
+	err = db.Where("id = ?", id).Find(&user).Error
+	if err != nil || user.role != role {
+		return false, err
+	}
+	return true, nil
 }
 
 // AuthUser function

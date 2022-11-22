@@ -39,10 +39,16 @@ func SetupRoutes() {
 	r.GET("/api/list-exams", listExams)
 	// auth protected routes
 	auth := r.Group("/", authMiddleware)
-	auth.GET("/api/list-user-exams", ListUserExams)
-	auth.GET("/api/auth-hello", hello)
-	auth.POST("/api/create-user", createUser)
-	auth.POST("/api/create-exam", createExam)
+	{
+		auth.GET("/api/list-user-exams", ListUserExams)
+		auth.GET("/api/auth-hello", hello)
+		auth.POST("/api/create-user", createUser)
+		adminAuth := auth.Group("/api/admin", adminMiddleware)
+		{
+			adminAuth.POST("/api/create-exam", createExam)
+		}
+	}
+	// Admin routes under auth protection
 
 	if err = r.Run(":5000"); err != nil {
 		log.Fatalln(err)
@@ -75,6 +81,26 @@ func authMiddleware(c *gin.Context) {
 
 	fmt.Println("User logged in")
 	fmt.Println("ID:", id)
+}
+
+func adminMiddleware(c *gin.Context) {
+	cookie, err := c.Cookie("BTH-app")
+	if err != nil {
+		c.AbortWithStatusJSON(401, gin.H{"error": "unauthorized"})
+		return
+	}
+	id, err := jwtauth.ValidateJWT(cookie)
+	userID, err := strconv.Atoi(id)
+	if err != nil {
+		c.AbortWithStatusJSON(401, gin.H{"error": "unauthorized"})
+		return
+	}
+	var isAdmin bool
+	isAdmin, err = db.IsRole(dBase, uint(userID), "admin")
+	if err != nil || !isAdmin {
+		c.AbortWithStatusJSON(401, gin.H{"error": "unauthorized"})
+		return
+	}
 }
 
 func createExam(c *gin.Context) {

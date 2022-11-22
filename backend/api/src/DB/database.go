@@ -96,6 +96,11 @@ func SetupDatabase() (*gorm.DB, error) {
 	}
 
 	// create user account
+	fmt.Printf("Creating new user ----------------------------------------------------\n")
+	err = CreateUser(db, &User{Username: "user", Password: "pass"})
+	if err != nil {
+		log.Println(err)
+	}
 	err = CreateUser(db, &User{Username: "user", Password: "pass"})
 	if err != nil {
 		log.Println(err)

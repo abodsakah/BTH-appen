@@ -13,6 +13,7 @@ type User struct {
 	gorm.Model
 	Username string  `gorm:"uniqueIndex" form:"username" binding:"required" json:"username"`
 	Password string  `form:"password" binding:"required" json:"password"`
+	role     string  `form:"role" default:"student" json:"role"`
 	Exams    []*Exam `gorm:"many2many:exam_users;"`
 }
 
