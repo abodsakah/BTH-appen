@@ -41,12 +41,13 @@ func SetupRoutes(gormObj *gorm.DB) {
 		auth.GET("/api/auth-hello", hello)
 		auth.POST("/api/register-exam", registerToExam)
 		auth.POST("/api/unregister-exam", unregisterFromExam)
-    adminAuth := r.Group("/admin", adminMiddleware)
+		auth.POST("/api/add-user-expo-push-token", addUserExpoPushToken)
+		adminAuth := r.Group("/admin", adminMiddleware)
 		{
 			adminAuth.GET("/api/list-exam-users", listExamUsers)
 			adminAuth.POST("/api/create-user", createUser)
-			adminAuth.POST("/api/delete-exam", deleteExam)
 			adminAuth.POST("/api/create-exam", createExam)
+			adminAuth.POST("/api/delete-exam", deleteExam)
 		}
 	}
 
@@ -86,18 +87,11 @@ func authMiddleware(c *gin.Context) {
 }
 
 func adminMiddleware(c *gin.Context) {
-	cookie, err := c.Cookie("BTH-app")
-	if err != nil {
-		c.AbortWithStatusJSON(401, gin.H{"error": "unauthorized"})
-		return
-	}
-	id, err := jwtauth.ValidateJWT(cookie)
-	if err != nil {
-		c.AbortWithStatusJSON(401, gin.H{"error": "unauthorized"})
-		return
-	}
+
+	id := c.Keys["UserID"].(uint)
+	var err error
 	var isAdmin bool
-	isAdmin, err = db.IsRole(gormDB, uint(id), "admin")
+	isAdmin, err = db.IsRole(gormDB, id, "admin")
 	if err != nil || !isAdmin {
 		c.AbortWithStatusJSON(401, gin.H{"error": "unauthorized"})
 		return
@@ -288,7 +282,20 @@ func login(c *gin.Context) {
 		return
 	}
 
+	// create JSON to send to client.
+	userInfo, err := db.GetUser(gormDB, userID)
+	if err != nil {
+		log.Println(err.Error())
+		c.JSON(500, gin.H{"error": "Internal server error"})
+		return
+	}
+	jsonUserInfo := gin.H{
+		"status": "success",
+		"jwt":    token,
+		"user":   userInfo,
+	}
+
 	// create a cookie that's valid for 2 hours to match the JWT 2 hour expiration time
 	c.SetCookie("BTH-app", token, 60*60*2, "/", "localhost", true, true)
-	c.JSON(200, gin.H{"message": "Success"})
+	c.JSON(200, jsonUserInfo)
 }

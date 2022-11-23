@@ -36,7 +36,7 @@
     },
     "search_ph": {
         "en": "Search for a hall...",
-        "sv-sv": "Sök efter ett sal...",
+        "sv-sv": "Sök efter en sal...",
         "ar": "ابحث عن قاعة ..."
     },
     "map_not_found": {
@@ -78,5 +78,55 @@
         "en": "Language",
         "sv-sv": "Språk",
         "ar": "اللغة"
+    },
+    "settings": {
+        "en": "Settings",
+        "sv-sv": "Inställningar",
+        "ar": "الإعدادات"
+    },
+    "about": {
+        "en": "About",
+        "sv-sv": "Om",
+        "ar": "معلومات"
+    },
+    "register": {
+        "en": "Register",
+        "sv-sv": "Registrera",
+        "ar": "سجل"
+    },
+    "unregister": {
+        "en": "Unregister",
+        "sv-sv": "Avregistrera",
+        "ar": "إلغاء التسجيل"
+    },
+    "registered_exams": {
+        "en": "Registered exams",
+        "sv-sv": "Registrerade tentamen",
+        "ar": "الامتحانات المسجلة"
+    },
+    "coming_exams": {
+        "en": "Coming exams",
+        "sv-sv": "kommande tentor",
+        "ar": "الامتحانات القادمة"
+    },
+    "date": {
+        "en": "Date",
+        "sv-sv": "Datum",
+        "ar": "التاريخ"
+    },
+    "time": {
+        "en": "Time",
+        "sv-sv": "Tid",
+        "ar": "الوقت"
+    },
+    "room": {
+        "en": "Room",
+        "sv-sv": "Rum",
+        "ar": "القاعة"
+    },
+    "more": {
+        "en": "More",
+        "sv-sv": "Mer",
+        "ar": "المزيد"
     }
 }

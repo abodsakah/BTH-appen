@@ -57,10 +57,23 @@ func CreateUser(db *gorm.DB, user *User) error {
 func IsRole(db *gorm.DB, id uint, role string) (isAdmin bool, err error) {
 	var user User
 	err = db.Where("id = ?", id).Find(&user).Error
-	if err != nil || user.role != role {
+	if err != nil || user.Role != role {
 		return false, err
 	}
 	return true, nil
+}
+
+// GetUser function
+func GetUser(db *gorm.DB, userID uint) (User, error) {
+	// get user from database
+	var user User
+
+	err := db.Omit("password").Where("id = ?", userID).First(&user).Error
+	if err != nil {
+		return User{}, err
+	}
+
+	return user, nil
 }
 
 // AuthUser function

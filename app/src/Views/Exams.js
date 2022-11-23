@@ -4,16 +4,17 @@ import Container from '../Components/Container';
 import Button from '../Components/Button';
 import { Colors, Fonts } from '../style';
 import Exam from '../Components/Exam';
+import { t } from '../locale/translate';
 
 const Exams = () => {
 	return (
 		<Container style={styles.container}>
-			<Text style={styles.title}>Exams</Text>
+			<Text style={styles.title}>{t('exams')}</Text>
 			<ScrollView
 				style={styles.scrollContainer}
 				contentContainerStyle={styles.scrollContentStyle}
 			>
-				<Text style={styles.heading}>Registered exams</Text>
+				<Text style={styles.heading}>{t('registered_exams')}</Text>
 				<Exam
 					code="PA1469"
 					name="Applikation Utveckling"
@@ -22,7 +23,7 @@ const Exams = () => {
 					room="J1240"
 					registered
 				/>
-				<Text style={styles.heading}>Comming exams</Text>
+				<Text style={styles.heading}>{t('coming_exams')}</Text>
 				<Exam
 					code="DV1628"
 					name="Webbutveckling"

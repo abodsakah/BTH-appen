@@ -177,7 +177,8 @@ func UnregisterFromExam(db *gorm.DB, examID uint, userID uint) error {
 // Or an error
 func ListUserExams(db *gorm.DB, userID uint) ([]*Exam, error) {
 	var user User
-	err := db.Model(&User{}).Preload("Exams").Find(&user).Error
+	err := db.Where("id = ?", userID).First(&user).Error
+	err = db.Model(&User{}).Preload("Exams").Find(&user).Error
 	if err != nil {
 		return nil, err
 	}

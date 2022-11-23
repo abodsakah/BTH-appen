@@ -105,8 +105,6 @@ export default TabBarNavigation;
 const styles = StyleSheet.create({
 	tabBar: {
 		backgroundColor: Colors.primary.regular,
-		height: '10%',
-		borderTopLeftRadius: 20,
-		borderTopRightRadius: 20,
+		height: '8%',
 	},
 });
