@@ -265,7 +265,20 @@ func login(c *gin.Context) {
 		return
 	}
 
+	// create JSON to send to client.
+	userInfo, err := db.GetUser(gormDB, userID)
+	if err != nil {
+		log.Println(err.Error())
+		c.JSON(500, gin.H{"error": "Internal server error"})
+		return
+	}
+	jsonUserInfo := gin.H{
+		"status": "success",
+		"jwt":    token,
+		"user":   userInfo,
+	}
+
 	// create a cookie that's valid for 2 hours to match the JWT 2 hour expiration time
 	c.SetCookie("BTH-app", token, 60*60*2, "/", "localhost", true, true)
-	c.JSON(200, gin.H{"message": "Success"})
+	c.JSON(200, jsonUserInfo)
 }

@@ -42,6 +42,19 @@ func CreateUser(db *gorm.DB, user *User) error {
 	return nil
 }
 
+// GetUser function
+func GetUser(db *gorm.DB, userID uint) (User, error) {
+	// get user from database
+	var user User
+
+	err := db.Omit("password").Where("id = ?", userID).First(&user).Error
+	if err != nil {
+		return User{}, err
+	}
+
+	return user, nil
+}
+
 // AuthUser function
 func AuthUser(db *gorm.DB, username string, password string) (userID uint, err error) {
 	// check username and password length
