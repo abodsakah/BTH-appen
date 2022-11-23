@@ -87,7 +87,6 @@ func authMiddleware(c *gin.Context) {
 }
 
 func adminMiddleware(c *gin.Context) {
-
 	id := c.Keys["UserID"].(uint)
 	var err error
 	var isAdmin bool
