@@ -123,5 +123,10 @@
         "en": "Room",
         "sv-sv": "Rum",
         "ar": "القاعة"
+    },
+    "more": {
+        "en": "More",
+        "sv-sv": "Mer",
+        "ar": "المزيد"
     }
 }
