@@ -57,23 +57,23 @@ func getExpoPushTokens(exams []db.Exam) {
 // since GetExamsDueSoon only gets exams due in ONE and FIVE days,
 // no duplicate notifications should be sent
 // as they will not be due in ONE or FIVE days after one more day has passed
-func examSendPushMessages(messages []expo.ExponentPushToken) {
+func examSendPushMessages(messages []expo.PushMessage) {
 	// loop
 	for {
 		// Create a new Expo SDK client
 		client := expo.NewPushClient(nil)
+		msg := &expo.PushMessage{
+			To:       []expo.ExponentPushToken{"ExponentPushToken[xxxxxxxxxxxxxxxxxxxxxx]"},
+			Body:     "This is a test notification",
+			Data:     map[string]string{"withSome": "data"},
+			Sound:    "default",
+			Title:    "Notification Title",
+			Priority: expo.DefaultPriority,
+		}
+		messages = append(messages, *msg)
 
 		// Publish message
-		response, err := client.Publish(
-			&expo.PushMessage{
-				To:       []expo.ExponentPushToken{pushToken},
-				Body:     "This is a test notification",
-				Data:     map[string]string{"withSome": "data"},
-				Sound:    "default",
-				Title:    "Notification Title",
-				Priority: expo.DefaultPriority,
-			},
-		)
+		response, err := client.PublishMultiple(messages)
 		// Check errors
 		if err != nil {
 			log.Println(err, "\nAn error occured sending message, sleeping a little bit before retry")
