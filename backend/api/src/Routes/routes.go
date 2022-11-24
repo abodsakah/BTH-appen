@@ -88,7 +88,7 @@ func authMiddleware(c *gin.Context) {
 
 func adminMiddleware(c *gin.Context) {
 	id := c.Keys["UserID"].(uint)
-  isAdmin, err := db.IsRole(gormDB, id, "admin")
+	isAdmin, err := db.IsRole(gormDB, id, "admin")
 	if err != nil || !isAdmin {
 		c.AbortWithStatusJSON(401, gin.H{"error": "unauthorized"})
 		return
