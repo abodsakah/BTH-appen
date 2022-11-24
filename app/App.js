@@ -24,6 +24,7 @@ import { setLanguage, t } from './src/locale/translate';
 import { useEffect, useState, useRef } from 'react';
 import { Colors } from './src/style';
 import * as Notifications from 'expo-notifications';
+import { addExpoPushToken } from './src/helpers/APIManager';
 
 async function registerForPushNotificationsAsync() {
 	let token;
@@ -42,6 +43,7 @@ async function registerForPushNotificationsAsync() {
 		}
 		token = (await Notifications.getExpoPushTokenAsync()).data;
 		console.log('token: ', token);
+		await addExpoPushToken(token);
 	} else {
 		alert('Must use physical device for Push Notifications');
 	}

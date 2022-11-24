@@ -113,15 +113,17 @@ export async function deleteExams(exam_id) {
 	);
 }
 
-export async function sendExpoPushToken(pushToken) {
+export async function addExpoPushToken(pushToken) {
 	const url = `${API_URL}/add-user-expo-push-token`;
-	return await sendPOSTRequest(
-		url,
-		{ expo_push_token: pushToken },
-		{
-			headers: {
-				jwt: `${await JSON.parse(SecureStore.getItemAsync('user'))?.jwt}`,
-			},
-		}
+	console.log(
+		await sendPOSTRequest(
+			url,
+			{ expo_push_token: pushToken },
+			{
+				headers: {
+					jwt: `${await JSON.parse(SecureStore.getItemAsync('user'))?.jwt}`,
+				},
+			}
+		)
 	);
 }
