@@ -9,8 +9,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 
-	"github.com/abodsakah/BTH-appen/backend/api/src/DB"
-	"github.com/abodsakah/BTH-appen/backend/api/src/JWTAuth"
+	db "github.com/abodsakah/BTH-appen/backend/api/src/DB"
+	jwtauth "github.com/abodsakah/BTH-appen/backend/api/src/JWTAuth"
 )
 
 // variables
@@ -37,14 +37,19 @@ func SetupRoutes(gormObj *gorm.DB) {
 	r.GET("/api/list-due-exams", listDueExams)
 	// auth protected routes
 	auth := r.Group("/", authMiddleware)
-	auth.GET("/api/auth-hello", hello)
-	auth.GET("/api/list-exam-users", listExamUsers) // TODO: should be adminMiddleware protected
-	auth.POST("/api/create-user", createUser)       // TODO: should be adminMiddleware protected
-	auth.POST("/api/create-exam", createExam)       // TODO: should be adminMiddleware protected
-	auth.POST("/api/delete-exam", deleteExam)       // TODO: should be adminMiddleware protected
-	auth.POST("/api/register-exam", registerToExam)
-	auth.POST("/api/unregister-exam", unregisterFromExam)
-	auth.POST("/api/add-user-expo-push-token", addUserExpoPushToken)
+	{
+		auth.GET("/api/auth-hello", hello)
+		auth.POST("/api/register-exam", registerToExam)
+		auth.POST("/api/unregister-exam", unregisterFromExam)
+		auth.POST("/api/add-user-expo-push-token", addUserExpoPushToken)
+		adminAuth := auth.Group("/", adminMiddleware)
+		{
+			adminAuth.GET("/api/list-exam-users", listExamUsers)
+			adminAuth.POST("/api/create-user", createUser)
+			adminAuth.POST("/api/create-exam", createExam)
+			adminAuth.POST("/api/delete-exam", deleteExam)
+		}
+	}
 
 	if err = r.Run(":5000"); err != nil {
 		log.Fatalln(err)
@@ -79,6 +84,15 @@ func authMiddleware(c *gin.Context) {
 	}
 	// create UserID key in c.Keys
 	c.Set("UserID", id)
+}
+
+func adminMiddleware(c *gin.Context) {
+	id := c.Keys["UserID"].(uint)
+	isAdmin, err := db.IsRole(gormDB, id, "admin")
+	if err != nil || !isAdmin {
+		c.AbortWithStatusJSON(401, gin.H{"error": "unauthorized"})
+		return
+	}
 }
 
 func createExam(c *gin.Context) {
