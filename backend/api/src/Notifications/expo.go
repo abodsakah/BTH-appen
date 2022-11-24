@@ -31,17 +31,18 @@ func StartServer(gormObj *gorm.DB) error {
 		return err
 	}
 	fmt.Println("Exams due soon: ", exams)
+	examSendPushMessages([]expo.PushMessage{})
 
 	// loop runs once every 24 hours, exits if StopRunning is set to true
 	for !StopRunning {
-		// examSendPushMessages()
+		// 	// examSendPushMessages()
 	}
 
 	return nil
 }
 
 // creates expo.PushMessage slice with all messages and returns it.
-func createPushMessages(exams []db.Exam)
+func createPushMessages(exams []db.Exam) {}
 
 // examSendPushMessages function
 //
@@ -53,7 +54,7 @@ func examSendPushMessages(messages []expo.PushMessage) {
 	// loop
 	for {
 		// To check the token is valid
-		pushToken, err := expo.NewExponentPushToken("ExponentPushToken[xxxxxxxxxxxxxxxxxxxxxx]")
+		pushToken, err := expo.NewExponentPushToken("ExponentPushToken[5lt-1tLRsrDUugt3Ltlhlf]")
 		if err != nil {
 			panic(err)
 		}
@@ -86,6 +87,7 @@ func examSendPushMessages(messages []expo.PushMessage) {
 			continue // jump to top of loop
 		}
 		// sleep for 24 hours if everything was successfully sent
+		log.Println("Expo response:", response)
 		time.Sleep(time.Hour * 24)
 	}
 }

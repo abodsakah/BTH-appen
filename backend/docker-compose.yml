@@ -23,31 +23,22 @@ services:
       - PGADMIN_DEFAULT_PASSWORD=SuperSecret
     ports:
       - "5050:80"
-  
-  # backend:
-  #TODO
 
-  # frontend:
-  #   image: node:16
-  #   volumes:
-  #     - ./frontend:/app
-  #   ports:
-  #     - "3000:80"
-  #   command: bash -c "cd app && npm install && npm run build"
   # backend:
-  #   image: go-gin-backend
+  #   image: bth-go-backend
   #   build:
-  #     context: backend
+  #     context: api
   #   restart: always
   #   ports:
   #     - "5000:5000"
   #   environment:
   #     - GIN_MODE=debug
   #     # - GIN_MODE=release
-  #     - POSTGRES_NAME=web_cli
+  #     - POSTGRES_NAME=bth-app
   #     - POSTGRES_USER=postgres
   #     - POSTGRES_PASSWORD=postgres
+  #     - DB_HOST=db
+  #   # env_file:
+  #   #   - .env
   #   depends_on:
   #     - db
-
-
