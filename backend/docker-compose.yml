@@ -10,8 +10,8 @@ services:
     #   - POSTGRES_PASSWORD=postgres
     env_file:
       - .env
-    # volumes:
-      # - ./data/db:/var/lib/postgresql/data
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
     ports:
       - "5432:5432"
   pgadmin4:
