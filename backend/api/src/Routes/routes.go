@@ -42,7 +42,7 @@ func SetupRoutes(gormObj *gorm.DB) {
 		auth.POST("/api/register-exam", registerToExam)
 		auth.POST("/api/unregister-exam", unregisterFromExam)
 		auth.POST("/api/add-user-expo-push-token", addUserExpoPushToken)
-		adminAuth := r.Group("/admin", adminMiddleware)
+		adminAuth := auth.Group("/", adminMiddleware)
 		{
 			adminAuth.GET("/api/list-exam-users", listExamUsers)
 			adminAuth.POST("/api/create-user", createUser)

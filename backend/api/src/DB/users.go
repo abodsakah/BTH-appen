@@ -17,18 +17,8 @@ func checkInputLength(username string, password string) (err error) {
 
 // CreateUser function
 func CreateUser(db *gorm.DB, user *User) error {
-	// Check if user already exists, if so return error created by function
-	var userTest []User
-	err := db.Where("username = ?", user.Username).Find(&userTest).Error
-	if err != nil {
-		return err
-	}
-	if len(userTest) != 0 {
-		err = errors.New("Error; user already exists in database")
-		return err
-	}
 	// check username and password length
-	err = checkInputLength(user.Username, user.Password)
+  err := checkInputLength(user.Username, user.Password)
 	if err != nil {
 		return err
 	}
