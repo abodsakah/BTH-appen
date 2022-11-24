@@ -31,7 +31,7 @@ func StartServer(gormObj *gorm.DB) error {
 		return err
 	}
 	fmt.Println("Exams due soon: ", exams)
-	examSendPushMessages([]expo.PushMessage{})
+	examSendPushMessages()
 
 	// loop runs once every 24 hours, exits if StopRunning is set to true
 	for !StopRunning {
@@ -41,8 +41,15 @@ func StartServer(gormObj *gorm.DB) error {
 	return nil
 }
 
-// creates expo.PushMessage slice with all messages and returns it.
-func createPushMessages(exams []db.Exam) {}
+// getExpoPushTokens
+// validates and returns all expo tokens for one exam.
+func getExpoPushTokens(exams []db.Exam) {
+	// To check the token is valid
+	pushToken, err := expo.NewExponentPushToken("ExponentPushToken[xxxxxxxxxxxxxxxxxxxxxx]")
+	if err != nil {
+		panic(err)
+	}
+}
 
 // examSendPushMessages function
 //
@@ -50,15 +57,9 @@ func createPushMessages(exams []db.Exam) {}
 // since GetExamsDueSoon only gets exams due in ONE and FIVE days,
 // no duplicate notifications should be sent
 // as they will not be due in ONE or FIVE days after one more day has passed
-func examSendPushMessages(messages []expo.PushMessage) {
+func examSendPushMessages(messages []expo.ExponentPushToken) {
 	// loop
 	for {
-		// To check the token is valid
-		pushToken, err := expo.NewExponentPushToken("ExponentPushToken[xxxxxxxxxxxxxxxxxxxxxx]")
-		if err != nil {
-			panic(err)
-		}
-
 		// Create a new Expo SDK client
 		client := expo.NewPushClient(nil)
 
