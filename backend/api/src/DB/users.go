@@ -18,7 +18,7 @@ func checkInputLength(username string, password string) (err error) {
 // CreateUser function
 func CreateUser(db *gorm.DB, user *User) error {
 	// check username and password length
-  err := checkInputLength(user.Username, user.Password)
+	err := checkInputLength(user.Username, user.Password)
 	if err != nil {
 		return err
 	}
@@ -44,9 +44,9 @@ func CreateUser(db *gorm.DB, user *User) error {
 // IsRole function
 //
 // Tests if user has the admin role
-func IsRole(db *gorm.DB, id uint, role string) (isAdmin bool, err error) {
+func IsRole(db *gorm.DB, id uint, role string) (bool, error) {
 	var user User
-	err = db.Where("id = ?", id).Find(&user).Error
+  err := db.Where("id = ?", id).Find(&user).Error
 	if err != nil || user.Role != role {
 		return false, err
 	}
