@@ -54,7 +54,7 @@ func examSendPushMessages(messages []expo.PushMessage) {
 	// loop
 	for {
 		// To check the token is valid
-		pushToken, err := expo.NewExponentPushToken("ExponentPushToken[5lt-1tLRsrDUugt3Ltlhlf]")
+		pushToken, err := expo.NewExponentPushToken("ExponentPushToken[xxxxxxxxxxxxxxxxxxxxxx]")
 		if err != nil {
 			panic(err)
 		}
