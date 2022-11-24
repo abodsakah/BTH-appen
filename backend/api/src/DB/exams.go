@@ -145,3 +145,45 @@ func RemoveUserFromExam(db *gorm.DB, examID uint, userID uint) error {
 	}
 	return nil
 }
+
+// UnregisterFromExam function
+// Removes a user from an exams list of users.
+//
+// Or an error.
+func UnregisterFromExam(db *gorm.DB, examID uint, userID uint) error {
+	// find exam
+	var exam Exam
+	result := db.Where("id = ?", examID).First(&exam)
+	if result.Error != nil {
+		return result.Error
+	}
+	// find user
+	var user User
+	err := db.Where("id = ?", userID).First(&user).Error
+	if err != nil {
+		return err
+	}
+	// remove exam from user
+	err = db.Model(&user).Association("Exams").Delete([]Exam{exam})
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// ListUserExams function
+// Lists the users exams which they have registered to
+//
+// Or an error
+func ListUserExams(db *gorm.DB, userID uint) ([]*Exam, error) {
+	var user User
+	err := db.Where("id = ?", userID).First(&user).Error
+	if err != nil {
+		return nil, err
+	}
+	err = db.Model(&User{}).Preload("Exams").Find(&user).Error
+	if err != nil {
+		return nil, err
+	}
+	return user.Exams, nil
+}

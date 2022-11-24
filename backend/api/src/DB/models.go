@@ -14,6 +14,7 @@ type User struct {
 	Name     string  `form:"name" json:"name"`
 	Username string  `gorm:"uniqueIndex" form:"username" binding:"required" json:"username"`
 	Password string  `form:"password" binding:"required" json:"password"`
+	Role     string  `form:"role" gorm:"default:student" json:"role"`
 	Exams    []*Exam `gorm:"many2many:exam_users;" json:"exams"`
 	Tokens   []Token `json:"tokens"`
 }
