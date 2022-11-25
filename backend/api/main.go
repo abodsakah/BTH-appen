@@ -24,7 +24,7 @@ func main() {
 
 	// start notifications server go routine
 	go func() {
-		if err := notifications.StartServer(gormDB); err != nil {
+		if err := notifications.StartExamServer(gormDB); err != nil {
 			log.Fatalln("Failed to start expo notifications server, error: ", err)
 		}
 	}()

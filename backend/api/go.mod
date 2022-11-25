@@ -5,15 +5,13 @@ go 1.18
 require (
 	github.com/gin-gonic/gin v1.8.1
 	github.com/golang-jwt/jwt/v4 v4.4.2
+	github.com/noahhakansson/exponent-server-sdk-golang v0.0.0-20211012185921-280ba35546ca
 	golang.org/x/crypto v0.2.0
 	gorm.io/driver/postgres v1.4.5
 	gorm.io/gorm v1.24.1
 )
 
-require (
-	github.com/oliveroneill/exponent-server-sdk-golang v0.0.0-20210823140141-d050598be512 // indirect
-	github.com/stretchr/testify v1.8.1 // indirect
-)
+require github.com/stretchr/testify v1.8.1 // indirect
 
 require (
 	github.com/gin-contrib/sse v0.1.0 // indirect
