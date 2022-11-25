@@ -35,11 +35,12 @@ func StartServer(gormObj *gorm.DB) error {
 		return err
 	}
 	fmt.Println("Exams due soon: ", exams)
-	examSendPushMessages([]expo.PushMessage{}, 1)
 
 	// loop runs once every 24 hours, exits if StopRunning is set to true
 	for !StopRunning {
-		// 	// examSendPushMessages()
+		// examSendPushMessages()
+		examSendPushMessages([]expo.PushMessage{}, 1)
+		time.Sleep(time.Hour * 24)
 	}
 
 	return nil
@@ -99,11 +100,13 @@ func examSendPushMessages(messages []expo.PushMessage, tryNumber uint) {
 	// retry sending failed messages, if any failed
 	if failedMessages != nil {
 		log.Println("we have some failed messages")
+		for key, msg := range failedMessages {
+			log.Printf("--------Failed message[%d]:\n%#v", key, msg)
+		}
 		retrySendingMessages(failedMessages, tryNumber)
 	}
-	// sleep for 24 hours if everything was successfully sent
+	// print response
 	log.Println("Expo response:", responses)
-	time.Sleep(time.Hour * 24)
 }
 
 // helper function to retry sending messages
@@ -111,7 +114,7 @@ func examSendPushMessages(messages []expo.PushMessage, tryNumber uint) {
 // sleep for tryNumber of minutes, and then try to send messages.
 // if tryNumber is >= 5; Return without retrying.
 func retrySendingMessages(messages []expo.PushMessage, tryNumber uint) {
-	if tryNumber >= maxRetries {
+	if tryNumber > maxRetries {
 		return
 	}
 	log.Println("Some messages failed to send, will retry in ", tryNumber, " minutes...")
