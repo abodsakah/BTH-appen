@@ -3,24 +3,16 @@ module github.com/abodsakah/BTH-appen/backend/api
 go 1.18
 
 require (
-	github.com/DATA-DOG/go-sqlmock v1.5.0
 	github.com/gin-gonic/gin v1.8.1
 	github.com/golang-jwt/jwt/v4 v4.4.2
-	github.com/stretchr/testify v1.8.1
 	golang.org/x/crypto v0.2.0
 	gorm.io/driver/postgres v1.4.5
 	gorm.io/gorm v1.24.1
 )
 
 require (
-<<<<<<< HEAD
 	github.com/oliveroneill/exponent-server-sdk-golang v0.0.0-20210823140141-d050598be512 // indirect
 	github.com/stretchr/testify v1.8.1 // indirect
-=======
-	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/pmezard/go-difflib v1.0.0 // indirect
-	gopkg.in/yaml.v3 v3.0.1 // indirect
->>>>>>> origin/MAD-42-Fix-Database-Mocking
 )
 
 require (
