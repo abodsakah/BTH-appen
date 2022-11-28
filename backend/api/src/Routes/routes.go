@@ -39,6 +39,7 @@ func SetupRoutes(gormObj *gorm.DB) {
 	auth := r.Group("/", authMiddleware)
 	{
 		auth.GET("/api/auth-hello", hello)
+		auth.GET("/api/list-user-exams", listUserExams)
 		auth.POST("/api/register-exam", registerToExam)
 		auth.POST("/api/unregister-exam", unregisterFromExam)
 		auth.POST("/api/add-user-expo-push-token", addUserExpoPushToken)
@@ -168,6 +169,21 @@ func listDueExams(c *gin.Context) {
 	c.JSON(200, exams)
 }
 
+// list exams a user is registered to
+func listUserExams(c *gin.Context) {
+	userID := c.Keys["UserID"].(uint)
+	// get users registered exams from database
+	users, err := db.GetUserExams(gormDB, userID)
+	if err != nil {
+		log.Println(err.Error())
+		c.JSON(500, gin.H{"error": "Internal server error"})
+		return
+	}
+
+	c.JSON(200, users)
+}
+
+// list a exams registered users
 func listExamUsers(c *gin.Context) {
 	var reqObj examReqBody
 
