@@ -47,7 +47,7 @@ func SetupRoutes(gormObj *gorm.DB) {
 			adminAuth.GET("/api/list-exam-users", listExamUsers)
 			adminAuth.POST("/api/create-user", createUser)
 			adminAuth.POST("/api/create-exam", createExam)
-			adminAuth.POST("/api/delete-exam", deleteExam)
+			adminAuth.DELETE("/api/delete-exam", deleteExam)
 		}
 	}
 
