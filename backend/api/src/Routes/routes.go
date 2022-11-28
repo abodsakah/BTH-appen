@@ -69,14 +69,23 @@ func hello(c *gin.Context) {
 
 func authMiddleware(c *gin.Context) {
 	// check cookie for valid JWT to see if user is already logged in
-	cookie, err := c.Cookie("BTH-app")
+	var id uint
+	var h authReqBody
+	cookieJwt, err := c.Cookie("BTH-app")
 	if err != nil {
-		log.Println(err.Error())
-		c.AbortWithStatusJSON(401, gin.H{"error": "unauthorized"})
-		return
+		// if no cookie is found, try to bind header.
+		if err := c.ShouldBindHeader(&h); err != nil {
+			log.Println(err.Error())
+			c.AbortWithStatusJSON(401, gin.H{"error": "unauthorized"})
+			return
+		}
+		// if we could bind header
+		id, err = jwtauth.ValidateJWT(h.Jwt)
+	} else {
+		// if cookie exists
+		id, err = jwtauth.ValidateJWT(cookieJwt)
 	}
-
-	id, err := jwtauth.ValidateJWT(cookie)
+	// check error from ValidateJWT
 	if err != nil {
 		log.Println(err.Error())
 		c.AbortWithStatusJSON(401, gin.H{"error": "unauthorized"})
@@ -108,7 +117,7 @@ func createExam(c *gin.Context) {
 	// create exam
 	if err := db.CreateExam(gormDB, &exam); err != nil {
 		log.Println(err.Error())
-		c.JSON(401, gin.H{"error": err.Error()})
+		c.JSON(500, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -128,7 +137,7 @@ func deleteExam(c *gin.Context) {
 	// delete exam
 	if err := db.DeleteExam(gormDB, reqObj.ExamID); err != nil {
 		log.Println(err.Error())
-		c.JSON(401, gin.H{"error": err.Error()})
+		c.JSON(500, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -246,7 +255,7 @@ func createUser(c *gin.Context) {
 	// Create user
 	if err := db.CreateUser(gormDB, &user); err != nil {
 		log.Println(err.Error())
-		c.JSON(401, gin.H{"error": err.Error()})
+		c.JSON(500, gin.H{"error": err.Error()})
 		return
 	}
 
