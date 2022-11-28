@@ -13,14 +13,11 @@ require (
 )
 
 require (
-<<<<<<< HEAD
-	github.com/oliveroneill/exponent-server-sdk-golang v0.0.0-20210823140141-d050598be512 // indirect
-	github.com/stretchr/testify v1.8.1 // indirect
-=======
 	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/google/go-cmp v0.5.8 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
+	github.com/rogpeppe/go-internal v1.8.1 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
->>>>>>> origin/MAD-42-Fix-Database-Mocking
 )
 
 require (
