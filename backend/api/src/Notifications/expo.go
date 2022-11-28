@@ -6,7 +6,34 @@ import (
 	"time"
 
 	expo "github.com/noahhakansson/exponent-server-sdk-golang/sdk"
+	"gorm.io/gorm"
 )
+
+var maxRetries uint = 5
+
+// StartServers function
+// Starts the notification server's in the notifications package.
+//
+//	stopRunning *bool
+// Allows stopping the expo notification server's gracefully by setting it to true.
+//	retries uint
+// Max times to retry sending messages before giving up.
+func StartServers(gormDB *gorm.DB, stopRunning *bool, retries uint) error {
+	var err error
+	// set maxRetries
+	maxRetries = retries
+	// start news notification server go routine
+	go func() {
+		if err = startNewsServer(gormDB, stopRunning); err != nil {
+			log.Fatalln("Something went wrong with the News notification server;\n error: ", err)
+		}
+	}()
+	// start exam notification server
+	if err = startExamServer(gormDB, stopRunning); err != nil {
+		log.Fatalln("Something went wrong with the Exam notification server;\n error: ", err)
+	}
+	return err
+}
 
 // sendExpoPushMessages function
 //

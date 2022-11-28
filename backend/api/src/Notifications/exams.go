@@ -13,29 +13,16 @@ import (
 	"gorm.io/gorm"
 )
 
-// TODO: Go through each exam in exams slice and
-// create a slice of expo.PushMessage structs
-// each being a message for one exam that should be sent to all registered users of that exam.
-
-var (
-	// StopRunning variable
-	// Allows stopping the expo notification server gracefully by setting it to true.
-	StopRunning = false
-	// max times to retry sending messages before giving up.
-	maxRetries uint = 5
-)
-
-// StartExamServer function
+// startExamServer function
 //
-// Starts notification server.
+// Starts exam notification server.
 // Loops and sends message for due exams once a day.
-// since GetExamsDueSoon only gets exams due in ONE and FIVE days,
+// Failed messages are retried `maxRetries` times.
+//
+// Since GetExamsDueSoon only gets exams due in ONE and FIVE days,
 // no duplicate notifications should be sent
 // as they will not be due in ONE or FIVE days after one more day has passed
-func StartExamServer(gormObj *gorm.DB) error {
-	// setup GORM database object
-	gormDB := gormObj
-
+func startExamServer(gormDB *gorm.DB, StopRunning *bool) error {
 	// test testMessages
 	var testMessages []expo.PushMessage
 	msg := &expo.PushMessage{
@@ -58,7 +45,7 @@ func StartExamServer(gormObj *gorm.DB) error {
 	testMessages = append(testMessages, *msg1)
 	testMessages = append(testMessages, *msg)
 	// loop runs once every 24 hours, exits if StopRunning is set to true
-	for !StopRunning {
+	for !(*StopRunning) {
 		exams, err := db.GetExamsDueSoon(gormDB)
 		if err != nil {
 			log.Println(err)
