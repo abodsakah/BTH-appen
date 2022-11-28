@@ -74,7 +74,7 @@ func StartExamServer(gormObj *gorm.DB) error {
 			continue // jump to top of loop
 		}
 		// otherwise create messages from the fetched exams
-		pushMessages, err := createExpoPushMessages(exams)
+		pushMessages, err := createExamPushMessages(exams)
 		if err != nil {
 			log.Println("No messages to send, retrying in 24 hours...")
 			time.Sleep(time.Hour * 24)
@@ -99,17 +99,17 @@ func createDateTimeString(exam db.Exam) string {
 	return fmt.Sprintf("Exam starts in %d day, %d %s at %s", days, startDay, startMonth.String(), startTime)
 }
 
-// createExpoPushMessages function
+// createExamPushMessages function
 // Makes a `expo.PushMessage` for each exam and
 // calls getExpoPushTokens for each exam to get the `expo.ExponentPushToken`s
 // that the `expo.PushMessage` should be sent to.
 //
 // Return slice of `expo.PushMessage`s
 // Or an error if no pushMessages were created.
-func createExpoPushMessages(exams []db.Exam) ([]expo.PushMessage, error) {
+func createExamPushMessages(exams []db.Exam) ([]expo.PushMessage, error) {
 	var pushMessages []expo.PushMessage
 	for _, exam := range exams {
-		pushTokens, err := getExpoPushTokens(exam)
+		pushTokens, err := getExamUsersPushTokens(exam)
 		// error means no push tokens for this exam.
 		if err != nil {
 			continue // jump to start of loop, skip creating message for this exam
@@ -131,11 +131,11 @@ func createExpoPushMessages(exams []db.Exam) ([]expo.PushMessage, error) {
 	return nil, errors.New("Error: no pushMessages to be sent")
 }
 
-// getExpoPushTokens function
-// validates and returns all `expo.ExponentPushToken`s for ONE exam.
+// getExamUsersPushTokens function
+// validates and returns all registered users `expo.ExponentPushToken`s for ONE exam.
 //
 // Returns an error if no user `expo.ExponentPushToken`s are found for the exam
-func getExpoPushTokens(exam db.Exam) ([]expo.ExponentPushToken, error) {
+func getExamUsersPushTokens(exam db.Exam) ([]expo.ExponentPushToken, error) {
 	// To check the token is valid
 	var expoPushTokens []expo.ExponentPushToken
 	// for each users tokens, validate and add them to expoPushTokens
