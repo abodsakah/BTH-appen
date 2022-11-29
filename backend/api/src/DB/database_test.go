@@ -14,6 +14,13 @@ var (
 	additionalTables = []string{"exam_users"}
 )
 
+func fixtureWrap(t *testing.T) {
+	err := cleanUp(db, additionalTables)
+	if err != nil {
+		t.Fatal(err)
+	}
+}
+
 func TestDatabase(t *testing.T) {
 	err := godotenv.Load("../../../.env")
 	assert.Equal(t, nil, err, "Database can not be connected to")
@@ -24,15 +31,9 @@ func TestDatabase(t *testing.T) {
 }
 
 func TestExample(t *testing.T) {
-	err := cleanUp(db, additionalTables)
-	if err != nil {
-		t.Fatal(err)
-	}
+	fixtureWrap(t)
 	assert.Equal(t, 1, 2, "They should be equal")
-	_, err = SetupDatabase()
+	_, err := SetupDatabase()
 	assert.Equal(t, nil, err, "Database can not be connected to")
-	err = cleanUp(db, additionalTables)
-	if err != nil {
-		t.Fatal(err)
-	}
+	fixtureWrap(t)
 }
