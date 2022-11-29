@@ -23,27 +23,6 @@ import (
 // no duplicate notifications should be sent
 // as they will not be due in ONE or FIVE days after one more day has passed
 func startExamServer(gormDB *gorm.DB, StopRunning *bool) error {
-	// test testMessages
-	var testMessages []expo.PushMessage
-	msg := &expo.PushMessage{
-		To:       []expo.ExponentPushToken{"ExponentPushToken[xxxxxxxxxxxxxxxxxxxxxx]", "ExponentPushToken[ePYzdGJlxthQk6_M-HiOzJ]"},
-		Title:    "Notification Title",
-		Body:     "This is a test notification",
-		Data:     map[string]string{"withSome": "data"},
-		Sound:    "default",
-		Priority: expo.DefaultPriority,
-	}
-	msg1 := &expo.PushMessage{
-		To:       []expo.ExponentPushToken{"ExponentPushToken[ePYzdGJlxthQk6_M-HiOzJ]"},
-		Title:    "Notification Title",
-		Body:     "This is a test notification",
-		Data:     map[string]string{"withSome": "data"},
-		Sound:    "default",
-		Priority: expo.DefaultPriority,
-	}
-
-	testMessages = append(testMessages, *msg1)
-	testMessages = append(testMessages, *msg)
 	// loop runs once every 24 hours, exits if StopRunning is set to true
 	for !(*StopRunning) {
 		exams, err := db.GetExamsDueSoon(gormDB)
