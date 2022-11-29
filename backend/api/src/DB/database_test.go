@@ -18,9 +18,9 @@ func TestDatabase(t *testing.T) {
 	err := godotenv.Load("../../../.env")
 	assert.Equal(t, nil, err, "Database can not be connected to")
 
-	db_p, err := SetupDatabase()
+	dbP, err := SetupDatabase()
 	assert.NotEqual(t, nil, err, "Database can not be connected to")
-	db = db_p
+	db = dbP
 }
 
 func TestExample(t *testing.T) {

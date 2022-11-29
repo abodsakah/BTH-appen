@@ -10,7 +10,10 @@ func cleanUp(db *gorm.DB, additionalTables []string) error {
 		return err
 	}
 	for _, strTable := range additionalTables {
-		db.Migrator().DropTable(strTable)
+		err = db.Migrator().DropTable(strTable)
+		if err != nil {
+			return err
+		}
 	}
 	err = db.Migrator().AutoMigrate(&User{}, &Exam{}, &News{}, &Token{})
 	return err
