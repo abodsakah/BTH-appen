@@ -22,9 +22,9 @@ import (
 // Since GetExamsDueSoon only gets exams due in ONE and FIVE days,
 // no duplicate notifications should be sent
 // as they will not be due in ONE or FIVE days after one more day has passed
-func startExamServer(gormDB *gorm.DB, StopRunning *bool) error {
+func startExamServer(gormDB *gorm.DB, stopRunning *bool) error {
 	// loop runs once every 24 hours, exits if StopRunning is set to true
-	for !(*StopRunning) {
+	for !(*stopRunning) {
 		exams, err := db.GetExamsDueSoon(gormDB)
 		if err != nil {
 			log.Println(err)
