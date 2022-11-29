@@ -1,6 +1,3 @@
-# github.com/DATA-DOG/go-sqlmock v1.5.0
-## explicit
-github.com/DATA-DOG/go-sqlmock
 # github.com/davecgh/go-spew v1.1.1
 ## explicit
 github.com/davecgh/go-spew/spew
@@ -92,12 +89,13 @@ github.com/modern-go/concurrent
 # github.com/modern-go/reflect2 v1.0.2
 ## explicit; go 1.12
 github.com/modern-go/reflect2
-# github.com/pelletier/go-toml/v2 v2.0.5
+# github.com/pelletier/go-toml/v2 v2.0.6
 ## explicit; go 1.16
 github.com/pelletier/go-toml/v2
-github.com/pelletier/go-toml/v2/internal/ast
+github.com/pelletier/go-toml/v2/internal/characters
 github.com/pelletier/go-toml/v2/internal/danger
 github.com/pelletier/go-toml/v2/internal/tracker
+github.com/pelletier/go-toml/v2/unstable
 # github.com/pmezard/go-difflib v1.0.0
 ## explicit
 github.com/pmezard/go-difflib/difflib
@@ -106,12 +104,10 @@ github.com/pmezard/go-difflib/difflib
 # github.com/stretchr/testify v1.8.1
 ## explicit; go 1.13
 github.com/stretchr/testify/assert
-github.com/stretchr/testify/require
-github.com/stretchr/testify/suite
 # github.com/ugorji/go/codec v1.2.7
 ## explicit; go 1.11
 github.com/ugorji/go/codec
-# golang.org/x/crypto v0.2.0
+# golang.org/x/crypto v0.3.0
 ## explicit; go 1.17
 golang.org/x/crypto/bcrypt
 golang.org/x/crypto/blowfish
@@ -167,7 +163,7 @@ gopkg.in/yaml.v3
 # gorm.io/driver/postgres v1.4.5
 ## explicit; go 1.14
 gorm.io/driver/postgres
-# gorm.io/gorm v1.24.1
+# gorm.io/gorm v1.24.2
 ## explicit; go 1.16
 gorm.io/gorm
 gorm.io/gorm/callbacks

@@ -5,26 +5,26 @@ import (
 
   "github.com/stretchr/testify/assert"
   "gorm.io/gorm"
-  // "github.com/abodsakah/BTH-appen/backend/api/src/Fixture"
 
 	"github.com/joho/godotenv"
 )
 
 var db *gorm.DB
-var tables = []string{"user", "exam", "news", "token"}
-
+var additionalTables = []string{"exam_users"}
 
 func TestDatabase(t *testing.T) {
   err := godotenv.Load("../../../.env")
-  assert.NotEqual(t, err, nil, "Database can not be connected to")
+  assert.Equal(t, nil, err, "Database can not be connected to")
 
   db_p, err := SetupDatabase()
-  assert.NotEqual(t, err, nil, "Database can not be connected to")
+  assert.NotEqual(t, nil, err, "Database can not be connected to")
   db = db_p
 }
-/*
 func TestExample(t *testing.T) {
-  fixture.CleanUp(db, tables, &User{}, &Exam{}, &News{}, &Token{})
+  cleanUp(db, additionalTables)
   assert.Equal(t, 1, 2, "They should be equal")
+  _, err := SetupDatabase()
+  assert.Equal(t, nil, err, "Database can not be connected to")
+  cleanUp(db, additionalTables)
 }
-*/
+

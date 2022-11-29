@@ -39,6 +39,7 @@ func SetupRoutes(gormObj *gorm.DB) {
 	auth := r.Group("/", authMiddleware)
 	{
 		auth.GET("/api/auth-hello", hello)
+		auth.GET("/api/list-user-exams", listUserExams)
 		auth.POST("/api/register-exam", registerToExam)
 		auth.POST("/api/unregister-exam", unregisterFromExam)
 		auth.POST("/api/add-user-expo-push-token", addUserExpoPushToken)
@@ -47,7 +48,7 @@ func SetupRoutes(gormObj *gorm.DB) {
 			adminAuth.GET("/api/list-exam-users", listExamUsers)
 			adminAuth.POST("/api/create-user", createUser)
 			adminAuth.POST("/api/create-exam", createExam)
-			adminAuth.POST("/api/delete-exam", deleteExam)
+			adminAuth.DELETE("/api/delete-exam", deleteExam)
 		}
 	}
 
@@ -69,14 +70,23 @@ func hello(c *gin.Context) {
 
 func authMiddleware(c *gin.Context) {
 	// check cookie for valid JWT to see if user is already logged in
-	cookie, err := c.Cookie("BTH-app")
+	var id uint
+	var h authReqBody
+	cookieJwt, err := c.Cookie("BTH-app")
 	if err != nil {
-		log.Println(err.Error())
-		c.AbortWithStatusJSON(401, gin.H{"error": "unauthorized"})
-		return
+		// if no cookie is found, try to bind header.
+		if err := c.ShouldBindHeader(&h); err != nil {
+			log.Println(err.Error())
+			c.AbortWithStatusJSON(401, gin.H{"error": "unauthorized"})
+			return
+		}
+		// if we could bind header
+		id, err = jwtauth.ValidateJWT(h.Jwt)
+	} else {
+		// if cookie exists
+		id, err = jwtauth.ValidateJWT(cookieJwt)
 	}
-
-	id, err := jwtauth.ValidateJWT(cookie)
+	// check error from ValidateJWT
 	if err != nil {
 		log.Println(err.Error())
 		c.AbortWithStatusJSON(401, gin.H{"error": "unauthorized"})
@@ -108,7 +118,7 @@ func createExam(c *gin.Context) {
 	// create exam
 	if err := db.CreateExam(gormDB, &exam); err != nil {
 		log.Println(err.Error())
-		c.JSON(401, gin.H{"error": err.Error()})
+		c.JSON(500, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -128,7 +138,7 @@ func deleteExam(c *gin.Context) {
 	// delete exam
 	if err := db.DeleteExam(gormDB, reqObj.ExamID); err != nil {
 		log.Println(err.Error())
-		c.JSON(401, gin.H{"error": err.Error()})
+		c.JSON(500, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -159,6 +169,21 @@ func listDueExams(c *gin.Context) {
 	c.JSON(200, exams)
 }
 
+// list exams a user is registered to
+func listUserExams(c *gin.Context) {
+	userID := c.Keys["UserID"].(uint)
+	// get users registered exams from database
+	users, err := db.GetUserExams(gormDB, userID)
+	if err != nil {
+		log.Println(err.Error())
+		c.JSON(500, gin.H{"error": "Internal server error"})
+		return
+	}
+
+	c.JSON(200, users)
+}
+
+// list a exams registered users
 func listExamUsers(c *gin.Context) {
 	var reqObj examReqBody
 
@@ -246,7 +271,7 @@ func createUser(c *gin.Context) {
 	// Create user
 	if err := db.CreateUser(gormDB, &user); err != nil {
 		log.Println(err.Error())
-		c.JSON(401, gin.H{"error": err.Error()})
+		c.JSON(500, gin.H{"error": err.Error()})
 		return
 	}
 
