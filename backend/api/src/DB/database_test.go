@@ -23,8 +23,9 @@ func fixtureWrap(t *testing.T) {
 
 func TestDatabase(t *testing.T) {
 	err := godotenv.Load("../../../.env")
-	assert.Equal(t, nil, err, "Database can not be connected to")
-
+	if err != nil {
+		t.Fatal(err)
+	}
 	dbP, err := SetupDatabase()
 	assert.NotEqual(t, nil, err, "Database can not be connected to")
 	db = dbP
@@ -32,8 +33,8 @@ func TestDatabase(t *testing.T) {
 
 func TestExample(t *testing.T) {
 	fixtureWrap(t)
+	defer fixtureWrap(t)
 	assert.Equal(t, 1, 2, "They should be equal")
 	_, err := SetupDatabase()
 	assert.Equal(t, nil, err, "Database can not be connected to")
-	fixtureWrap(t)
 }
