@@ -24,9 +24,15 @@ func TestDatabase(t *testing.T) {
 }
 
 func TestExample(t *testing.T) {
-	cleanUp(db, additionalTables)
+	err := cleanUp(db, additionalTables)
+	if err != nil {
+		t.Fatal(err)
+	}
 	assert.Equal(t, 1, 2, "They should be equal")
-	_, err := SetupDatabase()
+	_, err = SetupDatabase()
 	assert.Equal(t, nil, err, "Database can not be connected to")
-	cleanUp(db, additionalTables)
+	err = cleanUp(db, additionalTables)
+	if err != nil {
+		t.Fatal(err)
+	}
 }
