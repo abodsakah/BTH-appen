@@ -10,9 +10,10 @@ import (
 	"gorm.io/gorm"
 )
 
-// TODO: Go through each exam in exams slice and
-// create a slice of expo.PushMessage structs
-// each being a message for one exam that should be sent to all registered users of that exam.
+// TODO: Figure out way to see if new news articles have been added to database.
+// Maybe a boolean `new` flag on each news article that gets set to false after notifications have been sent about it.
+// Would result in a function that only gets news with the `new` flag set to true,
+// which then sets the flag to false after getting it from the database.
 
 // startNewsServerfunction
 //
