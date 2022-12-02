@@ -15,6 +15,8 @@ import { AntDesign } from '@expo/vector-icons';
 import { Colors, Fonts } from '../style';
 import { Buildings } from '../helpers/Constants';
 import { t } from '../locale/translate';
+import { useEffect } from 'react';
+import * as Location from 'expo-location';
 
 const SEARCH_RESULTS_HEIGHT = 120;
 
@@ -22,6 +24,7 @@ const Map = () => {
 	const [search, setSearch] = useState('');
 	const [searchFound, setSearchFound] = useState(false);
 	const [searchResults, setSearchResults] = useState('');
+	const [userLocation, setUserLocation] = useState(null);
 
 	const expandAnimation = useRef(new Animated.Value(0)).current;
 
@@ -75,12 +78,36 @@ const Map = () => {
 		setSearch(text);
 	};
 
+	const getUserLocation = async () => {
+		let { status } = await Location.requestForegroundPermissionsAsync();
+
+		if (status !== 'granted') {
+			alert(t('errorUserLocation'));
+			return;
+		}
+
+		let location = await Location.getCurrentPositionAsync({});
+		setUserLocation(location);
+	};
+
+	useEffect(() => {
+		getUserLocation();
+	}, []);
+
 	const CustomMarker = ({ title }) => {
 		return (
 			<View style={styles.markerOuter}>
 				<View style={styles.markerInner}>
 					<Text style={styles.markerText}>{title}</Text>
 				</View>
+			</View>
+		);
+	};
+
+	const UserMarker = () => {
+		return (
+			<View style={styles.userMarkerOuter}>
+				<View style={styles.userMarkerInner}></View>
 			</View>
 		);
 	};
@@ -138,6 +165,14 @@ const Map = () => {
 							<CustomMarker title={i.toUpperCase()} />
 						</Marker>
 					))}
+					<Marker
+						coordinate={{
+							latitude: userLocation?.coords.latitude,
+							longitude: userLocation?.coords.longitude,
+						}}
+					>
+						<UserMarker />
+					</Marker>
 				</MapView>
 			</View>
 		</Container>
@@ -176,6 +211,22 @@ const styles = StyleSheet.create({
 		fontFamily: Fonts.Inter_Bold,
 		fontSize: 16,
 		color: Colors.snowWhite,
+	},
+	userMarkerOuter: {
+		backgroundColor: Colors.snowWhite,
+		width: 20,
+		height: 20,
+		borderRadius: 100,
+		justifyContent: 'center',
+		alignItems: 'center',
+	},
+	userMarkerInner: {
+		backgroundColor: Colors.primary.light,
+		width: 15,
+		height: 15,
+		borderRadius: 100,
+		justifyContent: 'center',
+		alignItems: 'center',
 	},
 	mapContainer: {
 		flex: 1,
