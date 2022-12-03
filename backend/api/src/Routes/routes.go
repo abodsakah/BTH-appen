@@ -34,7 +34,7 @@ func SetupRoutes(gormObj *gorm.DB) {
 	r.GET("/api/hello", hello)
 	r.POST("/api/login", login)
 	r.GET("/api/list-exams", listExams)
-	r.Get("/api/list-news", listNews)
+	r.GET("/api/list-news", listNews)
 	r.GET("/api/list-due-exams", listDueExams)
 	// auth protected routes
 	auth := r.Group("/", authMiddleware)
