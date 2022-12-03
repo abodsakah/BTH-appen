@@ -4,7 +4,6 @@ package main
 import (
 	"log"
 
-	//routes "github.com/abodsakah/BTH-appen/backend/api/src/Routes"
 	db "github.com/abodsakah/BTH-appen/backend/api/src/DB"
 	notifications "github.com/abodsakah/BTH-appen/backend/api/src/Notifications"
 	routes "github.com/abodsakah/BTH-appen/backend/api/src/Routes"
@@ -20,7 +19,8 @@ func main() {
 	}
 
 	scraper.GetNews()
-	//routes.SetupRoutes()
+	return
+	// routes.SetupRoutes()
 	gormDB, err := db.SetupDatabase()
 	if err != nil {
 		log.Fatalln(err)

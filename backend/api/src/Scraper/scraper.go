@@ -10,7 +10,7 @@ import (
 	"github.com/gocolly/colly"
 )
 
-//GetNews function to get news from the website
+// GetNews function to get news from the website
 func GetNews() {
 	c := colly.NewCollector(
 		colly.AllowedDomains("www.bth.se"),
@@ -19,7 +19,6 @@ func GetNews() {
 	var newsList []db.News
 
 	c.OnHTML(".Article-result", func(h *colly.HTMLElement) {
-
 		// Get the title
 		h.ForEach(".ArticleItem", func(_ int, e *colly.HTMLElement) {
 			title := e.ChildText("h2")
