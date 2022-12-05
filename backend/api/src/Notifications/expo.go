@@ -22,12 +22,6 @@ func StartServers(gormDB *gorm.DB, stopRunning *bool, retries uint) error {
 	var err error
 	// set maxRetries
 	maxRetries = retries
-	// start news notification server go routine
-	go func() {
-		if err = startNewsServer(gormDB, stopRunning); err != nil {
-			log.Fatalln("Something went wrong with the News notification server;\n error: ", err)
-		}
-	}()
 	// start exam notification server
 	if err = startExamServer(gormDB, stopRunning); err != nil {
 		log.Fatalln("Something went wrong with the Exam notification server;\n error: ", err)
@@ -83,4 +77,10 @@ func retrySendingMessages(messages []expo.PushMessage, tryNumber uint) {
 	sleepTime := time.Minute * time.Duration(tryNumber)
 	time.Sleep(sleepTime)
 	sendExpoPushMessages(messages, tryNumber+1)
+}
+
+// getAllUsersExpoPushTokens function
+func getAllUsersExpoPushTokens() ([]expo.ExponentPushToken, error) {
+	// TODO:
+	return nil, nil
 }

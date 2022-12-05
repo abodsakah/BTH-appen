@@ -2,12 +2,13 @@
 package notifications
 
 import (
-	// "log"
-	// "time"
+// "log"
+// "time"
 
-	// "github.com/abodsakah/BTH-appen/backend/api/src/DB"
-	// expo "github.com/noahhakansson/exponent-server-sdk-golang/sdk"
-	"gorm.io/gorm"
+// "github.com/abodsakah/BTH-appen/backend/api/src/DB"
+// expo "github.com/noahhakansson/exponent-server-sdk-golang/sdk"
+// db "github.com/abodsakah/BTH-appen/backend/api/src/DB"
+// "gorm.io/gorm"
 )
 
 // TODO: Figure out way to see if new news articles have been added to database.
@@ -16,18 +17,34 @@ import (
 // which then sets the flag to false after getting it from the database.
 // Loops every 3-5 hours to check for new news.
 
-// startNewsServerfunction
+// createNewsPushMessages function
+// Makes a `expo.PushMessage` for each news and
+// calls getUserExpoPushTokens for each ALL users to get the `expo.ExponentPushToken`s
+// that the `expo.PushMessage` should be sent to.
 //
-// Starts notification server.
-// Loops and sends message for due exams once a day.
-// since GetExamsDueSoon only gets exams due in ONE and FIVE days,
-// no duplicate notifications should be sent
-// as they will not be due in ONE or FIVE days after one more day has passed
-func startNewsServer(gormDB *gorm.DB, stopRunning *bool) error {
-	// loop runs every few hours checking if any new news articles have been posted.
-	// If a new article has been added a notification is sent to all users.
-	for !(*stopRunning) {
-		// TODO: loop logic
-	}
-	return nil
-}
+// Return slice of `expo.PushMessage`s
+// Or an error if no pushMessages were created.
+// func createNewsPushMessages(exams []db.News) ([]expo.PushMessage, error) {
+// 	var pushMessages []expo.PushMessage
+// 	for _, exam := range exams {
+// 		pushTokens, err := getExamPushTokens(exam)
+// 		// error means no push tokens for this exam.
+// 		if err != nil {
+// 			continue // jump to start of loop, skip creating message for this exam
+// 		}
+// 		// create message to send to all tokens in pushTokens
+// 		pushMsg := expo.PushMessage{
+// 			To:        pushTokens,
+// 			Title:     fmt.Sprintf("%s: %s", exam.CourseCode, exam.Name),
+// 			Body:      createDateTimeString(exam),
+// 			Sound:     "default",
+// 			Priority:  expo.DefaultPriority,
+// 			ChannelID: "exams",
+// 		}
+// 		pushMessages = append(pushMessages, pushMsg)
+// 	}
+// 	if pushMessages != nil {
+// 		return pushMessages, nil
+// 	}
+// 	return nil, errors.New("Error: no pushMessages to be sent")
+// }

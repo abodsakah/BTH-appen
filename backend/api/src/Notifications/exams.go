@@ -75,7 +75,7 @@ func createDateTimeString(exam db.Exam) string {
 func createExamPushMessages(exams []db.Exam) ([]expo.PushMessage, error) {
 	var pushMessages []expo.PushMessage
 	for _, exam := range exams {
-		pushTokens, err := getExamUsersPushTokens(exam)
+		pushTokens, err := getExamPushTokens(exam)
 		// error means no push tokens for this exam.
 		if err != nil {
 			continue // jump to start of loop, skip creating message for this exam
@@ -97,11 +97,11 @@ func createExamPushMessages(exams []db.Exam) ([]expo.PushMessage, error) {
 	return nil, errors.New("Error: no pushMessages to be sent")
 }
 
-// getExamUsersPushTokens function
+// getExamPushTokens function
 // validates and returns all registered users `expo.ExponentPushToken`s for ONE exam.
 //
 // Returns an error if no user `expo.ExponentPushToken`s are found for the exam
-func getExamUsersPushTokens(exam db.Exam) ([]expo.ExponentPushToken, error) {
+func getExamPushTokens(exam db.Exam) ([]expo.ExponentPushToken, error) {
 	// To check the token is valid
 	var expoPushTokens []expo.ExponentPushToken
 	// for each users tokens, validate and add them to expoPushTokens
