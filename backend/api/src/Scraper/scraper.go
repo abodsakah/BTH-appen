@@ -33,12 +33,20 @@ func GetNews(gormDB *gorm.DB) {
 			fmt.Println(title)
 			var date string
 			var des string
+			var newsDate time.Time
+			var err error
 
 			// Get the date
 			e.ForEach("p", func(_ int, e *colly.HTMLElement) {
 				if strings.Contains(e.Text, "Publicerad") {
 					date = e.Text
-					fmt.Println(date)
+					date = strings.Split(date, " ")[1]
+					// format as: yyyy-mm-dd
+					newsDate, err = time.Parse("2006-01-02", date)
+					if err != nil {
+						log.Println(err)
+					}
+
 				}
 			})
 			// Get the description
@@ -57,12 +65,12 @@ func GetNews(gormDB *gorm.DB) {
 
 			article := db.News{
 				Title:       title,
-				Date:        date,
+				Date:        newsDate,
 				Description: des,
 				Link:        link,
 			}
 
-			err := db.CreateNews(gormDB, &article) // Create the news in the database
+			err = db.CreateNews(gormDB, &article) // Create the news in the database
 			if err != nil {
 				log.Println(err)
 			}

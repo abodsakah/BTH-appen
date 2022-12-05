@@ -31,10 +31,10 @@ type Exam struct {
 // News struct
 type News struct {
 	gorm.Model
-	Title       string `gorm:"uniqueIndex" form:"title" binding:"required" json:"title"`
-	Date        string `form:"date" binding:"required" json:"date"`
-	Description string `form:"description" binding:"required" json:"description"`
-	Link        string `form:"link" binding:"required" json:"link"`
+	Title       string    `gorm:"uniqueIndex" form:"title" binding:"required" json:"title"`
+	Date        time.Time `form:"date" binding:"required" json:"date"`
+	Description string    `form:"description" binding:"required" json:"description"`
+	Link        string    `form:"link" binding:"required" json:"link"`
 }
 
 // Token struct

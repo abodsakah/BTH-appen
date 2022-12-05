@@ -39,7 +39,7 @@ func DeleteNews(db *gorm.DB, newsID uint) error {
 // Or returns an error.
 func GetNews(db *gorm.DB) ([]News, error) {
 	var news []News
-	err := db.Order("start_date ASC").Find(&news).Error
+	err := db.Order("id ASC").Find(&news).Error
 	if err != nil {
 		return nil, err
 	}
