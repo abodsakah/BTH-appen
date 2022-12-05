@@ -1,22 +1,30 @@
 package scraper
 
 import (
-	"encoding/json"
 	"fmt"
 	"log"
 	"strings"
+	"time"
 
 	db "github.com/abodsakah/BTH-appen/backend/api/src/DB"
 	"github.com/gocolly/colly"
+	"gorm.io/gorm"
 )
 
+// Start function to get the script sleep for 5 hours
+func Start(gormDB *gorm.DB) {
+	for {
+		GetNews(gormDB)
+		time.Sleep(5 * time.Hour)
+	}
+}
+
 // GetNews function to get news from the website
-func GetNews() {
+func GetNews(gormDB *gorm.DB) {
+	// Instantiate default collector
 	c := colly.NewCollector(
 		colly.AllowedDomains("www.bth.se"),
 	)
-
-	var newsList []db.News
 
 	c.OnHTML(".Article-result", func(h *colly.HTMLElement) {
 		// Get the title
@@ -54,7 +62,10 @@ func GetNews() {
 				Link:        link,
 			}
 
-			newsList = append(newsList, article)
+			err := db.CreateNews(gormDB, &article) // Create the news in the database
+			if err != nil {
+				log.Println(err)
+			}
 		})
 	})
 
@@ -62,8 +73,4 @@ func GetNews() {
 	if err != nil {
 		log.Println(err)
 	}
-
-	results, _ := json.MarshalIndent(&newsList, "", "\n")
-
-	fmt.Printf("%s", results)
 }

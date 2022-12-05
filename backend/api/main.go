@@ -18,13 +18,14 @@ func main() {
 		log.Println("DEV: Could not load .env file")
 	}
 
-	scraper.GetNews()
-	return
 	// routes.SetupRoutes()
 	gormDB, err := db.SetupDatabase()
 	if err != nil {
 		log.Fatalln(err)
 	}
+
+	// start scarper
+	go scraper.Start(gormDB)
 
 	// start notifications server go routine
 	go func() {
