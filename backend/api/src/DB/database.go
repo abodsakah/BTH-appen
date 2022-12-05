@@ -57,12 +57,16 @@ func SetupDatabase() (*gorm.DB, error) {
 	}
 
 	// NOTE: Create admin account so there is something to authenticate with when using the API.
-	user := &User{Username: "admin", Password: "pass"}
+	user := &User{
+		Name:     "Admin Adminsson",
+		Username: "admin",
+		Password: "pass",
+		Role:     "admin",
+	}
 	err = CreateUser(db, user)
 	if err != nil {
 		log.Println(err)
 	}
-
 	// return db object
 	return db, nil
 }

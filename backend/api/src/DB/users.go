@@ -22,7 +22,6 @@ func CreateUser(db *gorm.DB, user *User) error {
 	if err != nil {
 		return err
 	}
-
 	// set creation date
 	user.CreatedAt = time.Now()
 
@@ -40,6 +39,31 @@ func CreateUser(db *gorm.DB, user *User) error {
 	}
 
 	return nil
+}
+
+// IsRole function
+//
+// Tests if user has the admin role
+func IsRole(db *gorm.DB, id uint, role string) (bool, error) {
+	var user User
+	err := db.Where("id = ?", id).Find(&user).Error
+	if err != nil || user.Role != role {
+		return false, err
+	}
+	return true, nil
+}
+
+// GetUser function
+func GetUser(db *gorm.DB, userID uint) (User, error) {
+	// get user from database
+	var user User
+
+	err := db.Omit("password").Where("id = ?", userID).First(&user).Error
+	if err != nil {
+		return User{}, err
+	}
+
+	return user, nil
 }
 
 // AuthUser function

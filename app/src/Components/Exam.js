@@ -12,16 +12,22 @@ const Exam = ({ code, name, date, time, room, registered = false }) => {
 		<View style={styles.container}>
 			<Text style={styles.code}>{code}</Text>
 			<Text>{name}</Text>
-			<Text>Date: {date}</Text>
-			<Text>Time: {time}</Text>
-			<Text>Room: {room}</Text>
+			<Text>
+				{t('date')}: {date}
+			</Text>
+			<Text>
+				{t('time')}: {time}
+			</Text>
+			<Text>
+				{t('room')}: {room}
+			</Text>
 			<Button
 				onPress={registered ? unregisterExam : registerExam}
 				type={registered ? 'danger' : 'primary'}
 				onCli
 				style={styles.buttonStyle}
 			>
-				{registered ? t('unRegister') : t('register')}
+				{registered ? t('unregister') : t('register')}
 			</Button>
 		</View>
 	);
