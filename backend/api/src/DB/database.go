@@ -61,12 +61,12 @@ func SetupDatabase() (*gorm.DB, error) {
 		Name:     "Admin Adminsson",
 		Username: "admin",
 		Password: "pass",
+		Role:     "admin",
 	}
 	err = CreateUser(db, user)
 	if err != nil {
 		log.Println(err)
 	}
-
 	// return db object
 	return db, nil
 }
