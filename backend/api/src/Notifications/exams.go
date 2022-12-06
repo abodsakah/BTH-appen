@@ -46,7 +46,13 @@ func startExamServer(gormDB *gorm.DB, stopRunning *bool) error {
 			time.Sleep(time.Hour * 24)
 			continue
 		}
-		sendExpoPushMessages(pushMessages, 1)
+		var tryNumber uint = 1
+		err = sendExpoPushMessages(pushMessages, tryNumber)
+		if err != nil {
+			log.Println("startExamServer; error; ", err)
+		}
+		log.Println("Done, sleeping for 24 hours...")
+		time.Sleep(time.Hour * 24)
 	}
 
 	return nil

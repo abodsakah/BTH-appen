@@ -2,6 +2,7 @@
 package notifications
 
 import (
+	"errors"
 	"log"
 	"time"
 
@@ -9,7 +10,11 @@ import (
 	"gorm.io/gorm"
 )
 
-var maxRetries uint = 5
+var (
+	maxRetries uint = 5
+	// ErrorMaxRetry returned on reaching max retry limit
+	ErrorMaxRetry = errors.New("Error: Retry time out, reached max try number")
+)
 
 // StartServers function
 // Starts the notification server's in the notifications package.
@@ -30,18 +35,23 @@ func StartServers(gormDB *gorm.DB, stopRunning *bool, retries uint) error {
 }
 
 // sendExpoPushMessages function
-//
-func sendExpoPushMessages(messages []expo.PushMessage, tryNumber uint) {
+// Retries `tryNumber` of times, with increasing wait times.
+func sendExpoPushMessages(messages []expo.PushMessage, tryNumber uint) error {
 	// Create a new Expo SDK client
 	client := expo.NewPushClient(nil)
 
 	// Publish message
+	log.Println("tryNumber; ", tryNumber)
 	responses, err := client.PublishMultiple(messages)
 	// Check errors
 	if err != nil {
 		log.Println(err, "\nAn error occured sending message, sleeping for 1 hour before retrying.")
 		time.Sleep(time.Hour * 1)
-		retrySendingMessages(messages, tryNumber)
+		err := retrySendingMessages(messages, tryNumber)
+		if err != nil {
+			return err
+		}
+		return nil
 	}
 	// Validate responses
 	// save failed responses in array and call this function again.
@@ -58,29 +68,34 @@ func sendExpoPushMessages(messages []expo.PushMessage, tryNumber uint) {
 		for key, msg := range failedMessages {
 			log.Printf("--------Failed message[%d]:\n%#v", key, msg)
 		}
-		retrySendingMessages(failedMessages, tryNumber)
+		log.Println("CALLING retrySendingMessages(); tryNumber: ", tryNumber)
+		err := retrySendingMessages(failedMessages, tryNumber)
+		if err != nil {
+			return err
+		}
+		return nil
 	}
 	// print response
 	log.Println("Expo response:", responses)
+	return nil
 }
 
 // helper function to retry sending messages
 //
 // sleep for tryNumber of minutes, and then try to send messages.
-// if tryNumber is >= 5; Return without retrying.
-func retrySendingMessages(messages []expo.PushMessage, tryNumber uint) {
+//  example:
+// if tryNumber is = 6 and maxRetries = 5; Return without retrying.
+func retrySendingMessages(messages []expo.PushMessage, tryNumber uint) error {
 	if tryNumber > maxRetries {
-		return
+		return ErrorMaxRetry
 	}
 	log.Println("Retry: ", tryNumber)
 	log.Println("Some messages failed to send, will retry in ", tryNumber, " minutes...")
-	sleepTime := time.Minute * time.Duration(tryNumber)
+	sleepTime := time.Second * time.Duration(tryNumber)
 	time.Sleep(sleepTime)
-	sendExpoPushMessages(messages, tryNumber+1)
-}
-
-// getAllUsersExpoPushTokens function
-func getAllUsersExpoPushTokens() ([]expo.ExponentPushToken, error) {
-	// TODO:
-	return nil, nil
+	err := sendExpoPushMessages(messages, tryNumber+1)
+	if err != nil {
+		log.Println(err)
+	}
+	return nil
 }
