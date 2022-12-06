@@ -1,7 +1,6 @@
 package scraper
 
 import (
-	"fmt"
 	"log"
 	"strings"
 	"time"
@@ -10,6 +9,10 @@ import (
 	"github.com/gocolly/colly"
 	"gorm.io/gorm"
 )
+
+// domain and newsURL are the domain and the url to the news
+var domain = "https://www.bth.se"
+var newsURL = "https://www.bth.se/category/nyheter"
 
 // Start function to get the script sleep for 5 hours
 func Start(gormDB *gorm.DB) {
@@ -23,14 +26,13 @@ func Start(gormDB *gorm.DB) {
 func GetNews(gormDB *gorm.DB) {
 	// Instantiate default collector
 	c := colly.NewCollector(
-		colly.AllowedDomains("www.bth.se"),
+		colly.AllowedDomains(domain),
 	)
 
 	c.OnHTML(".Article-result", func(h *colly.HTMLElement) {
 		// Get the title
 		h.ForEach(".ArticleItem", func(_ int, e *colly.HTMLElement) {
 			title := e.ChildText("h2")
-			fmt.Println(title)
 			var date string
 			var des string
 			var newsDate time.Time
@@ -61,7 +63,6 @@ func GetNews(gormDB *gorm.DB) {
 			})
 			// Get the link
 			link := e.ChildAttr("a", "href")
-			fmt.Println(link)
 
 			article := db.News{
 				Title:       title,
@@ -76,8 +77,8 @@ func GetNews(gormDB *gorm.DB) {
 			}
 		})
 	})
-
-	err := c.Visit("https://www.bth.se/category/nyheter")
+	// Start scraping on https://www.bth.se/category/nyheter
+	err := c.Visit(newsURL)
 	if err != nil {
 		log.Println(err)
 	}

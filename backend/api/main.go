@@ -18,7 +18,6 @@ func main() {
 		log.Println("DEV: Could not load .env file")
 	}
 
-	// routes.SetupRoutes()
 	gormDB, err := db.SetupDatabase()
 	if err != nil {
 		log.Fatalln(err)
