@@ -11,8 +11,10 @@ import (
 )
 
 // domain and newsURL are the domain and the url to the news
-var domain = "https://www.bth.se"
-var newsURL = "https://www.bth.se/category/nyheter"
+var (
+	domain  = "https://www.bth.se"
+	newsURL = "https://www.bth.se/category/nyheter"
+)
 
 // Start function to get the script sleep for 5 hours
 func Start(gormDB *gorm.DB) {
