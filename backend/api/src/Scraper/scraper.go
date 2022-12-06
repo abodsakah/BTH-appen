@@ -1,3 +1,4 @@
+// Package scraper provides scraper
 package scraper
 
 import (
@@ -5,18 +6,19 @@ import (
 	"strings"
 	"time"
 
-	db "github.com/abodsakah/BTH-appen/backend/api/src/DB"
+	"github.com/abodsakah/BTH-appen/backend/api/src/DB"
 	"github.com/gocolly/colly"
 	"gorm.io/gorm"
 )
 
 // domain and newsURL are the domain and the url to the news
-var (
-	domain  = "https://www.bth.se"
+const (
+	domain  = "www.bth.se"
 	newsURL = "https://www.bth.se/category/nyheter"
 )
 
-// Start function to get the script sleep for 5 hours
+// Start function
+// Runs GetNews() every 5 hours.
 func Start(gormDB *gorm.DB) {
 	for {
 		GetNews(gormDB)

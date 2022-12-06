@@ -4,10 +4,10 @@ package main
 import (
 	"log"
 
-	db "github.com/abodsakah/BTH-appen/backend/api/src/DB"
-	notifications "github.com/abodsakah/BTH-appen/backend/api/src/Notifications"
-	routes "github.com/abodsakah/BTH-appen/backend/api/src/Routes"
-	scraper "github.com/abodsakah/BTH-appen/backend/api/src/Scraper"
+	"github.com/abodsakah/BTH-appen/backend/api/src/DB"
+	"github.com/abodsakah/BTH-appen/backend/api/src/Notifications"
+	"github.com/abodsakah/BTH-appen/backend/api/src/Routes"
+	"github.com/abodsakah/BTH-appen/backend/api/src/Scraper"
 	"github.com/joho/godotenv"
 )
 
