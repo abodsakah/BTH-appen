@@ -13,7 +13,7 @@ import (
 var (
 	maxRetries uint = 5
 	// ErrorMaxRetry returned on reaching max retry limit
-	ErrorMaxRetry = errors.New("Error: Retry time out, reached max try number")
+	ErrMaxRetry = errors.New("Error: Retry time out, reached max try number")
 )
 
 // StartServers function
@@ -87,7 +87,7 @@ func sendExpoPushMessages(messages []expo.PushMessage, tryNumber uint) error {
 // if tryNumber is = 6 and maxRetries = 5; Return without retrying.
 func retrySendingMessages(messages []expo.PushMessage, tryNumber uint) error {
 	if tryNumber > maxRetries {
-		return ErrorMaxRetry
+		return ErrMaxRetry
 	}
 	log.Println("Retry: ", tryNumber)
 	log.Println("Some messages failed to send, will retry in ", tryNumber, " minutes...")
