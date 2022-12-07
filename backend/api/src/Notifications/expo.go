@@ -91,7 +91,7 @@ func retrySendingMessages(messages []expo.PushMessage, tryNumber uint) error {
 	}
 	log.Println("Retry: ", tryNumber)
 	log.Println("Some messages failed to send, will retry in ", tryNumber, " minutes...")
-	sleepTime := time.Second * time.Duration(tryNumber)
+	sleepTime := time.Minute * time.Duration(tryNumber)
 	time.Sleep(sleepTime)
 	err := sendExpoPushMessages(messages, tryNumber+1)
 	if err != nil {
