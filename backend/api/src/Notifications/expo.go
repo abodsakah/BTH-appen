@@ -12,7 +12,7 @@ import (
 
 var (
 	maxRetries uint = 5
-	// ErrorMaxRetry returned on reaching max retry limit
+	// ErrMaxRetry returned on reaching max retry limit
 	ErrMaxRetry = errors.New("Error: Retry time out, reached max try number")
 )
 
