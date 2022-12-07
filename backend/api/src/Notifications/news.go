@@ -2,6 +2,7 @@
 package notifications
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/abodsakah/BTH-appen/backend/api/src/DB"
@@ -48,10 +49,15 @@ func createNewsPushMessage(gormDB *gorm.DB, news db.News) (expo.PushMessage, err
 	}
 
 	// create expo.PushMessage
+	data := map[string]string{
+		"news_id": fmt.Sprint(news.ID),
+		"link":    news.Link,
+	}
 	pushMsg := expo.PushMessage{
 		To:        expoPushTokens,
-		Title:     "New BTH news article published!",
+		Title:     "BTH - News article published!",
 		Body:      news.Title,
+		Data:      data,
 		Sound:     "default",
 		Priority:  expo.DefaultPriority,
 		ChannelID: "news",
