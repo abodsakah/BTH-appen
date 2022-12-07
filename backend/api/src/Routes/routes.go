@@ -34,6 +34,7 @@ func SetupRoutes(gormObj *gorm.DB) {
 	r.GET("/api/hello", hello)
 	r.POST("/api/login", login)
 	r.GET("/api/list-exams", listExams)
+	r.GET("/api/list-news", listNews)
 	r.GET("/api/list-due-exams", listDueExams)
 	// auth protected routes
 	auth := r.Group("/", authMiddleware)
@@ -320,4 +321,16 @@ func login(c *gin.Context) {
 	// create a cookie that's valid for 2 hours to match the JWT 2 hour expiration time
 	c.SetCookie("BTH-app", token, 60*60*2, "/", "localhost", true, true)
 	c.JSON(200, jsonUserInfo)
+}
+
+func listNews(c *gin.Context) {
+	// get news from database
+	news, err := db.GetNews(gormDB)
+	if err != nil {
+		log.Println(err.Error())
+		c.JSON(500, gin.H{"error": "Internal server error"})
+		return
+	}
+
+	c.JSON(200, news)
 }

@@ -128,5 +128,15 @@
         "en": "More",
         "sv-sv": "Mer",
         "ar": "المزيد"
+    },
+    "pushTokenGetFailed": {
+        "en": "Failed to get push token for push notification!",
+        "sv-sv": "Det gick inte att hämta push-token för push-avisering!",
+        "ar": "فشل في الحصول على رمز الدفع للإشعار الفوري!"
+    },
+    "errorUserLocation": {
+        "en": "Permission to access the location was denied",
+        "sv-sv": "Tillstånd att komma åt platsen nekades",
+        "ar": "تم رفض إذن الوصول إلى الموقع"
     }
 }
