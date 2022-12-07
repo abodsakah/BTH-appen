@@ -41,7 +41,6 @@ func sendExpoPushMessages(messages []expo.PushMessage, tryNumber uint) error {
 	client := expo.NewPushClient(nil)
 
 	// Publish message
-	log.Println("tryNumber; ", tryNumber)
 	responses, err := client.PublishMultiple(messages)
 	// Check errors
 	if err != nil {
@@ -64,11 +63,6 @@ func sendExpoPushMessages(messages []expo.PushMessage, tryNumber uint) error {
 	}
 	// retry sending failed messages, if any failed
 	if failedMessages != nil {
-		log.Println("we have some failed messages")
-		for key, msg := range failedMessages {
-			log.Printf("--------Failed message[%d]:\n%#v", key, msg)
-		}
-		log.Println("CALLING retrySendingMessages(); tryNumber: ", tryNumber)
 		err := retrySendingMessages(failedMessages, tryNumber)
 		if err != nil {
 			return err
