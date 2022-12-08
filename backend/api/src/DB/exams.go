@@ -51,6 +51,19 @@ func GetExams(db *gorm.DB) ([]Exam, error) {
 	return exams, nil
 }
 
+// GetExamByName function
+// returns singular exam
+//
+// Or returns an error
+func getExamByName(db *gorm.DB, name string) (int, error) {
+  var exam Exam
+  err := db.Where("name = ?", name).First(&exam).Error
+  if err != nil {
+    return int(exam.ID), err
+  }
+  return int(exam.ID), nil
+}
+
 // GetExamUsers function
 // Returns an array with all users registered to an exam.
 // Takes an exam ID.
