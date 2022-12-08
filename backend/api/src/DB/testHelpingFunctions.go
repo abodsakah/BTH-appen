@@ -23,7 +23,15 @@ var testUser = &User{
 var testExam = &Exam{
   Name: "test",
   CourseCode: "pa121212",
-  StartDate: time.Now(),
+  StartDate: time.Now().AddDate(0, 0, 1),
+}
+
+func checkIfDeleted(db *gorm.DB, id uint, table interface{}) (bool, error) {
+  err := db.Where("id = ?", id).First(&table).Error
+  if err != nil {
+    return true, err
+  }
+  return false, nil
 }
 
 func createUserWrap() (uint ,error) {
