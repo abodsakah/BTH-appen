@@ -92,6 +92,6 @@ func getDbEnvs(dbEnvs *dbEnvs) {
 	}
 	dbEnvs.Host, ok = os.LookupEnv("DB_HOST")
 	if !ok {
-		log.Fatalln("POSTGRES_PASSWORD: env variable not found")
+		log.Fatalln("DB_HOST: env variable not found")
 	}
 }
