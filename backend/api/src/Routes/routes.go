@@ -59,9 +59,9 @@ func SetupRoutes(gormObj *gorm.DB) {
 }
 
 func hello(c *gin.Context) {
-	UserID := c.Keys["UserID"]
-	if UserID != nil {
-		msg := gin.H{"message": fmt.Sprint("Hello there user ", UserID, "!")}
+	userID := c.Keys["UserID"]
+	if userID != nil {
+		msg := gin.H{"message": fmt.Sprint("Hello there user ", userID, "!")}
 		c.IndentedJSON(http.StatusOK, msg)
 		return
 	}
