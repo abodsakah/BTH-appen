@@ -7,6 +7,7 @@ import (
 	"github.com/abodsakah/BTH-appen/backend/api/src/DB"
 	"github.com/abodsakah/BTH-appen/backend/api/src/Notifications"
 	"github.com/abodsakah/BTH-appen/backend/api/src/Routes"
+	"github.com/abodsakah/BTH-appen/backend/api/src/Scraper"
 	"github.com/joho/godotenv"
 )
 
@@ -22,9 +23,13 @@ func main() {
 		log.Fatalln(err)
 	}
 
+	// start scarper
+	go scraper.Start(gormDB)
+
 	// start notifications server go routine
+	stopRunning := false
 	go func() {
-		if err := notifications.StartServer(gormDB); err != nil {
+		if err := notifications.StartServers(gormDB, &stopRunning, 5); err != nil {
 			log.Fatalln("Failed to start expo notifications server, error: ", err)
 		}
 	}()

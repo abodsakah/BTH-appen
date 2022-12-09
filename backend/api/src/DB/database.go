@@ -21,6 +21,7 @@ type dbEnvs struct {
 	Name string
 	User string
 	Pass string
+	Host string
 }
 
 // Functions
@@ -32,7 +33,7 @@ func SetupDatabase() (*gorm.DB, error) {
 	var envs dbEnvs
 	getDbEnvs(&envs)
 	// connect to DB
-	dsn := fmt.Sprintf("host=localhost user=%s password=%s dbname=%s port=5432 sslmode=disable TimeZone=Europe/Stockholm", envs.User, envs.Pass, envs.Name)
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=5432 sslmode=disable TimeZone=Europe/Stockholm", envs.Host, envs.User, envs.Pass, envs.Name)
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		return nil, err
@@ -88,5 +89,9 @@ func getDbEnvs(dbEnvs *dbEnvs) {
 	dbEnvs.Pass, ok = os.LookupEnv("POSTGRES_PASSWORD")
 	if !ok {
 		log.Fatalln("POSTGRES_PASSWORD: env variable not found")
+	}
+	dbEnvs.Host, ok = os.LookupEnv("DB_HOST")
+	if !ok {
+		log.Fatalln("DB_HOST: env variable not found")
 	}
 }
