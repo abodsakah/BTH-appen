@@ -3,11 +3,18 @@ import React from 'react';
 import { t } from '../locale/translate';
 import { Colors, Fonts } from '../style';
 import Button from './Button';
+import { unregisterExam } from '../helpers/APIManager';
 
-const Exam = ({ code, name, date, time, room, registered = false }) => {
-	const registerExam = () => {};
-	const unregisterExam = () => {};
-
+const Exam = ({
+	code,
+	name,
+	date,
+	time,
+	room,
+	registered = false,
+	HandleRegisterExam = () => {},
+	HandleUnregisterExam = () => {},
+}) => {
 	return (
 		<View style={styles.container}>
 			<Text style={styles.code}>{code}</Text>
@@ -22,7 +29,7 @@ const Exam = ({ code, name, date, time, room, registered = false }) => {
 				{t('room')}: {room}
 			</Text>
 			<Button
-				onPress={registered ? unregisterExam : registerExam}
+				onPress={registered ? HandleUnregisterExam : HandleRegisterExam}
 				type={registered ? 'danger' : 'primary'}
 				onCli
 				style={styles.buttonStyle}

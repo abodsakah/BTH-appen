@@ -1,21 +1,45 @@
 import { StyleSheet, View, Text, Settings } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react';
 import Container from '../Components/Container';
 import { Colors, Fonts } from '../style';
-import { AntDesign, Ionicons, Entypo } from '@expo/vector-icons';
+import {
+	AntDesign,
+	Ionicons,
+	Entypo,
+	MaterialCommunityIcons,
+} from '@expo/vector-icons';
 import OptionContainer from '../Components/OptionContainer';
 import { t } from '../locale/translate';
+import * as SecureStore from 'expo-secure-store';
+import * as Updates from 'expo-updates';
 
 const Profile = ({ navigation }) => {
+	const [user, setUser] = useState(null);
 	const navigateToLanguages = () => {
 		navigation.navigate('Languages');
 	};
+
+	const logout = async () => {
+		await SecureStore.deleteItemAsync('user');
+		Updates.reloadAsync();
+	};
+
+	const getUser = async () => {
+		const res = await SecureStore.getItemAsync('user');
+		if (res) {
+			setUser(JSON.parse(res));
+		}
+	};
+
+	useEffect(() => {
+		getUser();
+	}, []);
 
 	return (
 		<Container style={styles.container}>
 			<Text style={styles.heading}>{t('profile')}</Text>
 			<OptionContainer
-				text="Student Name"
+				text={user?.user.name}
 				Icon={() => <Ionicons name="md-person" size={30}></Ionicons>}
 			/>
 			<Text style={styles.heading}>{t('more')}</Text>
@@ -33,6 +57,17 @@ const Profile = ({ navigation }) => {
 				)}
 			/>
 			<OptionContainer
+				text={t('logout')}
+				Icon={() => (
+					<MaterialCommunityIcons
+						name="logout-variant"
+						size={30}
+						color={Colors.primary.regular}
+					/>
+				)}
+				onPress={logout}
+			/>
+			<OptionContainer
 				text={t('about')}
 				Icon={() => (
 					<Ionicons
@@ -43,45 +78,6 @@ const Profile = ({ navigation }) => {
 				)}
 			/>
 		</Container>
-	);
-};
-const ProfilePage = () => {
-	return (
-		<View style={styles.lista}>
-			<Ionicons name="md-person" size={30}></Ionicons>
-			<Text>Student Name</Text>
-			<AntDesign name="right" size={30} color="black" />
-		</View>
-	);
-};
-
-const Setting = () => {
-	return (
-		<View style={styles.lista}>
-			<Ionicons name="settings" size={30} color="black" />
-			<Text>Settings</Text>
-			<AntDesign name="right" size={30} color="black" />
-		</View>
-	);
-};
-
-const Language = () => {
-	return (
-		<View style={styles.lista}>
-			<Ionicons name="language" size={30} color="black" />
-			<Text>Language</Text>
-			<AntDesign name="right" size={30} color="black" />
-		</View>
-	);
-};
-
-const About = () => {
-	return (
-		<View style={styles.lista}>
-			<Ionicons name="information-circle-outline" size={30} color="black" />
-			<Text style={{ styles: 'fontSize: Fonts.size.h4' }}>About this app</Text>
-			<AntDesign name="right" size={30} color="black" />
-		</View>
 	);
 };
 

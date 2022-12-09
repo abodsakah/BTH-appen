@@ -4,7 +4,7 @@ import * as SecureStore from 'expo-secure-store';
 
 async function sendGETRequest(url, headers) {
 	try {
-		return await axios.get(url, { headers });
+		return await axios.get(url, headers);
 	} catch (error) {
 		console.assert(error);
 		return null;
@@ -51,7 +51,7 @@ export async function listAllExams() {
 	const url = `${API_URL}/list-exams`;
 	return await sendGETRequest(url, {
 		headers: {
-			jwt: `${await JSON.parse(SecureStore.getItemAsync('user'))?.jwt}`,
+			Jwt: JSON.parse(await SecureStore.getItemAsync('user'))?.jwt,
 		},
 	});
 }
@@ -60,7 +60,7 @@ export async function listDueExams() {
 	const url = `${API_URL}/list-due-exams`;
 	return await sendGETRequest(url, {
 		headers: {
-			jwt: `${await JSON.parse(SecureStore.getItemAsync('user'))?.jwt}`,
+			Jwt: JSON.parse(await SecureStore.getItemAsync('user'))?.jwt,
 		},
 	});
 }
@@ -69,7 +69,17 @@ export async function listExam(examId) {
 	const url = `${API_URL}/list-exam/${examId}`;
 	return await sendGETRequest(url, {
 		headers: {
-			jwt: `${await JSON.parse(SecureStore.getItemAsync('user'))?.jwt}`,
+			Jwt: JSON.parse(await SecureStore.getItemAsync('user'))?.jwt,
+		},
+	});
+}
+
+export async function listUserExams() {
+	const url = `${API_URL}/list-user-exams`;
+
+	return await sendGETRequest(url, {
+		headers: {
+			Jwt: JSON.parse(await SecureStore.getItemAsync('user'))?.jwt,
 		},
 	});
 }
@@ -81,7 +91,7 @@ export async function registerExam(exam_id) {
 		{ exam_id },
 		{
 			headers: {
-				jwt: `${await JSON.parse(SecureStore.getItemAsync('user'))?.jwt}`,
+				Jwt: JSON.parse(await SecureStore.getItemAsync('user'))?.jwt,
 			},
 		}
 	);
@@ -94,7 +104,7 @@ export async function unregisterExam(exam_id) {
 		{ exam_id },
 		{
 			headers: {
-				jwt: `${await JSON.parse(SecureStore.getItemAsync('user'))?.jwt}`,
+				Jwt: JSON.parse(await SecureStore.getItemAsync('user'))?.jwt,
 			},
 		}
 	);
@@ -107,7 +117,7 @@ export async function deleteExams(exam_id) {
 		{ exam_id },
 		{
 			headers: {
-				jwt: `${await JSON.parse(SecureStore.getItemAsync('user'))?.jwt}`,
+				Jwt: JSON.parse(await SecureStore.getItemAsync('user'))?.jwt,
 			},
 		}
 	);
@@ -115,15 +125,13 @@ export async function deleteExams(exam_id) {
 
 export async function addExpoPushToken(pushToken) {
 	const url = `${API_URL}/add-user-expo-push-token`;
-	console.log(
-		await sendPOSTRequest(
-			url,
-			{ expo_push_token: pushToken },
-			{
-				headers: {
-					jwt: `${await JSON.parse(SecureStore.getItemAsync('user'))?.jwt}`,
-				},
-			}
-		)
+	return await sendPOSTRequest(
+		url,
+		{ expo_push_token: pushToken },
+		{
+			headers: {
+				Jwt: JSON.parse(await SecureStore.getItemAsync('user'))?.jwt,
+			},
+		}
 	);
 }
