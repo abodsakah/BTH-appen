@@ -45,3 +45,16 @@ func GetNews(db *gorm.DB) ([]News, error) {
 	}
 	return news, nil
 }
+
+// GetExamByName function
+// returns singular exam
+//
+// Or returns an error
+func getNewsByName(db *gorm.DB, title string) (int, error) {
+  var news News
+  err := db.Where("title = ?", title).First(&news).Error
+  if err != nil {
+    return int(0), err
+  }
+  return int(news.ID), nil
+}

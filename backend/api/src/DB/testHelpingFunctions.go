@@ -4,8 +4,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/stretchr/testify/assert"
 	"gorm.io/gorm"
+	fixture "github.com/abodsakah/BTH-appen/backend/api/src/Fixture"
 )
 
 var (
@@ -26,12 +26,11 @@ var testExam = &Exam{
   StartDate: time.Now().AddDate(0, 0, 1),
 }
 
-func checkIfDeleted(db *gorm.DB, id uint, table interface{}) (bool, error) {
-  err := db.Where("id = ?", id).First(&table).Error
-  if err != nil {
-    return true, err
-  }
-  return false, nil
+var testNews = &News{
+  Title: "Test",
+  Date: time.Now(),
+  Description: "A test",
+  Link: "test.com",
 }
 
 func createUserWrap() (uint ,error) {
@@ -46,7 +45,7 @@ func createUserWrap() (uint ,error) {
 }
 
 func fixtureWrapUser(t *testing.T) (uint, error) {
-	err := cleanUp(db, additionalTables)
+  err := fixture.CleanUp(db, additionalTables, &User{}, &Exam{}, &News{}, &Token{})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -56,7 +55,7 @@ func fixtureWrapUser(t *testing.T) (uint, error) {
 
 func fixtureWrapExam(t *testing.T) (uint, error) {
 
-	err := cleanUp(db, additionalTables)
+  err := fixture.CleanUp(db, additionalTables, &User{}, &Exam{}, &News{}, &Token{})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -65,10 +64,13 @@ func fixtureWrapExam(t *testing.T) (uint, error) {
 	return uint(id), err
 }
 
-func assertNoError(t *testing.T, err error, message string) {
-	assert.Equal(t, nil, err, message)
+func fixtureWrapNews(t *testing.T) (uint, error) {
+  err := fixture.CleanUp(db, additionalTables, &User{}, &Exam{}, &News{}, &Token{})
+	if err != nil {
+		t.Fatal(err)
+	}
+  err = CreateNews(db, testNews)
+  id, _ := getNewsByName(db, testNews.Title)
+	return uint(id), err
 }
 
-func assertError(t *testing.T, err error, message string) {
-	assert.NotEqual(t, nil, err, message)
-}
