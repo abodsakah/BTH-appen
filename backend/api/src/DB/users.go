@@ -53,6 +53,43 @@ func IsRole(db *gorm.DB, id uint, role string) (bool, error) {
 	return true, nil
 }
 
+// GetAllUsers function
+func GetAllUsers(db *gorm.DB) ([]User, error) {
+	// get users from database
+	var users []User
+
+	err := db.Omit("password").Find(&users).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return users, nil
+}
+
+// GetAllUserTokens function
+// Wont get deleted users token.
+// And later if implemented, should
+// respect user settings incase they dont want notifications.
+//
+// Returns all users expo tokens.
+func GetAllUserTokens(db *gorm.DB) ([]Token, error) {
+	// get users from database
+	var users []User
+	var tokens []Token
+
+	err := db.Preload("Tokens").Find(&users).Error
+	if err != nil {
+		return nil, err
+	}
+
+	// append all user tokens to one large tokens slice.
+	for _, user := range users {
+		tokens = append(tokens, user.Tokens...)
+	}
+
+	return tokens, nil
+}
+
 // GetUser function
 func GetUser(db *gorm.DB, userID uint) (User, error) {
 	// get user from database

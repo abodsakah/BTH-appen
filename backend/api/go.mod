@@ -7,6 +7,7 @@ require (
 	github.com/gocolly/colly v1.2.0
 	github.com/golang-jwt/jwt/v4 v4.4.3
 	github.com/joho/godotenv v1.4.0
+	github.com/noahhakansson/exponent-server-sdk-golang v0.0.0-20211012185921-280ba35546ca
 	github.com/stretchr/testify v1.8.1
 	golang.org/x/crypto v0.4.0
 	gorm.io/driver/postgres v1.4.5

@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/abodsakah/BTH-appen/backend/api/src/DB"
+	"github.com/abodsakah/BTH-appen/backend/api/src/Notifications"
 	"github.com/gocolly/colly"
 	"gorm.io/gorm"
 )
@@ -75,9 +76,16 @@ func GetNews(gormDB *gorm.DB) {
 				Link:        link,
 			}
 
-			err = db.CreateNews(gormDB, &article) // Create the news in the database
+			// Add the news article to the database
+			err = db.CreateNews(gormDB, &article)
 			if err != nil {
 				log.Println(err)
+			} else {
+				// send notification to users if a new news article is added to the database.
+				err := notifications.SendNewsPushMessage(gormDB, article)
+				if err != nil {
+					log.Println(err)
+				}
 			}
 		})
 	})

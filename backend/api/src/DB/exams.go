@@ -84,7 +84,7 @@ func GetExamUsers(db *gorm.DB, examID uint) ([]*User, error) {
 // GetExamsDueSoon function
 //
 // Returns all exams due in FIVE or ONE days
-// with their users preloaded from the database.
+// with all registered users ExpoPushTokens
 // Made with intent to get exams with users to notify them in the app.
 //
 // Or returns an error.
@@ -101,7 +101,7 @@ func GetExamsDueSoon(db *gorm.DB) ([]Exam, error) {
 	err := db.Order("start_date ASC").
 		Where("start_date BETWEEN ? AND ?", tomorrow, inTwoDays).
 		Or("start_date BETWEEN ? AND ?", inFiveDays, inSixDays).
-		Preload("Users").
+		Preload("Users.Tokens").
 		Find(&exams).Error
 	if err != nil {
 		return nil, err
