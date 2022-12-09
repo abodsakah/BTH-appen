@@ -1,9 +1,10 @@
 package fixture
 
 import (
-	"gorm.io/gorm"
+	"testing"
+
 	"github.com/stretchr/testify/assert"
-  "testing"
+	"gorm.io/gorm"
 )
 
 func CleanUp(db *gorm.DB, additionalTables []string, tables ...interface{}) error {
@@ -22,11 +23,11 @@ func CleanUp(db *gorm.DB, additionalTables []string, tables ...interface{}) erro
 }
 
 func CheckIfDeleted(db *gorm.DB, id uint, table interface{}) (bool, error) {
-  err := db.Where("id = ?", id).First(&table).Error
-  if err != nil {
-    return true, err
-  }
-  return false, nil
+	err := db.Where("id = ?", id).First(&table).Error
+	if err != nil {
+		return true, err
+	}
+	return false, nil
 }
 
 func AssertNoError(t *testing.T, err error, message string) {

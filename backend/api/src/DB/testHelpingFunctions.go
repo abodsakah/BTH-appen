@@ -4,12 +4,12 @@ import (
 	"testing"
 	"time"
 
-	"gorm.io/gorm"
 	fixture "github.com/abodsakah/BTH-appen/backend/api/src/Fixture"
+	"gorm.io/gorm"
 )
 
 var (
-	db *gorm.DB
+	db               *gorm.DB
 	additionalTables = []string{"exam_users"}
 )
 
@@ -21,56 +21,54 @@ var testUser = &User{
 }
 
 var testExam = &Exam{
-  Name: "test",
-  CourseCode: "pa121212",
-  StartDate: time.Now().AddDate(0, 0, 1),
+	Name:       "test",
+	CourseCode: "pa121212",
+	StartDate:  time.Now().AddDate(0, 0, 1),
 }
 
 var testNews = &News{
-  Title: "Test",
-  Date: time.Now(),
-  Description: "A test",
-  Link: "test.com",
+	Title:       "Test",
+	Date:        time.Now(),
+	Description: "A test",
+	Link:        "test.com",
 }
 
-func createUserWrap() (uint ,error) {
+func createUserWrap() (uint, error) {
 	temp := *testUser
 	err := CreateUser(db, testUser)
 	*testUser = temp
 	if err != nil {
 		return 0, err
 	}
-  user, _ := GetUserByName(db, testUser.Username)
-	return user.ID ,nil
+	user, _ := GetUserByName(db, testUser.Username)
+	return user.ID, nil
 }
 
 func fixtureWrapUser(t *testing.T) (uint, error) {
-  err := fixture.CleanUp(db, additionalTables, &User{}, &Exam{}, &News{}, &Token{})
+	err := fixture.CleanUp(db, additionalTables, &User{}, &Exam{}, &News{}, &Token{})
 	if err != nil {
 		t.Fatal(err)
 	}
-  id , err := createUserWrap()
+	id, err := createUserWrap()
 	return id, err
 }
 
 func fixtureWrapExam(t *testing.T) (uint, error) {
-
-  err := fixture.CleanUp(db, additionalTables, &User{}, &Exam{}, &News{}, &Token{})
+	err := fixture.CleanUp(db, additionalTables, &User{}, &Exam{}, &News{}, &Token{})
 	if err != nil {
 		t.Fatal(err)
 	}
-  err = CreateExam(db, testExam)
-  id, _ := getExamByName(db, testExam.Name)
+	err = CreateExam(db, testExam)
+	id, _ := getExamByName(db, testExam.Name)
 	return uint(id), err
 }
 
 func fixtureWrapNews(t *testing.T) (uint, error) {
-  err := fixture.CleanUp(db, additionalTables, &User{}, &Exam{}, &News{}, &Token{})
+	err := fixture.CleanUp(db, additionalTables, &User{}, &Exam{}, &News{}, &Token{})
 	if err != nil {
 		t.Fatal(err)
 	}
-  err = CreateNews(db, testNews)
-  id, _ := getNewsByName(db, testNews.Title)
+	err = CreateNews(db, testNews)
+	id, _ := getNewsByName(db, testNews.Title)
 	return uint(id), err
 }
-

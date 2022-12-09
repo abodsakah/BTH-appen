@@ -3,9 +3,9 @@ package db
 import (
 	"testing"
 
-	"github.com/stretchr/testify/assert"
 	fixture "github.com/abodsakah/BTH-appen/backend/api/src/Fixture"
 	"github.com/joho/godotenv"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestDatabaseUser(t *testing.T) {
@@ -33,13 +33,13 @@ func TestUserCreate2(t *testing.T) {
 
 // Tries to create exam when there is none in database
 func TestUserIsRole1(t *testing.T) {
-  id, _ := fixtureWrapUser(t)
+	id, _ := fixtureWrapUser(t)
 	res, _ := IsRole(db, id, "student")
 	assert.Equal(t, true, res, "User with role \"student\" shall make the function return true when its given \"student\"")
 }
 
 func TestUserIsRole2(t *testing.T) {
-  id, _ := fixtureWrapUser(t)
+	id, _ := fixtureWrapUser(t)
 	res, _ := IsRole(db, id, "admin")
 	assert.NotEqual(t, true, res, "User with role \"student\" shall make function return false when its given admin")
 }
