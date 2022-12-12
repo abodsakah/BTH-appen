@@ -2,7 +2,6 @@ package db
 
 import (
 	"errors"
-	"log"
 	"time"
 
 	"golang.org/x/crypto/bcrypt"
