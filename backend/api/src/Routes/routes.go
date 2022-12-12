@@ -137,13 +137,17 @@ func deleteExam(c *gin.Context) {
 	}
 
 	// delete exam
-	if err := db.DeleteExam(gormDB, reqObj.ExamID); err != nil {
+	exam, err := db.DeleteExam(gormDB, reqObj.ExamID)
+	if err != nil {
 		log.Println(err.Error())
 		c.JSON(500, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(200, gin.H{"Success": fmt.Sprintf("Exam %d was deleted", reqObj.ExamID)})
+	c.JSON(200, gin.H{
+		"Success": fmt.Sprintf("Exam %d was deleted", reqObj.ExamID),
+		"exam":    exam,
+	})
 }
 
 func listExams(c *gin.Context) {
@@ -233,12 +237,15 @@ func registerToExam(c *gin.Context) {
 	}
 	// register user to exam
 	userID := c.Keys["UserID"].(uint)
-	err := db.AddUserToExam(gormDB, reqObj.ExamID, userID)
+	user, err := db.AddUserToExam(gormDB, reqObj.ExamID, userID)
 	if err != nil {
 		c.JSON(500, gin.H{"error": "Internal server error"})
 		return
 	}
-	c.JSON(200, gin.H{"Success": fmt.Sprintf("User %d was registered to exam %d", userID, reqObj.ExamID)})
+	c.JSON(200, gin.H{
+		"Success": fmt.Sprintf("User %d was registered to exam %d", userID, reqObj.ExamID),
+		"user":    user,
+	})
 }
 
 func unregisterFromExam(c *gin.Context) {
@@ -251,12 +258,15 @@ func unregisterFromExam(c *gin.Context) {
 	}
 	// unregister user to exam
 	userID := c.Keys["UserID"].(uint)
-	err := db.RemoveUserFromExam(gormDB, reqObj.ExamID, userID)
+	user, err := db.RemoveUserFromExam(gormDB, reqObj.ExamID, userID)
 	if err != nil {
 		c.JSON(500, gin.H{"error": "Internal server error"})
 		return
 	}
-	c.JSON(200, gin.H{"Success": fmt.Sprintf("User %d was unregistered from exam %d", userID, reqObj.ExamID)})
+	c.JSON(200, gin.H{
+		"Success": fmt.Sprintf("User %d was unregistered from exam %d", userID, reqObj.ExamID),
+		"user":    user,
+	})
 }
 
 func createUser(c *gin.Context) {
