@@ -43,7 +43,7 @@ func CreateUser(db *gorm.DB, user *User) error {
 
 // IsRole function
 //
-// Tests if user has the admin role
+// Tests if user has the given role
 func IsRole(db *gorm.DB, id uint, role string) (bool, error) {
 	var user User
 	err := db.Where("id = ?", id).Find(&user).Error
