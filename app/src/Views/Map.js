@@ -24,7 +24,7 @@ const Map = () => {
 	const [search, setSearch] = useState('');
 	const [searchFound, setSearchFound] = useState(false);
 	const [searchResults, setSearchResults] = useState('');
-	const [userLocation, setUserLocation] = useState(null);
+	const [userLocation, setUserLocation] = useState({});
 
 	const expandAnimation = useRef(new Animated.Value(0)).current;
 
@@ -87,7 +87,7 @@ const Map = () => {
 		}
 
 		let location = await Location.getCurrentPositionAsync({});
-		setUserLocation(location);
+		setUserLocation(location.coords);
 	};
 
 	useEffect(() => {
@@ -165,14 +165,16 @@ const Map = () => {
 							<CustomMarker title={i.toUpperCase()} />
 						</Marker>
 					))}
-					<Marker
-						coordinate={{
-							latitude: userLocation?.coords.latitude,
-							longitude: userLocation?.coords.longitude,
-						}}
-					>
-						<UserMarker />
-					</Marker>
+					{userLocation.latitude && userLocation.longitude && (
+						<Marker
+							coordinate={{
+								latitude: userLocation?.latitude,
+								longitude: userLocation?.longitude,
+							}}
+						>
+							<UserMarker />
+						</Marker>
+					)}
 				</MapView>
 			</View>
 		</Container>

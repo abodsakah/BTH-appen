@@ -91,7 +91,7 @@ const Exams = () => {
 								time={new Date(exam.start_date)
 									.toLocaleTimeString()
 									.slice(0, 5)}
-								room="TBD"
+								room={exam?.room || 'Not set'}
 								registered
 							/>
 						))}
@@ -108,7 +108,7 @@ const Exams = () => {
 								time={new Date(exam.start_date)
 									.toLocaleTimeString()
 									.slice(0, 5)}
-								room="TBD"
+								room={exam?.room || 'Not set'}
 								HandleRegisterExam={() => HandleRegisterExam(exam.ID)}
 								HandleUnregisterExam={() => HandleUnregisterExam(exam.ID)}
 							/>
