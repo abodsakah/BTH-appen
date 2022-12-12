@@ -264,7 +264,7 @@ func registerToExam(c *gin.Context) {
 	userID := c.Keys["UserID"].(uint)
 	user, err := db.AddUserToExam(gormDB, reqObj.ExamID, userID)
 	if err != nil {
-		c.JSON(500, gin.H{"error": "Internal server error"})
+		c.JSON(500, gin.H{"error": err.Error()})
 		return
 	}
 	c.JSON(200, gin.H{
@@ -285,7 +285,7 @@ func unregisterFromExam(c *gin.Context) {
 	userID := c.Keys["UserID"].(uint)
 	user, err := db.RemoveUserFromExam(gormDB, reqObj.ExamID, userID)
 	if err != nil {
-		c.JSON(500, gin.H{"error": "Internal server error"})
+		c.JSON(500, gin.H{"error": err.Error()})
 		return
 	}
 	c.JSON(200, gin.H{
