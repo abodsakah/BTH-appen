@@ -50,6 +50,7 @@ func SetupRoutes(gormObj *gorm.DB) {
 			adminAuth.POST("/api/create-user", createUser)
 			adminAuth.POST("/api/create-exam", createExam)
 			adminAuth.DELETE("/api/delete-exam", deleteExam)
+			adminAuth.DELETE("/api/delete-news", deleteNews)
 		}
 	}
 
@@ -124,6 +125,30 @@ func createExam(c *gin.Context) {
 	}
 
 	c.JSON(200, exam)
+}
+
+func deleteNews(c *gin.Context) {
+	var reqObj newsReqBody
+
+	// bind body data or return error if it fails
+	if err := c.ShouldBind(&reqObj); err != nil {
+		log.Println(err.Error())
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+
+	// delete news article
+	news, err := db.DeleteNews(gormDB, reqObj.NewsID)
+	if err != nil {
+		log.Println(err.Error())
+		c.JSON(500, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(200, gin.H{
+		"Success": fmt.Sprintf("News article %d was deleted", reqObj.NewsID),
+		"news":    news,
+	})
 }
 
 func deleteExam(c *gin.Context) {
