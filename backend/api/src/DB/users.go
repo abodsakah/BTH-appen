@@ -2,6 +2,7 @@ package db
 
 import (
 	"errors"
+	"log"
 	"time"
 
 	"golang.org/x/crypto/bcrypt"
@@ -133,18 +134,18 @@ func AuthUser(db *gorm.DB, username string, password string) (userID uint, err e
 // ExpoPushToken example: `ExponentPushToken[xxxxxxxxxxxxxxxxxxxxxx]`
 //
 // Or returns an error.
-func AddExpoPushToken(db *gorm.DB, userID uint, pushToken string) error {
+func AddExpoPushToken(db *gorm.DB, userID uint, pushToken string) (User, error) {
 	// find user
 	var user User
 	err := db.Where("id = ?", userID).First(&user).Error
 	if err != nil {
-		return err
+		return User{}, err
 	}
 
 	// update user exams with exam
 	err = db.Model(&user).Association("Tokens").Append(&Token{ExpoPushToken: pushToken})
 	if err != nil {
-		return err
+		return User{}, err
 	}
-	return nil
+	return user, nil
 }

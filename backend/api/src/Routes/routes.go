@@ -215,7 +215,7 @@ func addUserExpoPushToken(c *gin.Context) {
 	}
 	// add expo push token to user
 	userID := c.Keys["UserID"].(uint)
-	err := db.AddExpoPushToken(gormDB, userID, expoToken.ExpoPushToken)
+	_, err := db.AddExpoPushToken(gormDB, userID, expoToken.ExpoPushToken)
 	if err != nil {
 		c.JSON(500, gin.H{"error": "Internal server error"})
 		return
