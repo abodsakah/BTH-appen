@@ -24,6 +24,7 @@ type Exam struct {
 	gorm.Model
 	Name       string    `form:"name" binding:"required" json:"name,omitempty"`
 	CourseCode string    `form:"course_code" binding:"required" json:"course_code,omitempty"`
+	Room       string    `form:"room" binding:"required" json:"room,omitempty"`
 	StartDate  time.Time `form:"start_date" binding:"required" json:"start_date,omitempty"`
 	Users      []*User   `gorm:"many2many:exam_users;" json:"users,omitempty"`
 }
