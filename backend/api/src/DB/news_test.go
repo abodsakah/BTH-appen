@@ -12,8 +12,9 @@ func TestDatabaseNews(t *testing.T) {
 	if err != nil {
 		t.Log("DEV: Could not load .env file")
 	}
-	_, err = SetupDatabase()
+	dbP, err := SetupDatabase()
 	assert.Nil(t, err, "Database can not be connected to")
+	db = dbP
 }
 
 func TestCreateNews1(t *testing.T) {
