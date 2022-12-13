@@ -12,9 +12,8 @@ func TestDatabaseExam(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	dbP, err := SetupDatabase()
+	_, err = SetupDatabase()
 	assert.Nil(t, err, "Database can not be connected to")
-	db = dbP
 }
 
 func TestCreateExam1(t *testing.T) {
