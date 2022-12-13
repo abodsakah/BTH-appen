@@ -10,7 +10,7 @@ import (
 func TestDatabaseUser(t *testing.T) {
 	err := godotenv.Load("../../../.env")
 	if err != nil {
-		t.Fatal(err)
+		t.Log("DEV: Could not load .env file")
 	}
 	_, err = SetupDatabase()
 	assert.Nil(t, err, "Database can not be connected to")
