@@ -24,17 +24,15 @@ func TestCreateExam1(t *testing.T) {
 }
 
 func TestCreateExam2(t *testing.T) {
-	_, err := fixtureWrap(t, &testExam)
-	err = CreateExam(db, testExam)
+  fixtureWrap(t, &testExam)
+  err := CreateExam(db, testExam)
 	fixture.AssertError(t, err, "After already having created an exam with the same credentials, trying to create a duplicate shall return an error")
 }
 
 func TestDeleteExam1(t *testing.T) {
 	id, _ := fixtureWrap(t, &testExam)
-	DeleteExam(db, id)
-	var exam Exam
-	res, _ := fixture.CheckIfDeleted(db, id, &exam)
-	assert.Equal(t, true, res, "After having deleted an exam, it should not be in database anymore")
+  _, err := DeleteExam(db, id)
+  assert.Nil(t, err, "When deleting the object it shall not return an error")
 }
 
 func TestAddUserToExam1(t *testing.T) {
