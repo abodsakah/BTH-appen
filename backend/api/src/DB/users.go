@@ -43,7 +43,7 @@ func CreateUser(db *gorm.DB, user *User) error {
 
 // IsRole function
 //
-// Tests if user has the admin role
+// Tests if user has the given role
 func IsRole(db *gorm.DB, id uint, role string) (bool, error) {
 	var user User
 	err := db.Where("id = ?", id).Find(&user).Error
@@ -51,6 +51,43 @@ func IsRole(db *gorm.DB, id uint, role string) (bool, error) {
 		return false, err
 	}
 	return true, nil
+}
+
+// GetAllUsers function
+func GetAllUsers(db *gorm.DB) ([]User, error) {
+	// get users from database
+	var users []User
+
+	err := db.Omit("password").Find(&users).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return users, nil
+}
+
+// GetAllUserTokens function
+// Wont get deleted users token.
+// And later if implemented, should
+// respect user settings incase they dont want notifications.
+//
+// Returns all users expo tokens.
+func GetAllUserTokens(db *gorm.DB) ([]Token, error) {
+	// get users from database
+	var users []User
+	var tokens []Token
+
+	err := db.Preload("Tokens").Find(&users).Error
+	if err != nil {
+		return nil, err
+	}
+
+	// append all user tokens to one large tokens slice.
+	for _, user := range users {
+		tokens = append(tokens, user.Tokens...)
+	}
+
+	return tokens, nil
 }
 
 // GetUser function
@@ -96,18 +133,18 @@ func AuthUser(db *gorm.DB, username string, password string) (userID uint, err e
 // ExpoPushToken example: `ExponentPushToken[xxxxxxxxxxxxxxxxxxxxxx]`
 //
 // Or returns an error.
-func AddExpoPushToken(db *gorm.DB, userID uint, pushToken string) error {
+func AddExpoPushToken(db *gorm.DB, userID uint, pushToken string) (User, error) {
 	// find user
 	var user User
 	err := db.Where("id = ?", userID).First(&user).Error
 	if err != nil {
-		return err
+		return User{}, err
 	}
 
 	// update user exams with exam
 	err = db.Model(&user).Association("Tokens").Append(&Token{ExpoPushToken: pushToken})
 	if err != nil {
-		return err
+		return User{}, err
 	}
-	return nil
+	return user, nil
 }

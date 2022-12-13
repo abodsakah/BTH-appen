@@ -34,6 +34,7 @@ func SetupRoutes(gormObj *gorm.DB) {
 	r.GET("/api/hello", hello)
 	r.POST("/api/login", login)
 	r.GET("/api/list-exams", listExams)
+	r.GET("/api/list-news", listNews)
 	r.GET("/api/list-due-exams", listDueExams)
 	// auth protected routes
 	auth := r.Group("/", authMiddleware)
@@ -49,6 +50,7 @@ func SetupRoutes(gormObj *gorm.DB) {
 			adminAuth.POST("/api/create-user", createUser)
 			adminAuth.POST("/api/create-exam", createExam)
 			adminAuth.DELETE("/api/delete-exam", deleteExam)
+			adminAuth.DELETE("/api/delete-news", deleteNews)
 		}
 	}
 
@@ -58,9 +60,9 @@ func SetupRoutes(gormObj *gorm.DB) {
 }
 
 func hello(c *gin.Context) {
-	UserID := c.Keys["UserID"]
-	if UserID != nil {
-		msg := gin.H{"message": fmt.Sprint("Hello there user ", UserID, "!")}
+	userID := c.Keys["UserID"]
+	if userID != nil {
+		msg := gin.H{"message": fmt.Sprint("Hello there user ", userID, "!")}
 		c.IndentedJSON(http.StatusOK, msg)
 		return
 	}
@@ -125,6 +127,30 @@ func createExam(c *gin.Context) {
 	c.JSON(200, exam)
 }
 
+func deleteNews(c *gin.Context) {
+	var reqObj newsReqBody
+
+	// bind body data or return error if it fails
+	if err := c.ShouldBind(&reqObj); err != nil {
+		log.Println(err.Error())
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+
+	// delete news article
+	news, err := db.DeleteNews(gormDB, reqObj.NewsID)
+	if err != nil {
+		log.Println(err.Error())
+		c.JSON(500, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(200, gin.H{
+		"Success": fmt.Sprintf("News article %d was deleted", reqObj.NewsID),
+		"news":    news,
+	})
+}
+
 func deleteExam(c *gin.Context) {
 	var reqObj examReqBody
 
@@ -136,13 +162,17 @@ func deleteExam(c *gin.Context) {
 	}
 
 	// delete exam
-	if err := db.DeleteExam(gormDB, reqObj.ExamID); err != nil {
+	exam, err := db.DeleteExam(gormDB, reqObj.ExamID)
+	if err != nil {
 		log.Println(err.Error())
 		c.JSON(500, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(200, gin.H{"Success": fmt.Sprintf("Exam %d was deleted", reqObj.ExamID)})
+	c.JSON(200, gin.H{
+		"Success": fmt.Sprintf("Exam %d was deleted", reqObj.ExamID),
+		"exam":    exam,
+	})
 }
 
 func listExams(c *gin.Context) {
@@ -214,7 +244,7 @@ func addUserExpoPushToken(c *gin.Context) {
 	}
 	// add expo push token to user
 	userID := c.Keys["UserID"].(uint)
-	err := db.AddExpoPushToken(gormDB, userID, expoToken.ExpoPushToken)
+	_, err := db.AddExpoPushToken(gormDB, userID, expoToken.ExpoPushToken)
 	if err != nil {
 		c.JSON(500, gin.H{"error": "Internal server error"})
 		return
@@ -232,12 +262,15 @@ func registerToExam(c *gin.Context) {
 	}
 	// register user to exam
 	userID := c.Keys["UserID"].(uint)
-	err := db.AddUserToExam(gormDB, reqObj.ExamID, userID)
+	user, err := db.AddUserToExam(gormDB, reqObj.ExamID, userID)
 	if err != nil {
-		c.JSON(500, gin.H{"error": "Internal server error"})
+		c.JSON(500, gin.H{"error": err.Error()})
 		return
 	}
-	c.JSON(200, gin.H{"Success": fmt.Sprintf("User %d was registered to exam %d", userID, reqObj.ExamID)})
+	c.JSON(200, gin.H{
+		"Success": fmt.Sprintf("User %d was registered to exam %d", userID, reqObj.ExamID),
+		"user":    user,
+	})
 }
 
 func unregisterFromExam(c *gin.Context) {
@@ -250,12 +283,15 @@ func unregisterFromExam(c *gin.Context) {
 	}
 	// unregister user to exam
 	userID := c.Keys["UserID"].(uint)
-	err := db.RemoveUserFromExam(gormDB, reqObj.ExamID, userID)
+	user, err := db.RemoveUserFromExam(gormDB, reqObj.ExamID, userID)
 	if err != nil {
-		c.JSON(500, gin.H{"error": "Internal server error"})
+		c.JSON(500, gin.H{"error": err.Error()})
 		return
 	}
-	c.JSON(200, gin.H{"Success": fmt.Sprintf("User %d was unregistered from exam %d", userID, reqObj.ExamID)})
+	c.JSON(200, gin.H{
+		"Success": fmt.Sprintf("User %d was unregistered from exam %d", userID, reqObj.ExamID),
+		"user":    user,
+	})
 }
 
 func createUser(c *gin.Context) {
@@ -320,4 +356,16 @@ func login(c *gin.Context) {
 	// create a cookie that's valid for 2 hours to match the JWT 2 hour expiration time
 	c.SetCookie("BTH-app", token, 60*60*2, "/", "localhost", true, true)
 	c.JSON(200, jsonUserInfo)
+}
+
+func listNews(c *gin.Context) {
+	// get news from database
+	news, err := db.GetNews(gormDB)
+	if err != nil {
+		log.Println(err.Error())
+		c.JSON(500, gin.H{"error": "Internal server error"})
+		return
+	}
+
+	c.JSON(200, news)
 }
