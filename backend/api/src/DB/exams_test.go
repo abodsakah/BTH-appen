@@ -67,7 +67,7 @@ func TestRemoveUserFromExam2(t *testing.T) {
 func TestGetExamsDueSoon(t *testing.T) {
 	_, _ = fixtureWrap(t, &testExam)
 	exams, _ := GetExamsDueSoon(db)
-	assert.Less(t, 0, len(exams), "After an exam has been created with the current date, it should come up in the array of due exams")
+	assert.Less(t, 0, len(exams), "After an exam has been created with the current date plus one day, it should come up in the array of due exams")
 }
 
 func TestGetExamUsers1(t *testing.T) {
