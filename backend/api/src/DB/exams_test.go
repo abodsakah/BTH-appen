@@ -44,7 +44,7 @@ func TestAddUserToExam1(t *testing.T) {
 func TestAddUserToExam2(t *testing.T) {
 	idExam, _ := fixtureWrap(t, &testExam)
 	idUser, _ := createUserWrap()
-	AddUserToExam(db, idExam, idUser)
+	_, _ = AddUserToExam(db, idExam, idUser)
 	_, err := AddUserToExam(db, idExam, idUser)
   assert.NotNil(t, err, "Trying to add a duplicate entry should return an error")
 }
@@ -52,7 +52,7 @@ func TestAddUserToExam2(t *testing.T) {
 func TestRemoveUserFromExam1(t *testing.T) {
 	idExam, _ := fixtureWrap(t, &testExam)
 	idUser, _ := createUserWrap()
-	AddUserToExam(db, idExam, idUser)
+	_, _ = AddUserToExam(db, idExam, idUser)
 	_, err := RemoveUserFromExam(db, idExam, idUser)
   assert.Nil(t, err, "Removing an existing entry shall not return any errors")
 }
@@ -73,14 +73,14 @@ func TestGetExamsDueSoon(t *testing.T) {
 func TestGetExamUsers1(t *testing.T) {
 	idExam, _ := fixtureWrap(t, &testExam)
 	idUser, _ := createUserWrap()
-	AddUserToExam(db, idExam, idUser)
+	_, _ = AddUserToExam(db, idExam, idUser)
 	users, _ := GetExamUsers(db, idExam)
 	assert.Less(t, 0, len(users), "GetExamUsers should return 1 entry in the array after a user has been added to the exam")
 }
 
 func TestGetExamUsers2(t *testing.T) {
 	idExam, _ := fixtureWrap(t, &testExam)
-	createUserWrap()
+	_, _ = createUserWrap()
 	users, _ := GetExamUsers(db, idExam)
 	assert.Equal(t, 0, len(users), "GetExamUsers should return 0 entries in the array when no user has been added to exam")
 }
