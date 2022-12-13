@@ -5,7 +5,6 @@ import (
 
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
-	// "github.com/stretchr/testify/assert"
 )
 
 func TestDatabaseNews(t *testing.T) {
