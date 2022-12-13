@@ -32,10 +32,8 @@ func TestCreateNews2(t *testing.T) {
 
 func TestDeleteNews1(t *testing.T) {
 	newsID, _ := fixtureWrap(t, &testNews)
-	DeleteNews(db, newsID)
-	var news News
-	res, _ := fixture.CheckIfDeleted(db, newsID, &news)
-	assert.Equal(t, true, res, "When calling delete the article shall be soft-deleted from the database and not come up in a where statement")
+	_, err := DeleteNews(db, newsID)
+	assert.Nil(t, err, "After calling delete on news, it should not return any errors")
 }
 
 func TestGetNews1(t *testing.T) {

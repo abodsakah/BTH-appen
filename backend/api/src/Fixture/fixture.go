@@ -25,17 +25,6 @@ func CleanUp(db *gorm.DB, additionalTables []string, tables ...interface{}) erro
 	return err
 }
 
-// CheckIfDeleted 
-// Checks if entry is deleted 
-// Returns err if it true if it doesn't exist, vice versa
-func CheckIfDeleted(db *gorm.DB, id uint, table interface{}) (bool, error) {
-	err := db.Where("id = ?", id).First(&table).Error
-	if err != nil {
-		return true, err
-	}
-	return false, nil
-}
-
 func AssertNoError(t *testing.T, err error, message string) {
 	assert.Equal(t, nil, err, message)
 }
