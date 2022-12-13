@@ -57,3 +57,4 @@ jobs:
           POSTGRES_NAME: bth-app
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
+          SECRET_SIGN_KEY: supersecretkey
