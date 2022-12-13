@@ -16,8 +16,7 @@ import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity } from 'rea
 import { Container, Header, Content, Card, CardItem, Thumbnail, Button, Icon, Left, Body, Right } from 'native-base';
 import { Actions } from 'react-native-router-flux';
 
-export default class News extends Component {
-    render() {
+const News = () => {
         return (
         <ScrollView>
             <Container>
@@ -58,4 +57,5 @@ export default class News extends Component {
         </ScrollView>
         );
     }
-    }
+
+export default News;
