@@ -3,7 +3,6 @@ package db
 import (
 	"testing"
 
-	fixture "github.com/abodsakah/BTH-appen/backend/api/src/Fixture"
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
 )
@@ -14,19 +13,19 @@ func TestDatabaseUser(t *testing.T) {
 		t.Fatal(err)
 	}
 	dbP, err := SetupDatabase()
-	fixture.AssertNoError(t, err, "Database can not be connected to")
+  assert.Nil(t, err, "Database can not be connected to")
 	db = dbP
 }
 
 func TestUserCreate1(t *testing.T) {
 	_, err := fixtureWrapUser(t)
-	fixture.AssertNoError(t, err, "API endpoint should be able to create user if no duplicates are present")
+  assert.Nil(t, err, "When calling create, with no duplicates, it shall return no errors")
 }
 
 func TestUserCreate2(t *testing.T) {
-	fixtureWrapUser(t)
+	_, _ = fixtureWrapUser(t)
 	_, err := createUserWrap()
-	fixture.AssertError(t, err, "API should return error as duplicate already exists")
+  assert.NotNil(t, err, "When calling create, with duplicates, it shall return errors")
 }
 
 func TestUserIsRole1(t *testing.T) {
@@ -42,13 +41,13 @@ func TestUserIsRole2(t *testing.T) {
 }
 
 func TestUserAuth1(t *testing.T) {
-	fixtureWrapUser(t)
+	_, _ = fixtureWrapUser(t)
 	_, err := AuthUser(db, testUser.Username, testUser.Password)
-	fixture.AssertNoError(t, err, "Authenticating created user with correct information shall return no errors")
+  assert.Nil(t, err, "Authenticating created user with correct information shall return no errors")
 }
 
 func TestUserAuth2(t *testing.T) {
-	fixtureWrapUser(t)
+	_, _ = fixtureWrapUser(t)
 	_, err := AuthUser(db, testUser.Username, "IncorrectPassword")
-	fixture.AssertError(t, err, "Authenticating created user with correct information shall return no errors")
+  assert.NotNil(t, err, "Authenticating created user with incorrect information shall return errors")
 }

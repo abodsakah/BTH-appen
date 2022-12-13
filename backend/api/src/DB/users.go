@@ -103,6 +103,7 @@ func GetUser(db *gorm.DB, userID uint) (User, error) {
 	return user, nil
 }
 
+// AuthUser function
 func AuthUser(db *gorm.DB, username string, password string) (userID uint, err error) {
 	// check username and password length
 	err = checkInputLength(username, password)

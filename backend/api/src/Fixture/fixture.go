@@ -1,15 +1,10 @@
 package fixture
 
 import (
-	"testing"
-
-	"github.com/stretchr/testify/assert"
 	"gorm.io/gorm"
 )
 
-// CleanUp
-// Fixture clean up of live database, resets everything in given tables and automigrates
-// returns err if dropping tables or automigrating fails
+// CleanUp function
 func CleanUp(db *gorm.DB, additionalTables []string, tables ...interface{}) error {
 	err := db.Migrator().DropTable(tables...)
 	if err != nil {
@@ -25,10 +20,3 @@ func CleanUp(db *gorm.DB, additionalTables []string, tables ...interface{}) erro
 	return err
 }
 
-func AssertNoError(t *testing.T, err error, message string) {
-	assert.Equal(t, nil, err, message)
-}
-
-func AssertError(t *testing.T, err error, message string) {
-	assert.NotEqual(t, nil, err, message)
-}

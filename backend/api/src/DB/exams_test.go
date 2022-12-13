@@ -3,7 +3,6 @@ package db
 import (
 	"testing"
 
-	fixture "github.com/abodsakah/BTH-appen/backend/api/src/Fixture"
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
 )
@@ -14,32 +13,32 @@ func TestDatabaseExam(t *testing.T) {
 		t.Fatal(err)
 	}
 	dbP, err := SetupDatabase()
-	fixture.AssertNoError(t, err, "Database can not be connected to")
+  assert.Nil(t, err, "Database can not be connected to")
 	db = dbP
 }
 
 func TestCreateExam1(t *testing.T) {
 	_, err := fixtureWrap(t, &testExam)
-	fixture.AssertNoError(t, err, "After fixture is run a create will be called that shall return no error if successful")
+  assert.Nil(t, err, "After fixture is run a create will be called that shall return no error")
 }
 
 func TestCreateExam2(t *testing.T) {
-	fixtureWrap(t, &testExam)
-	err := CreateExam(db, testExam)
-	fixture.AssertError(t, err, "After already having created an exam with the same credentials, trying to create a duplicate shall return an error")
+  _, _ = fixtureWrap(t, &testExam)
+  err := CreateExam(db, testExam)
+  assert.NotNil(t, err, "Trying to create a duplicate exam shall return an error")
 }
 
 func TestDeleteExam1(t *testing.T) {
 	id, _ := fixtureWrap(t, &testExam)
-	_, err := DeleteExam(db, id)
-	assert.Nil(t, err, "When deleting the object it shall not return an error")
+  _, err := DeleteExam(db, id)
+  assert.Nil(t, err, "When deleting the object it shall not return an error")
 }
 
 func TestAddUserToExam1(t *testing.T) {
 	idExam, _ := fixtureWrap(t, &testExam)
 	idUser, _ := createUserWrap()
 	_, err := AddUserToExam(db, idExam, idUser)
-	fixture.AssertNoError(t, err, "Adding an existing user to an existing exam, with no duplicates, should create no errors")
+  assert.Nil(t, err, "Adding an existing user to an existing exam, with no duplicates, should create no errors")
 }
 
 func TestAddUserToExam2(t *testing.T) {
@@ -47,7 +46,7 @@ func TestAddUserToExam2(t *testing.T) {
 	idUser, _ := createUserWrap()
 	AddUserToExam(db, idExam, idUser)
 	_, err := AddUserToExam(db, idExam, idUser)
-	fixture.AssertError(t, err, "Adding an existing user to an existing exam, with a duplicate, should cause errors")
+  assert.NotNil(t, err, "Trying to add a duplicate entry should return an error")
 }
 
 func TestRemoveUserFromExam1(t *testing.T) {
@@ -55,18 +54,18 @@ func TestRemoveUserFromExam1(t *testing.T) {
 	idUser, _ := createUserWrap()
 	AddUserToExam(db, idExam, idUser)
 	_, err := RemoveUserFromExam(db, idExam, idUser)
-	fixture.AssertNoError(t, err, "Removing an existing entry in exam2user table shall not return any errors")
+  assert.Nil(t, err, "Removing an existing entry shall not return any errors")
 }
 
 func TestRemoveUserFromExam2(t *testing.T) {
 	idExam, _ := fixtureWrap(t, &testExam)
 	idUser, _ := createUserWrap()
 	_, err := RemoveUserFromExam(db, idExam, idUser)
-	fixture.AssertError(t, err, "Removing a non-existent entry in exam2user table shall return an error")
+  assert.NotNil(t, err, "Removing a non-existent entry shall return an error")
 }
 
 func TestGetExamsDueSoon(t *testing.T) {
-	fixtureWrap(t, &testExam)
+  _, _ = fixtureWrap(t, &testExam)
 	exams, _ := GetExamsDueSoon(db)
 	assert.Less(t, 0, len(exams), "After an exam has been created with the current date, it should come up in the array of due exams")
 }

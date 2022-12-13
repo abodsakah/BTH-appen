@@ -3,7 +3,6 @@ package db
 import (
 	"testing"
 
-	fixture "github.com/abodsakah/BTH-appen/backend/api/src/Fixture"
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
 	// "github.com/stretchr/testify/assert"
@@ -15,19 +14,19 @@ func TestDatabaseNews(t *testing.T) {
 		t.Fatal(err)
 	}
 	dbP, err := SetupDatabase()
-	fixture.AssertNoError(t, err, "Database can not be connected to")
+  assert.Nil(t, err, "Database can not be connected to")
 	db = dbP
 }
 
 func TestCreateNews1(t *testing.T) {
 	_, err := fixtureWrap(t, &testNews)
-	fixture.AssertNoError(t, err, "After calling create on news there shall be no errors returned")
+  assert.Nil(t, err, "After calling create, with no duplicates, no errors shall be returned")
 }
 
 func TestCreateNews2(t *testing.T) {
-	fixtureWrap(t, &testNews)
+  _, _ = fixtureWrap(t, &testNews)
 	err := CreateNews(db, testNews)
-	fixture.AssertError(t, err, "After calling create on news when it's a duplicate it shall return an error")
+  assert.NotNil(t, err, "After calling create, with duplicates, errors shall be returned")
 }
 
 func TestDeleteNews1(t *testing.T) {
@@ -37,7 +36,7 @@ func TestDeleteNews1(t *testing.T) {
 }
 
 func TestGetNews1(t *testing.T) {
-	fixtureWrap(t, &testNews)
+  _, _ = fixtureWrap(t, &testNews)
 	res, _ := GetNews(db)
 	assert.Less(t, 0, len(res), "When calling getNews after a test entry has been created the function call return an array of larger than 0 in size")
 }
