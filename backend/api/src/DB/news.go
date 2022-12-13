@@ -24,13 +24,19 @@ func CreateNews(db *gorm.DB, news *News) error {
 // Takes a news ID and deletes the news from the database.
 //
 // Or returns an error.
-func DeleteNews(db *gorm.DB, newsID uint) error {
-	// delete exam from database
-	err := db.Delete(&News{}, newsID).Error
+func DeleteNews(db *gorm.DB, newsID uint) (News, error) {
+	// find news
+	news := News{}
+	err := db.Where("id = ?", newsID).First(&news).Error
 	if err != nil {
-		return err
+		return News{}, err
 	}
-	return nil
+	// delete news from database
+	err = db.Delete(&news).Error
+	if err != nil {
+		return News{}, err
+	}
+	return news, nil
 }
 
 // GetNews function

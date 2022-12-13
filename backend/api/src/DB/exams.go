@@ -27,14 +27,20 @@ func CreateExam(db *gorm.DB, exam *Exam) error {
 // Takes a exam ID and deletes the exam from the database.
 //
 // Or returns an error.
-func DeleteExam(db *gorm.DB, examID uint) error {
-	// delete exam from database
-	err := db.Delete(&Exam{}, examID).Error
+func DeleteExam(db *gorm.DB, examID uint) (Exam, error) {
+	// find exam
+	exam := Exam{}
+	err := db.Where("id = ?", examID).First(&exam).Error
 	if err != nil {
-		return err
+		return Exam{}, err
+	}
+	// delete exam from database
+	err = db.Delete(&exam).Error
+	if err != nil {
+		return Exam{}, err
 	}
 
-	return nil
+	return exam, nil
 }
 
 // GetExams function
@@ -113,50 +119,50 @@ func GetExamsDueSoon(db *gorm.DB) ([]Exam, error) {
 // Adds a user to an exams list of users.
 //
 // Or returns an error.
-func AddUserToExam(db *gorm.DB, examID uint, userID uint) error {
+func AddUserToExam(db *gorm.DB, examID uint, userID uint) (User, error) {
 	// find exam
 	var exam Exam
 	err := db.Where("id = ?", examID).First(&exam).Error
 	if err != nil {
-		return err
+		return User{}, err
 	}
 	// find user
 	var user User
-	err = db.Where("id = ?", userID).First(&user).Error
+	err = db.Omit("password").Where("id = ?", userID).First(&user).Error
 	if err != nil {
-		return err
+		return User{}, err
 	}
 	// update user exams with exam
 	err = db.Model(&user).Association("Exams").Append([]Exam{exam})
 	if err != nil {
-		return err
+		return User{}, err
 	}
-	return nil
+	return user, nil
 }
 
 // RemoveUserFromExam function
 // Removes a user from an exams list of users.
 //
 // Or returns an error.
-func RemoveUserFromExam(db *gorm.DB, examID uint, userID uint) error {
+func RemoveUserFromExam(db *gorm.DB, examID uint, userID uint) (User, error) {
 	// find exam
 	var exam Exam
 	err := db.Where("id = ?", examID).First(&exam).Error
 	if err != nil {
-		return err
+		return User{}, err
 	}
 	// find user
 	var user User
-	err = db.Where("id = ?", userID).First(&user).Error
+	err = db.Omit("password").Where("id = ?", userID).First(&user).Error
 	if err != nil {
-		return err
+		return User{}, err
 	}
 	// remove exam from user
 	err = db.Model(&user).Association("Exams").Delete([]Exam{exam})
 	if err != nil {
-		return err
+		return User{}, err
 	}
-	return nil
+	return user, nil
 }
 
 // GetUserExams function
