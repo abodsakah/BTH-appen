@@ -34,6 +34,9 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+        ports:
+          # Maps tcp port 5432 on service container to the host
+          - 5432:5432
 
 
     steps:
@@ -50,7 +53,7 @@ jobs:
       - name: Test
         run: go test -v ./...
         env:
-          DB_HOST: postgres
+          DB_HOST: localhost
           POSTGRES_NAME: bth-app
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
