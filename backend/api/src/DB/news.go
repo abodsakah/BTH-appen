@@ -51,4 +51,3 @@ func GetNews(db *gorm.DB) ([]News, error) {
 	}
 	return news, nil
 }
-

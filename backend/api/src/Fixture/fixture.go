@@ -19,4 +19,3 @@ func CleanUp(db *gorm.DB, additionalTables []string, tables ...interface{}) erro
 	err = db.Migrator().AutoMigrate(tables...)
 	return err
 }
-

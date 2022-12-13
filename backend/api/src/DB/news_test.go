@@ -14,19 +14,19 @@ func TestDatabaseNews(t *testing.T) {
 		t.Fatal(err)
 	}
 	dbP, err := SetupDatabase()
-  assert.Nil(t, err, "Database can not be connected to")
+	assert.Nil(t, err, "Database can not be connected to")
 	db = dbP
 }
 
 func TestCreateNews1(t *testing.T) {
 	_, err := fixtureWrap(t, &testNews)
-  assert.Nil(t, err, "After calling create, with no duplicates, no errors shall be returned")
+	assert.Nil(t, err, "After calling create, with no duplicates, no errors shall be returned")
 }
 
 func TestCreateNews2(t *testing.T) {
-  _, _ = fixtureWrap(t, &testNews)
+	_, _ = fixtureWrap(t, &testNews)
 	err := CreateNews(db, testNews)
-  assert.NotNil(t, err, "After calling create, with duplicates, errors shall be returned")
+	assert.NotNil(t, err, "After calling create, with duplicates, errors shall be returned")
 }
 
 func TestDeleteNews1(t *testing.T) {
@@ -36,7 +36,7 @@ func TestDeleteNews1(t *testing.T) {
 }
 
 func TestGetNews1(t *testing.T) {
-  _, _ = fixtureWrap(t, &testNews)
+	_, _ = fixtureWrap(t, &testNews)
 	res, _ := GetNews(db)
 	assert.Less(t, 0, len(res), "When calling getNews after a test entry has been created the function call return an array of larger than 0 in size")
 }
