@@ -20,8 +20,11 @@ var (
 // Starts the notification server's in the notifications package.
 //
 //	stopRunning *bool
+//
 // Allows stopping the expo notification server's gracefully by setting it to true.
+//
 //	retries uint
+//
 // Max times to retry sending messages before giving up.
 func StartServers(gormDB *gorm.DB, stopRunning *bool, retries uint) error {
 	var err error
@@ -77,7 +80,9 @@ func sendExpoPushMessages(messages []expo.PushMessage, tryNumber uint) error {
 // helper function to retry sending messages
 //
 // sleep for tryNumber of minutes, and then try to send messages.
-//  example:
+//
+//	example:
+//
 // if tryNumber is = 6 and maxRetries = 5; Return without retrying.
 func retrySendingMessages(messages []expo.PushMessage, tryNumber uint) error {
 	if tryNumber > maxRetries {
