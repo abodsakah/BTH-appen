@@ -43,7 +43,7 @@ func TestGetNews1(t *testing.T) {
 
 func TestGetNews2(t *testing.T) {
 	newsID, _ := fixtureWrap(t, &testNews)
-	DeleteNews(db, newsID)
+	_, _ = DeleteNews(db, newsID)
 	res, _ := GetNews(db)
 	assert.Equal(t, 0, len(res), "When calling getNews with no entries it shall return an array of size 0")
 }
