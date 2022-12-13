@@ -6,8 +6,9 @@ import (
 	"github.com/stretchr/testify/assert"
 	"gorm.io/gorm"
 )
+
 // Clean up function for postgres database
-// 
+//
 // returns err if dropping tables or automigrating fails
 func CleanUp(db *gorm.DB, additionalTables []string, tables ...interface{}) error {
 	err := db.Migrator().DropTable(tables...)
@@ -23,6 +24,7 @@ func CleanUp(db *gorm.DB, additionalTables []string, tables ...interface{}) erro
 	err = db.Migrator().AutoMigrate(tables...)
 	return err
 }
+
 // Checks if an entry is deleted in chosen table
 func CheckIfDeleted(db *gorm.DB, id uint, table interface{}) (bool, error) {
 	err := db.Where("id = ?", id).First(&table).Error
