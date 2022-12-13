@@ -49,7 +49,7 @@ func TestAddUserToExam2(t *testing.T) {
 	idUser, _ := createUserWrap()
 	AddUserToExam(db, idExam, idUser)
 	_, err := AddUserToExam(db, idExam, idUser)
-	fixture.AssertError(t, err, "Adding an existing user to an existing exam, with a duplicate, should create cause errors")
+	fixture.AssertError(t, err, "Adding an existing user to an existing exam, with a duplicate, should cause errors")
 }
 
 func TestRemoveUserFromExam1(t *testing.T) {
