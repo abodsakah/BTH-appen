@@ -36,12 +36,12 @@ var testNews = &News{
 func createUserWrap() (uint, error) {
 	temp := *testUser
 	err := CreateUser(db, testUser)
+	id := testUser.ID
 	*testUser = temp
 	if err != nil {
 		return 0, err
 	}
-	user, _ := GetUserByName(db, testUser.Username)
-	return user.ID, nil
+	return id, nil
 }
 
 func fixtureWrapUser(t *testing.T) (uint, error) {
@@ -53,22 +53,11 @@ func fixtureWrapUser(t *testing.T) (uint, error) {
 	return id, err
 }
 
-func fixtureWrapExam(t *testing.T) (uint, error) {
+func fixtureWrap(t *testing.T, entry interface{}) (uint, error) {
 	err := fixture.CleanUp(db, additionalTables, &User{}, &Exam{}, &News{}, &Token{})
 	if err != nil {
 		t.Fatal(err)
 	}
-	err = CreateExam(db, testExam)
-	id, _ := getExamByName(db, testExam.Name)
-	return uint(id), err
-}
-
-func fixtureWrapNews(t *testing.T) (uint, error) {
-	err := fixture.CleanUp(db, additionalTables, &User{}, &Exam{}, &News{}, &Token{})
-	if err != nil {
-		t.Fatal(err)
-	}
-	err = CreateNews(db, testNews)
-	id, _ := getNewsByName(db, testNews.Title)
-	return uint(id), err
+	err = db.Create(entry).Error
+	return testExam.ID, err
 }

@@ -20,18 +20,18 @@ func TestDatabaseNews(t *testing.T) {
 }
 
 func TestCreateNews1(t *testing.T) {
-	_, err := fixtureWrapNews(t)
+	_, err := fixtureWrap(t, &testNews)
 	fixture.AssertNoError(t, err, "After calling create on news there shall be no errors returned")
 }
 
 func TestCreateNews2(t *testing.T) {
-	fixtureWrapNews(t)
+	fixtureWrap(t, &testNews)
 	err := CreateNews(db, testNews)
 	fixture.AssertError(t, err, "After calling create on news when it's a duplicate it shall return an error")
 }
 
 func TestDeleteNews1(t *testing.T) {
-	newsID, _ := fixtureWrapNews(t)
+	newsID, _ := fixtureWrap(t, &testNews)
 	DeleteNews(db, newsID)
 	var news News
 	res, _ := fixture.CheckIfDeleted(db, newsID, &news)
@@ -39,13 +39,13 @@ func TestDeleteNews1(t *testing.T) {
 }
 
 func TestGetNews1(t *testing.T) {
-	fixtureWrapNews(t)
+	fixtureWrap(t, &testNews)
 	res, _ := GetNews(db)
 	assert.Less(t, 0, len(res), "When calling getNews after a test entry has been created the function call return an array of larger than 0 in size")
 }
 
 func TestGetNews2(t *testing.T) {
-	newsID, _ := fixtureWrapNews(t)
+	newsID, _ := fixtureWrap(t, &testNews)
 	DeleteNews(db, newsID)
 	res, _ := GetNews(db)
 	assert.Equal(t, 0, len(res), "When calling getNews with no entries it shall return an array of size 0")

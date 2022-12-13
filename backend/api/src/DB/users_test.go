@@ -18,20 +18,17 @@ func TestDatabaseUser(t *testing.T) {
 	db = dbP
 }
 
-// Tries to create user "Test" when there is none in the database
 func TestUserCreate1(t *testing.T) {
 	_, err := fixtureWrapUser(t)
 	fixture.AssertNoError(t, err, "API endpoint should be able to create user if no duplicates are present")
 }
 
-// Tries to create user "Test" when there already is in database
 func TestUserCreate2(t *testing.T) {
 	fixtureWrapUser(t)
 	_, err := createUserWrap()
 	fixture.AssertError(t, err, "API should return error as duplicate already exists")
 }
 
-// Tries to create exam when there is none in database
 func TestUserIsRole1(t *testing.T) {
 	id, _ := fixtureWrapUser(t)
 	res, _ := IsRole(db, id, "student")
