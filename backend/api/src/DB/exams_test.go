@@ -49,7 +49,7 @@ func TestDeleteExam1(t *testing.T) {
 func TestAddUserToExam1(t *testing.T) {
 	idExam, _ := fixtureWrapExam(t)
 	idUser, _ := createUserWrap()
-	err := AddUserToExam(db, idExam, idUser)
+	_, err := AddUserToExam(db, idExam, idUser)
 	fixture.AssertNoError(t, err, "Adding an existing user to an existing exam, with no duplicates, should create no errors")
 }
 
@@ -57,7 +57,7 @@ func TestAddUserToExam2(t *testing.T) {
 	idExam, _ := fixtureWrapExam(t)
 	idUser, _ := createUserWrap()
 	AddUserToExam(db, idExam, idUser)
-	err := AddUserToExam(db, idExam, idUser)
+  _, err := AddUserToExam(db, idExam, idUser)
 	fixture.AssertError(t, err, "Adding an existing user to an existing exam, with a duplicate, should create cause errors")
 }
 
@@ -65,14 +65,14 @@ func TestRemoveUserFromExam1(t *testing.T) {
 	idExam, _ := fixtureWrapExam(t)
 	idUser, _ := createUserWrap()
 	AddUserToExam(db, idExam, idUser)
-	err := RemoveUserFromExam(db, idExam, idUser)
+	_, err := RemoveUserFromExam(db, idExam, idUser)
 	fixture.AssertNoError(t, err, "Removing an existing entry in exam2user table shall not return any errors")
 }
 
 func TestRemoveUserFromExam2(t *testing.T) {
 	idExam, _ := fixtureWrapExam(t)
 	idUser, _ := createUserWrap()
-	err := RemoveUserFromExam(db, idExam, idUser)
+	_, err := RemoveUserFromExam(db, idExam, idUser)
 	fixture.AssertError(t, err, "Removing a non-existent entry in exam2user table shall return an error")
 }
 
