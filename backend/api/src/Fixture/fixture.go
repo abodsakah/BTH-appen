@@ -7,8 +7,8 @@ import (
 	"gorm.io/gorm"
 )
 
-// Clean up function for postgres database
-//
+// CleanUp
+// Fixture clean up of live database, resets everything in given tables and automigrates
 // returns err if dropping tables or automigrating fails
 func CleanUp(db *gorm.DB, additionalTables []string, tables ...interface{}) error {
 	err := db.Migrator().DropTable(tables...)
@@ -25,7 +25,9 @@ func CleanUp(db *gorm.DB, additionalTables []string, tables ...interface{}) erro
 	return err
 }
 
-// Checks if an entry is deleted in chosen table
+// CheckIfDeleted 
+// Checks if entry is deleted 
+// Returns err if it true if it doesn't exist, vice versa
 func CheckIfDeleted(db *gorm.DB, id uint, table interface{}) (bool, error) {
 	err := db.Where("id = ?", id).First(&table).Error
 	if err != nil {
