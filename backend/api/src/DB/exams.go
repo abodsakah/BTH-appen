@@ -1,6 +1,7 @@
 package db
 
 import (
+	"errors"
 	"time"
   models "github.com/abodsakah/BTH-appen/backend/api/src/Models"
 	"gorm.io/gorm"
@@ -107,15 +108,26 @@ func GetExamsDueSoon(db *gorm.DB) ([]models.Exam, error) {
 //
 // Or returns an error.
 func AddUserToExam(db *gorm.DB, examID uint, userID uint) (models.User, error) {
-	// find exam
-	var exam models.Exam
-	err := db.Where("id = ?", examID).First(&exam).Error
+	// find user
+	var user models.User
+	err := db.Omit("password").Where("id = ?", userID).Preload("Exams").First(&user).Error
 	if err != nil {
 		return models.User{}, err
 	}
-	// find user
-	var user models.User
-	err = db.Omit("password").Where("id = ?", userID).First(&user).Error
+	// check user is not already registered to exam
+	var currentExam *models.Exam
+	for _, e := range user.Exams {
+		if e.ID == examID {
+			currentExam = e
+			break
+		}
+	}
+	if currentExam != nil {
+		return models.User{}, errors.New("User is already registered to this exam")
+	}
+	// find exam
+	var exam models.Exam
+	err = db.Where("id = ?", examID).First(&exam).Error
 	if err != nil {
 		return models.User{}, err
 	}
@@ -132,20 +144,25 @@ func AddUserToExam(db *gorm.DB, examID uint, userID uint) (models.User, error) {
 //
 // Or returns an error.
 func RemoveUserFromExam(db *gorm.DB, examID uint, userID uint) (models.User, error) {
-	// find exam
-	var exam models.Exam
-	err := db.Where("id = ?", examID).First(&exam).Error
-	if err != nil {
-		return models.User{}, err
-	}
 	// find user
 	var user models.User
-	err = db.Omit("password").Where("id = ?", userID).First(&user).Error
+	err := db.Omit("password").Where("id = ?", userID).Preload("Exams").First(&user).Error
 	if err != nil {
 		return models.User{}, err
 	}
+	// find exam
+	var exam *models.Exam
+	for _, e := range user.Exams {
+		if e.ID == examID {
+			exam = e
+			break
+		}
+	}
+	if exam == nil {
+		return models.User{}, gorm.ErrRecordNotFound
+	}
 	// remove exam from user
-	err = db.Model(&user).Association("Exams").Delete([]models.Exam{exam})
+	err = db.Model(&user).Association("Exams").Delete([]models.Exam{*exam})
 	if err != nil {
 		return models.User{}, err
 	}

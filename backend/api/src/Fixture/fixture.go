@@ -1,3 +1,4 @@
+// Package fixture provides fixture
 package fixture
 
 import (
