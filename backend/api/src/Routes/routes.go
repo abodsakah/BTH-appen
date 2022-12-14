@@ -9,6 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 
+	models "github.com/abodsakah/BTH-appen/backend/api/src/Models"
 	db "github.com/abodsakah/BTH-appen/backend/api/src/DB"
 	jwtauth "github.com/abodsakah/BTH-appen/backend/api/src/JWTAuth"
 )
@@ -105,7 +106,7 @@ func adminMiddleware(c *gin.Context) {
 }
 
 func createExam(c *gin.Context) {
-	var exam db.Exam
+	var exam models.Exam
 
 	// bind body data or return error if it fails
 	if err := c.ShouldBind(&exam); err != nil {
@@ -232,7 +233,7 @@ func listExamUsers(c *gin.Context) {
 }
 
 func addUserExpoPushToken(c *gin.Context) {
-	var expoToken db.Token
+	var expoToken models.Token
 
 	// bind body data or return error if it fails
 	if err := c.ShouldBind(&expoToken); err != nil {
@@ -292,7 +293,7 @@ func unregisterFromExam(c *gin.Context) {
 }
 
 func createUser(c *gin.Context) {
-	var user db.User
+	var user models.User
  	// bind body data or return error if it fails
 	if err := c.ShouldBind(&user); err != nil {
 		log.Println(err.Error())
@@ -311,7 +312,7 @@ func createUser(c *gin.Context) {
 }
 
 func login(c *gin.Context) {
-	var user db.User
+	var user models.User
 	// bind body data or return error if it fails
 	if err := c.ShouldBind(&user); err != nil {
 		log.Println(err.Error())
