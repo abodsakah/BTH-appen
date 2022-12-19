@@ -141,7 +141,7 @@ func TestExamDelete1(t *testing.T) {
   c, w := setupContext()
 	// Set Body, Header and Content-Type
 	mockJSONPost(c, &gin.H{
-		"id": 1,
+		"exam_id": 1,
 	})
 
 	// call API endpoint
@@ -161,3 +161,60 @@ func TestExamDelete2(t *testing.T) {
 	deleteExam(c)
   assert.NotEqual(t, 200, w.Code, "When trying to call on delete Exam API with no entry present, it should not return status: 200")
 }
+
+func TestListExams1(t *testing.T) {
+  startTest(t)
+  c, w := setupContext()
+	// Set Body, Header and Content-Type
+	mockJSONPost(c, &gin.H{
+		"exam_id": 1,
+	})
+
+	// call API endpoint
+	listExams(c)
+  assert.Equal(t, 200, w.Code, "When trying to call on list Exams API with entries present, it should return status: 200")
+}
+
+func TestListDueExams1(t *testing.T) {
+  startTest(t)
+  c, w := setupContext()
+	// Set Body, Header and Content-Type
+	mockJSONPost(c, &gin.H{
+		"exam_id": 1,
+	})
+
+	// call API endpoint
+	listDueExams(c)
+  assert.Equal(t, 200, w.Code, "When trying to call on list due Exams API with due exams present, it should return status: 200")
+}
+
+func TestListUserExams(t *testing.T) {
+  startTest(t)
+  db.AddUserToExam(helpers.DbGorm, 1, 1)
+  c, w := setupContext()
+	// Set Body, Header and Content-Type
+	mockJSONPost(c, &gin.H{
+    "userID": 1,
+		"exam_id": 1,
+	})
+  c.Set("UserID", uint(1))
+	// call API endpoint
+	listUserExams(c)
+  assert.Equal(t, 200, w.Code, "When trying to call on list User Exams API with exams present for user, it should return status: 200")
+}
+
+func TestListExamUser(t *testing.T) {
+  startTest(t)
+  db.AddUserToExam(helpers.DbGorm, 1, 1)
+  c, w := setupContext()
+	// Set Body, Header and Content-Type
+	mockJSONPost(c, &gin.H{
+		"exam_id": 1,
+	})
+  c.Set("UserID", uint(1))
+	// call API endpoint
+	listExamUsers(c)
+  assert.Equal(t, 200, w.Code, "When trying to call on list Exam Users API with users present for user, it should return status: 200")
+}
+
+
