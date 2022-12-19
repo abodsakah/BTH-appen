@@ -11,7 +11,6 @@ import (
 
 	db "github.com/abodsakah/BTH-appen/backend/api/src/DB"
 	jwtauth "github.com/abodsakah/BTH-appen/backend/api/src/JWTAuth"
-	models "github.com/abodsakah/BTH-appen/backend/api/src/Models"
 )
 
 // variables
@@ -20,7 +19,7 @@ var (
 )
 
 // SetupRoutes function
-func SetupRoutes(gormObj *gorm.DB) (*gin.Engine, error) {
+func SetupRoutes(gormObj *gorm.DB) {
 	// setup GORM database object
 	gormDB = gormObj
 
@@ -28,7 +27,7 @@ func SetupRoutes(gormObj *gorm.DB) (*gin.Engine, error) {
 	// set trusted proxy to localhost
 	err := r.SetTrustedProxies([]string{"127.0.0.1"})
 	if err != nil {
-		return nil, err
+		log.Fatalln(err)
 	}
 
 	// routes
@@ -54,7 +53,10 @@ func SetupRoutes(gormObj *gorm.DB) (*gin.Engine, error) {
 			adminAuth.DELETE("/api/delete-news", deleteNews)
 		}
 	}
-	return r, nil
+
+	if err = r.Run(":5000"); err != nil {
+		log.Fatalln(err)
+	}
 }
 
 func hello(c *gin.Context) {
@@ -106,7 +108,7 @@ func adminMiddleware(c *gin.Context) {
 }
 
 func createExam(c *gin.Context) {
-	var exam models.Exam
+	var exam db.Exam
 
 	// bind body data or return error if it fails
 	if err := c.ShouldBind(&exam); err != nil {
@@ -233,7 +235,7 @@ func listExamUsers(c *gin.Context) {
 }
 
 func addUserExpoPushToken(c *gin.Context) {
-	var expoToken models.Token
+	var expoToken db.Token
 
 	// bind body data or return error if it fails
 	if err := c.ShouldBind(&expoToken); err != nil {
@@ -293,7 +295,8 @@ func unregisterFromExam(c *gin.Context) {
 }
 
 func createUser(c *gin.Context) {
-	var user models.User
+	var user db.User
+
 	// bind body data or return error if it fails
 	if err := c.ShouldBind(&user); err != nil {
 		log.Println(err.Error())
@@ -312,7 +315,8 @@ func createUser(c *gin.Context) {
 }
 
 func login(c *gin.Context) {
-	var user models.User
+	var user db.User
+
 	// bind body data or return error if it fails
 	if err := c.ShouldBind(&user); err != nil {
 		log.Println(err.Error())

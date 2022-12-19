@@ -4,12 +4,11 @@ package db
 import (
 	"time"
 
-	models "github.com/abodsakah/BTH-appen/backend/api/src/Models"
 	"gorm.io/gorm"
 )
 
 // CreateNews function
-func CreateNews(db *gorm.DB, news *models.News) error {
+func CreateNews(db *gorm.DB, news *News) error {
 	// set creation date
 	news.CreatedAt = time.Now()
 
@@ -25,17 +24,17 @@ func CreateNews(db *gorm.DB, news *models.News) error {
 // Takes a news ID and deletes the news from the database.
 //
 // Or returns an error.
-func DeleteNews(db *gorm.DB, newsID uint) (models.News, error) {
+func DeleteNews(db *gorm.DB, newsID uint) (News, error) {
 	// find news
-	news := models.News{}
+	news := News{}
 	err := db.Where("id = ?", newsID).First(&news).Error
 	if err != nil {
-		return models.News{}, err
+		return News{}, err
 	}
 	// delete news from database
 	err = db.Delete(&news).Error
 	if err != nil {
-		return models.News{}, err
+		return News{}, err
 	}
 	return news, nil
 }
@@ -44,8 +43,8 @@ func DeleteNews(db *gorm.DB, newsID uint) (models.News, error) {
 // Returns an array with all news
 //
 // Or returns an error.
-func GetNews(db *gorm.DB) ([]models.News, error) {
-	var news []models.News
+func GetNews(db *gorm.DB) ([]News, error) {
+	var news []News
 	err := db.Order("id ASC").Find(&news).Error
 	if err != nil {
 		return nil, err
