@@ -10,10 +10,14 @@ import (
 )
 
 var (
+	// DbGorm variable
+	// Stores database pointer for test-enviorment
 	DbGorm           *gorm.DB
 	additionalTables = []string{"exam_users"}
 )
 
+// TestUser variable
+// User entry for test-enviorment
 var TestUser = &models.User{
 	Name:     "Test Testsson",
 	Username: "test",
@@ -21,12 +25,16 @@ var TestUser = &models.User{
 	Role:     "student",
 }
 
+// TestExam variable
+// Exam entry for test-enviorment
 var TestExam = &models.Exam{
 	Name:       "test",
 	CourseCode: "pa121212",
 	StartDate:  time.Now().AddDate(0, 0, 1),
 }
 
+// TestNews variable
+// News entry for test-enviorment
 var TestNews = &models.News{
 	Title:       "Test",
 	Date:        time.Now(),
