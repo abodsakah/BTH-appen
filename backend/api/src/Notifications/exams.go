@@ -9,7 +9,6 @@ import (
 	"time"
 
 	"github.com/abodsakah/BTH-appen/backend/api/src/DB"
-	models "github.com/abodsakah/BTH-appen/backend/api/src/Models"
 	expo "github.com/noahhakansson/exponent-server-sdk-golang/sdk"
 	"gorm.io/gorm"
 )
@@ -61,7 +60,7 @@ func startExamServer(gormDB *gorm.DB, stopRunning *bool) error {
 
 // creates and return a string that says
 // in how many days the exam is starting and what date and time.
-func createDateTimeString(exam models.Exam) string {
+func createDateTimeString(exam db.Exam) string {
 	days := int(math.Round(time.Until(exam.StartDate).Hours() / 24))
 	_, startMonth, startDay := exam.StartDate.Date()
 	startHour, startMin, _ := exam.StartDate.Clock()
@@ -79,7 +78,7 @@ func createDateTimeString(exam models.Exam) string {
 //
 // Return slice of `expo.PushMessage`s
 // Or an error if no pushMessages were created.
-func createExamPushMessages(exams []models.Exam) ([]expo.PushMessage, error) {
+func createExamPushMessages(exams []db.Exam) ([]expo.PushMessage, error) {
 	var pushMessages []expo.PushMessage
 	for _, exam := range exams {
 		pushTokens, err := getExamPushTokens(exam)
@@ -108,7 +107,7 @@ func createExamPushMessages(exams []models.Exam) ([]expo.PushMessage, error) {
 // validates and returns all registered users `expo.ExponentPushToken`s for ONE exam.
 //
 // Returns an error if no user `expo.ExponentPushToken`s are found for the exam
-func getExamPushTokens(exam models.Exam) ([]expo.ExponentPushToken, error) {
+func getExamPushTokens(exam db.Exam) ([]expo.ExponentPushToken, error) {
 	// To check the token is valid
 	var expoPushTokens []expo.ExponentPushToken
 	// for each users tokens, validate and add them to expoPushTokens
