@@ -25,9 +25,9 @@ func TestUserCreate1(t *testing.T) {
 
 func TestUserCreate2(t *testing.T) {
 	_, _ = helpers.FixtureWrapCreate(t, helpers.TestUser)
-  temp := *helpers.TestUser
+	temp := *helpers.TestUser
 	err := CreateUser(helpers.DbGorm, &temp)
- 	assert.NotNil(t, err, "When calling create, with duplicates, it shall return errors")
+	assert.NotNil(t, err, "When calling create, with duplicates, it shall return errors")
 }
 
 func TestUserIsRole1(t *testing.T) {
@@ -44,7 +44,7 @@ func TestUserIsRole2(t *testing.T) {
 
 func TestUserAuth1(t *testing.T) {
 	_ = helpers.FixtureWrapNonCreate(t)
-  temp := *helpers.TestUser
+	temp := *helpers.TestUser
 	_ = CreateUser(helpers.DbGorm, &temp)
 	_, err := AuthUser(helpers.DbGorm, helpers.TestUser.Username, helpers.TestUser.Password)
 	assert.Nil(t, err, "Authenticating created user with correct information shall return no errors")
@@ -52,7 +52,7 @@ func TestUserAuth1(t *testing.T) {
 
 func TestUserAuth2(t *testing.T) {
 	_ = helpers.FixtureWrapNonCreate(t)
-  temp := *helpers.TestUser
+	temp := *helpers.TestUser
 	_ = CreateUser(helpers.DbGorm, &temp)
 	_, err := AuthUser(helpers.DbGorm, helpers.TestUser.Username, "IncorrectPassword")
 	assert.NotNil(t, err, "Authenticating created user with incorrect information shall return errors")

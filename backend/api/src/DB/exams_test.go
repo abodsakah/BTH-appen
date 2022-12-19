@@ -43,7 +43,7 @@ func TestAddUserToExam1(t *testing.T) {
 }
 
 func TestAddUserToExam2(t *testing.T) {
-  idExam, _ := helpers.FixtureWrapCreate(t, &helpers.TestExam)
+	idExam, _ := helpers.FixtureWrapCreate(t, &helpers.TestExam)
 	helpers.DbGorm.Create(&helpers.TestUser)
 	_, _ = AddUserToExam(helpers.DbGorm, idExam, helpers.TestUser.ID)
 	_, err := AddUserToExam(helpers.DbGorm, idExam, helpers.TestExam.ID)

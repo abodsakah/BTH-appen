@@ -4,7 +4,7 @@ import (
 	"errors"
 	"time"
 
-  models "github.com/abodsakah/BTH-appen/backend/api/src/Models"
+	models "github.com/abodsakah/BTH-appen/backend/api/src/Models"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )

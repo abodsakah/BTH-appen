@@ -8,8 +8,8 @@ import (
 	"math"
 	"time"
 
-	models "github.com/abodsakah/BTH-appen/backend/api/src/Models"
 	"github.com/abodsakah/BTH-appen/backend/api/src/DB"
+	models "github.com/abodsakah/BTH-appen/backend/api/src/Models"
 	expo "github.com/noahhakansson/exponent-server-sdk-golang/sdk"
 	"gorm.io/gorm"
 )

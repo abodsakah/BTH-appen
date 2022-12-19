@@ -5,7 +5,8 @@ import (
 	"fmt"
 	"log"
 	"os"
-  models "github.com/abodsakah/BTH-appen/backend/api/src/Models"
+
+	models "github.com/abodsakah/BTH-appen/backend/api/src/Models"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"

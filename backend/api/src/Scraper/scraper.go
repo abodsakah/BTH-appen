@@ -6,8 +6,8 @@ import (
 	"strings"
 	"time"
 
-	models "github.com/abodsakah/BTH-appen/backend/api/src/Models"
 	"github.com/abodsakah/BTH-appen/backend/api/src/DB"
+	models "github.com/abodsakah/BTH-appen/backend/api/src/Models"
 	"github.com/abodsakah/BTH-appen/backend/api/src/Notifications"
 	"github.com/gocolly/colly"
 	"gorm.io/gorm"

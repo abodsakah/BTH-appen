@@ -10,7 +10,7 @@ import (
 )
 
 var (
-	DbGorm               *gorm.DB
+	DbGorm           *gorm.DB
 	additionalTables = []string{"exam_users"}
 )
 
@@ -33,15 +33,16 @@ var TestNews = &models.News{
 	Description: "A test",
 	Link:        "test.com",
 }
+
 // SetupTables function
 func SetupTables(entries ...interface{}) error {
-  var err error
-  for _, entry := range entries {
-    err = DbGorm.Create(entry).Error
-    if err != nil {
-      return err
-    }
-  }
+	var err error
+	for _, entry := range entries {
+		err = DbGorm.Create(entry).Error
+		if err != nil {
+			return err
+		}
+	}
 	return nil
 }
 
@@ -51,7 +52,7 @@ func FixtureWrapCreate(t *testing.T, entries ...interface{}) (uint, error) {
 	if err != nil {
 		t.Fatal(err)
 	}
-  err = SetupTables(entries...)
+	err = SetupTables(entries...)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -63,8 +64,7 @@ func FixtureWrapNonCreate(t *testing.T) error {
 	err := fixture.CleanUp(DbGorm, additionalTables, &models.User{}, &models.Exam{}, &models.News{}, &models.Token{})
 	if err != nil {
 		t.Fatal(err)
-    return err
+		return err
 	}
-  return nil
+	return nil
 }
-
