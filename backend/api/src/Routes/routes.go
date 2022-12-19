@@ -9,9 +9,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 
-	models "github.com/abodsakah/BTH-appen/backend/api/src/Models"
 	db "github.com/abodsakah/BTH-appen/backend/api/src/DB"
 	jwtauth "github.com/abodsakah/BTH-appen/backend/api/src/JWTAuth"
+	models "github.com/abodsakah/BTH-appen/backend/api/src/Models"
 )
 
 // variables
@@ -54,7 +54,7 @@ func SetupRoutes(gormObj *gorm.DB) (*gin.Engine, error) {
 			adminAuth.DELETE("/api/delete-news", deleteNews)
 		}
 	}
-  return r, nil
+	return r, nil
 }
 
 func hello(c *gin.Context) {
@@ -294,7 +294,7 @@ func unregisterFromExam(c *gin.Context) {
 
 func createUser(c *gin.Context) {
 	var user models.User
- 	// bind body data or return error if it fails
+	// bind body data or return error if it fails
 	if err := c.ShouldBind(&user); err != nil {
 		log.Println(err.Error())
 		c.JSON(400, gin.H{"error": "Missing user credentials"})
