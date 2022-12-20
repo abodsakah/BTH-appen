@@ -81,8 +81,9 @@ const Exams = () => {
 				{registeredExams.length > 0 && (
 					<>
 						<Text style={styles.heading}>{t('registered_exams')}</Text>
-						{registeredExams.map((exam) => (
+						{registeredExams.map((exam, i) => (
 							<Exam
+								key={i}
 								HandleRegisterExam={() => HandleRegisterExam(exam.ID)}
 								HandleUnregisterExam={() => HandleUnregisterExam(exam.ID)}
 								code={exam.course_code}
@@ -100,8 +101,9 @@ const Exams = () => {
 				{commingExams.length > 0 && (
 					<>
 						<Text style={styles.heading}>{t('coming_exams')}</Text>
-						{commingExams.map((exam) => (
+						{commingExams.map((exam, i) => (
 							<Exam
+								key={i}
 								code={exam.course_code}
 								name={exam.name}
 								date={new Date(exam.start_date).toLocaleDateString()}

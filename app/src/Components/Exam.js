@@ -11,12 +11,13 @@ const Exam = ({
 	date,
 	time,
 	room,
+	key = 0,
 	registered = false,
 	HandleRegisterExam = () => {},
 	HandleUnregisterExam = () => {},
 }) => {
 	return (
-		<View style={styles.container}>
+		<View key={key} style={styles.container}>
 			<Text style={styles.code}>{code}</Text>
 			<Text>{name}</Text>
 			<Text>
