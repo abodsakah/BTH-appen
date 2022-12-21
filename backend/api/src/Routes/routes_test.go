@@ -67,7 +67,7 @@ func TestDatabaseRoutes(t *testing.T) {
 	}
 	assert.Nil(t, err, "Database can not be connected to")
 	helpers.DbGorm = dbP
-  _ = helpers.FixtureWrapNonCreate(t)
+	_ = helpers.FixtureWrapNonCreate(t)
 }
 
 func TestSetupRoutes(t *testing.T) {

@@ -16,7 +16,7 @@ func TestDatabaseNews(t *testing.T) {
 	dbP, err := SetupDatabase()
 	assert.Nil(t, err, "Database can not be connected to")
 	helpers.DbGorm = dbP
-  _ = helpers.FixtureWrapNonCreate(t)
+	_ = helpers.FixtureWrapNonCreate(t)
 }
 
 func TestCreateNews1(t *testing.T) {
