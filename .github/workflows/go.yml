@@ -50,8 +50,16 @@ jobs:
       - name: Build
         run: go build -v ./...
 
-      - name: Test
-        run: go test -v -p 1 ./...
+      - name: TestDB
+        run: go test -v ./src/DB/...
+        env:
+          DB_HOST: localhost
+          POSTGRES_NAME: bth-app
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          SECRET_SIGN_KEY: supersecretkey
+      - name: TestRoutes
+        run: go test -v ./src/Routes/...
         env:
           DB_HOST: localhost
           POSTGRES_NAME: bth-app
