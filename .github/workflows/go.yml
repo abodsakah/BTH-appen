@@ -51,7 +51,7 @@ jobs:
         run: go build -v ./...
 
       - name: TestDB
-        run: go test -v ./src/DB/...
+        run: go test -v ./src/DB/.
         env:
           DB_HOST: localhost
           POSTGRES_NAME: bth-app
@@ -59,7 +59,7 @@ jobs:
           POSTGRES_PASSWORD: postgres
           SECRET_SIGN_KEY: supersecretkey
       - name: TestRoutes
-        run: go test -v ./src/Routes/...
+        run: go test -v ./src/Routes/.
         env:
           DB_HOST: localhost
           POSTGRES_NAME: bth-app
