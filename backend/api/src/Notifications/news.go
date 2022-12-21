@@ -6,12 +6,13 @@ import (
 	"log"
 
 	"github.com/abodsakah/BTH-appen/backend/api/src/DB"
+	models "github.com/abodsakah/BTH-appen/backend/api/src/Models"
 	expo "github.com/noahhakansson/exponent-server-sdk-golang/sdk"
 	"gorm.io/gorm"
 )
 
 // SendNewsPushMessage function
-func SendNewsPushMessage(gormDB *gorm.DB, news db.News) error {
+func SendNewsPushMessage(gormDB *gorm.DB, news models.News) error {
 	pushMsg, err := createNewsPushMessage(gormDB, news)
 	if err != nil {
 		return err
@@ -30,7 +31,7 @@ func SendNewsPushMessage(gormDB *gorm.DB, news db.News) error {
 //
 // Return slice of `expo.PushMessage`s
 // Or an error if no pushMessages were created.
-func createNewsPushMessage(gormDB *gorm.DB, news db.News) (expo.PushMessage, error) {
+func createNewsPushMessage(gormDB *gorm.DB, news models.News) (expo.PushMessage, error) {
 	// create message to send to all tokens in pushTokens
 	tokens, err := db.GetAllUserTokens(gormDB)
 	if err != nil {
