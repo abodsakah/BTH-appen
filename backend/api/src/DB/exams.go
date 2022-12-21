@@ -4,6 +4,7 @@ import (
 	"errors"
 	"time"
 
+	models "github.com/abodsakah/BTH-appen/backend/api/src/Models"
 	"gorm.io/gorm"
 )
 
@@ -11,7 +12,7 @@ import (
 // Takes a Exam struct and creates a database entry in exams table.
 //
 // Or returns an error.
-func CreateExam(db *gorm.DB, exam *Exam) error {
+func CreateExam(db *gorm.DB, exam *models.Exam) error {
 	// set creation date
 	exam.CreatedAt = time.Now()
 
@@ -28,17 +29,17 @@ func CreateExam(db *gorm.DB, exam *Exam) error {
 // Takes a exam ID and deletes the exam from the database.
 //
 // Or returns an error.
-func DeleteExam(db *gorm.DB, examID uint) (Exam, error) {
+func DeleteExam(db *gorm.DB, examID uint) (models.Exam, error) {
 	// find exam
-	exam := Exam{}
+	exam := models.Exam{}
 	err := db.Where("id = ?", examID).First(&exam).Error
 	if err != nil {
-		return Exam{}, err
+		return models.Exam{}, err
 	}
 	// delete exam from database
 	err = db.Delete(&exam).Error
 	if err != nil {
-		return Exam{}, err
+		return models.Exam{}, err
 	}
 
 	return exam, nil
@@ -48,8 +49,8 @@ func DeleteExam(db *gorm.DB, examID uint) (Exam, error) {
 // Returns an array with all exams
 //
 // Or returns an error.
-func GetExams(db *gorm.DB) ([]Exam, error) {
-	var exams []Exam
+func GetExams(db *gorm.DB) ([]models.Exam, error) {
+	var exams []models.Exam
 	err := db.Order("start_date ASC").Find(&exams).Error
 	if err != nil {
 		return nil, err
@@ -63,8 +64,8 @@ func GetExams(db *gorm.DB) ([]Exam, error) {
 // Takes an exam ID.
 //
 // Or returns an error.
-func GetExamUsers(db *gorm.DB, examID uint) ([]*User, error) {
-	var exam Exam
+func GetExamUsers(db *gorm.DB, examID uint) ([]*models.User, error) {
+	var exam models.Exam
 
 	// get exam with users preloaded
 	err := db.Where("id = ?", examID).Preload("Users").First(&exam).Error
@@ -82,8 +83,8 @@ func GetExamUsers(db *gorm.DB, examID uint) ([]*User, error) {
 // Made with intent to get exams with users to notify them in the app.
 //
 // Or returns an error.
-func GetExamsDueSoon(db *gorm.DB) ([]Exam, error) {
-	var exams []Exam
+func GetExamsDueSoon(db *gorm.DB) ([]models.Exam, error) {
+	var exams []models.Exam
 	t := time.Now()
 	midnight := time.Date(t.Year(), t.Month(), t.Day(), 0, 0, 0, 0, time.Local)
 	tomorrow := midnight.AddDate(0, 0, 1)
@@ -107,15 +108,15 @@ func GetExamsDueSoon(db *gorm.DB) ([]Exam, error) {
 // Adds a user to an exams list of users.
 //
 // Or returns an error.
-func AddUserToExam(db *gorm.DB, examID uint, userID uint) (User, error) {
+func AddUserToExam(db *gorm.DB, examID uint, userID uint) (models.User, error) {
 	// find user
-	var user User
+	var user models.User
 	err := db.Omit("password").Where("id = ?", userID).Preload("Exams").First(&user).Error
 	if err != nil {
-		return User{}, err
+		return models.User{}, err
 	}
 	// check user is not already registered to exam
-	var currentExam *Exam
+	var currentExam *models.Exam
 	for _, e := range user.Exams {
 		if e.ID == examID {
 			currentExam = e
@@ -123,18 +124,18 @@ func AddUserToExam(db *gorm.DB, examID uint, userID uint) (User, error) {
 		}
 	}
 	if currentExam != nil {
-		return User{}, errors.New("User is already registered to this exam")
+		return models.User{}, errors.New("User is already registered to this exam")
 	}
 	// find exam
-	var exam Exam
+	var exam models.Exam
 	err = db.Where("id = ?", examID).First(&exam).Error
 	if err != nil {
-		return User{}, err
+		return models.User{}, err
 	}
 	// update user exams with exam
-	err = db.Model(&user).Association("Exams").Append([]Exam{exam})
+	err = db.Model(&user).Association("Exams").Append([]models.Exam{exam})
 	if err != nil {
-		return User{}, err
+		return models.User{}, err
 	}
 	return user, nil
 }
@@ -143,15 +144,15 @@ func AddUserToExam(db *gorm.DB, examID uint, userID uint) (User, error) {
 // Removes a user from an exams list of users.
 //
 // Or returns an error.
-func RemoveUserFromExam(db *gorm.DB, examID uint, userID uint) (User, error) {
+func RemoveUserFromExam(db *gorm.DB, examID uint, userID uint) (models.User, error) {
 	// find user
-	var user User
+	var user models.User
 	err := db.Omit("password").Where("id = ?", userID).Preload("Exams").First(&user).Error
 	if err != nil {
-		return User{}, err
+		return models.User{}, err
 	}
 	// find exam
-	var exam *Exam
+	var exam *models.Exam
 	for _, e := range user.Exams {
 		if e.ID == examID {
 			exam = e
@@ -159,12 +160,12 @@ func RemoveUserFromExam(db *gorm.DB, examID uint, userID uint) (User, error) {
 		}
 	}
 	if exam == nil {
-		return User{}, gorm.ErrRecordNotFound
+		return models.User{}, gorm.ErrRecordNotFound
 	}
 	// remove exam from user
-	err = db.Model(&user).Association("Exams").Delete([]Exam{*exam})
+	err = db.Model(&user).Association("Exams").Delete([]models.Exam{*exam})
 	if err != nil {
-		return User{}, err
+		return models.User{}, err
 	}
 	return user, nil
 }
@@ -173,13 +174,13 @@ func RemoveUserFromExam(db *gorm.DB, examID uint, userID uint) (User, error) {
 // Lists the users exams which they have registered to
 //
 // Or an error
-func GetUserExams(db *gorm.DB, userID uint) ([]*Exam, error) {
-	var user User
+func GetUserExams(db *gorm.DB, userID uint) ([]*models.Exam, error) {
+	var user models.User
 	err := db.Where("id = ?", userID).First(&user).Error
 	if err != nil {
 		return nil, err
 	}
-	err = db.Model(&User{}).Preload("Exams").Find(&user).Error
+	err = db.Model(&models.User{}).Preload("Exams").Find(&user).Error
 	if err != nil {
 		return nil, err
 	}

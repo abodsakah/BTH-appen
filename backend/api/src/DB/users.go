@@ -4,6 +4,7 @@ import (
 	"errors"
 	"time"
 
+	models "github.com/abodsakah/BTH-appen/backend/api/src/Models"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
@@ -16,7 +17,7 @@ func checkInputLength(username string, password string) (err error) {
 }
 
 // CreateUser function
-func CreateUser(db *gorm.DB, user *User) error {
+func CreateUser(db *gorm.DB, user *models.User) error {
 	// check username and password length
 	err := checkInputLength(user.Username, user.Password)
 	if err != nil {
@@ -45,7 +46,7 @@ func CreateUser(db *gorm.DB, user *User) error {
 //
 // Tests if user has the given role
 func IsRole(db *gorm.DB, id uint, role string) (bool, error) {
-	var user User
+	var user models.User
 	err := db.Where("id = ?", id).Find(&user).Error
 	if err != nil || user.Role != role {
 		return false, err
@@ -54,9 +55,9 @@ func IsRole(db *gorm.DB, id uint, role string) (bool, error) {
 }
 
 // GetAllUsers function
-func GetAllUsers(db *gorm.DB) ([]User, error) {
+func GetAllUsers(db *gorm.DB) ([]models.User, error) {
 	// get users from database
-	var users []User
+	var users []models.User
 
 	err := db.Omit("password").Find(&users).Error
 	if err != nil {
@@ -72,10 +73,10 @@ func GetAllUsers(db *gorm.DB) ([]User, error) {
 // respect user settings incase they dont want notifications.
 //
 // Returns all users expo tokens.
-func GetAllUserTokens(db *gorm.DB) ([]Token, error) {
+func GetAllUserTokens(db *gorm.DB) ([]models.Token, error) {
 	// get users from database
-	var users []User
-	var tokens []Token
+	var users []models.User
+	var tokens []models.Token
 
 	err := db.Preload("Tokens").Find(&users).Error
 	if err != nil {
@@ -91,13 +92,13 @@ func GetAllUserTokens(db *gorm.DB) ([]Token, error) {
 }
 
 // GetUser function
-func GetUser(db *gorm.DB, userID uint) (User, error) {
+func GetUser(db *gorm.DB, userID uint) (models.User, error) {
 	// get user from database
-	var user User
+	var user models.User
 
 	err := db.Omit("password").Where("id = ?", userID).First(&user).Error
 	if err != nil {
-		return User{}, err
+		return models.User{}, err
 	}
 
 	return user, nil
@@ -112,7 +113,7 @@ func AuthUser(db *gorm.DB, username string, password string) (userID uint, err e
 	}
 
 	// get user from database
-	var user User
+	var user models.User
 	err = db.Where("username = ?", username).First(&user).Error
 	if err != nil {
 		return 0, err
@@ -133,18 +134,18 @@ func AuthUser(db *gorm.DB, username string, password string) (userID uint, err e
 // ExpoPushToken example: `ExponentPushToken[xxxxxxxxxxxxxxxxxxxxxx]`
 //
 // Or returns an error.
-func AddExpoPushToken(db *gorm.DB, userID uint, pushToken string) (User, error) {
+func AddExpoPushToken(db *gorm.DB, userID uint, pushToken string) (models.User, error) {
 	// find user
-	var user User
+	var user models.User
 	err := db.Where("id = ?", userID).First(&user).Error
 	if err != nil {
-		return User{}, err
+		return models.User{}, err
 	}
 
 	// update user exams with exam
-	err = db.Model(&user).Association("Tokens").Append(&Token{ExpoPushToken: pushToken})
+	err = db.Model(&user).Association("Tokens").Append(&models.Token{ExpoPushToken: pushToken})
 	if err != nil {
-		return User{}, err
+		return models.User{}, err
 	}
 	return user, nil
 }

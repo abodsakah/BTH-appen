@@ -6,6 +6,8 @@ import (
 	"log"
 	"os"
 
+	models "github.com/abodsakah/BTH-appen/backend/api/src/Models"
+
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -40,25 +42,25 @@ func SetupDatabase() (*gorm.DB, error) {
 	}
 
 	// migrate database models
-	err = db.AutoMigrate(&User{})
+	err = db.AutoMigrate(&models.User{})
 	if err != nil {
 		return nil, err
 	}
-	err = db.AutoMigrate(&Exam{})
+	err = db.AutoMigrate(&models.Exam{})
 	if err != nil {
 		return nil, err
 	}
-	err = db.AutoMigrate(&News{})
+	err = db.AutoMigrate(&models.News{})
 	if err != nil {
 		return nil, err
 	}
-	err = db.AutoMigrate(&Token{})
+	err = db.AutoMigrate(&models.Token{})
 	if err != nil {
 		return nil, err
 	}
 
 	// NOTE: Create admin account so there is something to authenticate with when using the API.
-	user := &User{
+	user := &models.User{
 		Name:     "Admin Adminsson",
 		Username: "admin",
 		Password: "pass",

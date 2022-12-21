@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/abodsakah/BTH-appen/backend/api/src/DB"
+	"github.com/abodsakah/BTH-appen/backend/api/src/Models"
 	"github.com/abodsakah/BTH-appen/backend/api/src/Notifications"
 	"github.com/gocolly/colly"
 	"gorm.io/gorm"
@@ -23,7 +24,7 @@ const (
 func Start(gormDB *gorm.DB) {
 	for {
 		// slice to keep track of new articles
-		var newArticles []db.News
+		var newArticles []models.News
 		// scrape all articles
 		news, err := GetNews()
 		if err != nil {
@@ -50,9 +51,9 @@ func Start(gormDB *gorm.DB) {
 }
 
 // GetNews function to get news from the website
-func GetNews() ([]db.News, error) {
+func GetNews() ([]models.News, error) {
 	// articles slice
-	var news []db.News
+	var news []models.News
 
 	// Instantiate default collector
 	c := colly.NewCollector(
@@ -64,7 +65,7 @@ func GetNews() ([]db.News, error) {
 		// Get the title
 		h.ForEach(".ArticleItem", func(_ int, e *colly.HTMLElement) {
 			var err error
-			article := db.News{}
+			article := models.News{}
 			article.Title = e.ChildText("h2")
 
 			// Get the date
