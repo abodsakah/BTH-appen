@@ -59,7 +59,7 @@ func mockJSONPost(c *gin.Context, content interface{}) {
 func TestDatabaseRoutes(t *testing.T) {
 	err := godotenv.Load("../../../.env")
 	if err != nil {
-		t.Fatal(err)
+		t.Log(err)
 	}
 	dbP, err := db.SetupDatabase()
 	if dbP == nil {
