@@ -1,6 +1,6 @@
 pipeline {
     agent any
-    tools {go '1.19'}
+    tools {go '1.18'}
     stages {
         stage('Build') {
             steps {
