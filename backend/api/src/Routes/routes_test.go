@@ -4,6 +4,7 @@ package routes
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -61,8 +62,12 @@ func TestDatabaseRoutes(t *testing.T) {
 		t.Fatal(err)
 	}
 	dbP, err := db.SetupDatabase()
+	if dbP == nil {
+		fmt.Printf("Is nil!!!!!!!!!!!!!!!!!!!!!1111\n")
+	}
 	assert.Nil(t, err, "Database can not be connected to")
 	helpers.DbGorm = dbP
+  _ = helpers.FixtureWrapNonCreate(t)
 }
 
 func TestSetupRoutes(t *testing.T) {

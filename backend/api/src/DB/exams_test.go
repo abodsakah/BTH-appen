@@ -16,6 +16,7 @@ func TestDatabaseExam(t *testing.T) {
 	dbP, err := SetupDatabase()
 	assert.Nil(t, err, "Database can not be connected to")
 	helpers.DbGorm = dbP
+  _ = helpers.FixtureWrapNonCreate(t)
 }
 
 func TestCreateExam1(t *testing.T) {
