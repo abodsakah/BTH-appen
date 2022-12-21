@@ -36,7 +36,7 @@ func SendNewsPushMessage(gormDB *gorm.DB, news []models.News) error {
 	return nil
 }
 
-// createNewsPushMessages function
+// createNewsPushMessage function
 // Makes a `expo.PushMessage` for a news object and
 // send it to all users that have expo push tokens.
 //
