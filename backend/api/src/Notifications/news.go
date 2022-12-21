@@ -2,6 +2,7 @@
 package notifications
 
 import (
+	"errors"
 	"fmt"
 	"log"
 
@@ -11,13 +12,23 @@ import (
 )
 
 // SendNewsPushMessage function
-func SendNewsPushMessage(gormDB *gorm.DB, news db.News) error {
-	pushMsg, err := createNewsPushMessage(gormDB, news)
-	if err != nil {
-		return err
+func SendNewsPushMessage(gormDB *gorm.DB, news []db.News) error {
+	var pushMessages []expo.PushMessage
+	// create all push messages and append to slice
+	for _, article := range news {
+		pushMsg, err := createNewsPushMessage(gormDB, article)
+		if err != nil {
+			continue
+		}
+		pushMessages = append(pushMessages, pushMsg)
 	}
+	// return error if there are new messages to send
+	if len(pushMessages) < 1 {
+		return errors.New("Notifications; no news push messages to send")
+	}
+	// send messages
 	var tryNumber uint = 1
-	err = sendExpoPushMessages([]expo.PushMessage{pushMsg}, tryNumber)
+	err := sendExpoPushMessages(pushMessages, tryNumber)
 	if err != nil {
 		return err
 	}
