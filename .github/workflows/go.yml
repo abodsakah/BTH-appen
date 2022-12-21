@@ -59,7 +59,7 @@ jobs:
           POSTGRES_PASSWORD: postgres
           SECRET_SIGN_KEY: supersecretkey
       - name: TestRoutes
-        run: go test -v ./src/Routes/.
+        run: go test -p 1 -v ./src/Routes/.
         env:
           DB_HOST: localhost
           POSTGRES_NAME: bth-app
