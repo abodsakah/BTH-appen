@@ -25,13 +25,13 @@ import { useEffect, useState, useRef } from 'react';
 import { Colors } from './src/style';
 import * as Notifications from 'expo-notifications';
 import { addExpoPushToken } from './src/helpers/APIManager';
+import * as SecureStore from 'expo-secure-store';
 
 async function registerForPushNotificationsAsync() {
 	let token;
 	if (Device.isDevice) {
 		const { status: existingStatus } =
 			await Notifications.getPermissionsAsync();
-		console.log('device');
 		let finalStatus = existingStatus;
 		if (existingStatus !== 'granted') {
 			const { status } = await Notifications.requestPermissionsAsync();
@@ -42,7 +42,6 @@ async function registerForPushNotificationsAsync() {
 			return;
 		}
 		token = (await Notifications.getExpoPushTokenAsync()).data;
-		console.log('token: ', token);
 		await addExpoPushToken(token);
 	} else {
 		alert('Must use physical device for Push Notifications');
@@ -63,6 +62,7 @@ async function registerForPushNotificationsAsync() {
 export default function App() {
 	const [expoPushToken, setExpoPushToken] = useState();
 	const [notification, setNotification] = useState(false);
+	const [user, setUser] = useState(null);
 
 	const notificationListener = useRef();
 	const responseListener = useRef();
@@ -86,35 +86,50 @@ export default function App() {
 		}
 	};
 
+	const getUserFromSecureStorage = async () => {
+		let res = await SecureStore.getItemAsync('user');
+		if (res) {
+			setUser(JSON.parse(res));
+		}
+	};
+
 	useEffect(() => {
 		getPreferredLanguageAndApply();
-
-		// Expo push notifications
-		registerForPushNotificationsAsync().then((token) =>
-			setExpoPushToken(token)
-		);
-
-		// This listener is fired whenever a notification is received while the app is foregrounded
-		notificationListener.current =
-			Notifications.addNotificationReceivedListener((notification) => {
-				setNotification(notification);
-			});
-
-		// This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
-		responseListener.current =
-			Notifications.addNotificationResponseReceivedListener((response) => {
-				console.log(response);
-			});
-
-		return () => {
-			Notifications.removeNotificationSubscription(notificationListener);
-			Notifications.removeNotificationSubscription(responseListener);
-		};
 	}, []);
+
+	useEffect(() => {
+		if (user) {
+			// Expo push notifications
+			registerForPushNotificationsAsync().then((token) =>
+				setExpoPushToken(token)
+			);
+
+			// This listener is fired whenever a notification is received while the app is foregrounded
+			notificationListener.current =
+				Notifications.addNotificationReceivedListener((notification) => {
+					setNotification(notification);
+				});
+
+			// This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
+			responseListener.current =
+				Notifications.addNotificationResponseReceivedListener((response) => {
+					console.log(response);
+				});
+
+			getUserFromSecureStorage();
+
+			return () => {
+				Notifications.removeNotificationSubscription(notificationListener);
+				Notifications.removeNotificationSubscription(responseListener);
+			};
+		}
+	}, [user]);
 
 	if (!fontsLoaded) {
 		return <ActivityIndicator />;
 	}
+
+	if (!user) return <Login setUser={setUser} />;
 
 	return (
 		<NavigationContainer>
