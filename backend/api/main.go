@@ -35,5 +35,11 @@ func main() {
 	}()
 
 	// start API web server main routine
-	routes.SetupRoutes(gormDB)
+	r, err := routes.SetupRoutes(gormDB)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	if err = r.Run(":5000"); err != nil {
+		log.Fatalln(err)
+	}
 }

@@ -1,4 +1,4 @@
-export const API_URL = 'http://[din-ip]:5000/api';
+export const API_URL = 'https://bth.abodsakka.xyz/api';
 
 export const Buildings = {
 	j: {

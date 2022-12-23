@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/abodsakah/BTH-appen/backend/api/src/DB"
+	models "github.com/abodsakah/BTH-appen/backend/api/src/Models"
 	"github.com/abodsakah/BTH-appen/backend/api/src/Notifications"
 	"github.com/gocolly/colly"
 	"gorm.io/gorm"
@@ -69,7 +70,7 @@ func GetNews(gormDB *gorm.DB) {
 			// Get the link
 			link := e.ChildAttr("a", "href")
 
-			article := db.News{
+			article := models.News{
 				Title:       title,
 				Date:        newsDate,
 				Description: des,
