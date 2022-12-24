@@ -5,6 +5,7 @@ import React from 'react';
 import Main from '../Views/Main';
 import TabBarNavigation from './TabBarNavigation';
 import Languages from '../Views/Languages';
+import About from '../Views/About';
 
 const MainNavigation = () => {
 	const Stack = createStackNavigator();
@@ -18,6 +19,7 @@ const MainNavigation = () => {
 		>
 			<Stack.Screen name="Main" component={TabBarNavigation} />
 			<Stack.Screen name="Languages" component={Languages} />
+			<Stack.Screen name="About" component={About} />
 		</Stack.Navigator>
 	);
 };
