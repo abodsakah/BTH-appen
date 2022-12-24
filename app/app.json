@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "BTH app",
-    "slug": "BTH app",
+    "slug": "BthApp",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -24,6 +24,13 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#09718C"
+      },
+      "googleServicesFile": "./google-services.json",
+      "package": "com.abodsakka.bthstudent",
+      "config": {
+        "googleMaps": {
+          "apiKey": "[api-key]"
+        }
       }
     },
     "web": {
@@ -32,11 +39,17 @@
     "plugins": [
       "sentry-expo",
       [
-        "expo-notifications", {
+        "expo-notifications",
+        {
           "icon": "./assets/notification-icon.png",
           "color": "#09718C"
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "e5b88002-cadf-4bd1-92de-f6fee8587b9b"
+      }
+    }
   }
 }
