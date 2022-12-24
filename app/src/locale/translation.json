@@ -138,5 +138,15 @@
         "en": "Permission to access the location was denied",
         "sv-sv": "Tillstånd att komma åt platsen nekades",
         "ar": "تم رفض إذن الوصول إلى الموقع"
+    },
+    "aboutText": {
+        "en": "This app is made by students for students. It is a free and open-source app to help students navigate their university life.",
+        "sv-sv": "Denna app är gjord av studenter för studenter. Det är en gratis app med öppen källkod som hjälper studenter att navigera i sitt universitetsliv.",
+        "ar": "تم إنشاء هذا التطبيق من قبل الطلاب للطلاب. إنه تطبيق مجاني ومفتوح المصدر لمساعدة الطلاب على التنقل في حياتهم الجامعية."
+    },
+    "developedBy": {
+        "en": "This application was developed by:",
+        "sv-sv": "Appen är utvecklad av:",
+        "ar": "تم تطوير التطبيق بواسطة:"
     }
 }

@@ -12,11 +12,19 @@ import OptionContainer from '../Components/OptionContainer';
 import { t } from '../locale/translate';
 import * as SecureStore from 'expo-secure-store';
 import * as Updates from 'expo-updates';
+import TriggerContainer from '../Components/TriggerContainer';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Profile = ({ navigation }) => {
 	const [user, setUser] = useState(null);
+	const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+
 	const navigateToLanguages = () => {
 		navigation.navigate('Languages');
+	};
+
+	const navigateToAbout = () => {
+		navigation.navigate('About');
 	};
 
 	const logout = async () => {
@@ -28,6 +36,16 @@ const Profile = ({ navigation }) => {
 		const res = await SecureStore.getItemAsync('user');
 		if (res) {
 			setUser(JSON.parse(res));
+		}
+	};
+
+	const triggerNotifications = async () => {
+		setNotificationsEnabled(!notificationsEnabled);
+
+		if (!notificationsEnabled) {
+			await AsyncStorage.setItem('notificationsEnabled', 'false');
+		} else {
+			await AsyncStorage.setItem('notificationsEnabled', 'true');
 		}
 	};
 
@@ -43,11 +61,17 @@ const Profile = ({ navigation }) => {
 				Icon={() => <Ionicons name="md-person" size={30}></Ionicons>}
 			/>
 			<Text style={styles.heading}>{t('more')}</Text>
-			<OptionContainer
-				text={t('settings')}
+			<TriggerContainer
+				text={t('Notifications')}
 				Icon={() => (
-					<AntDesign name="setting" size={30} color={Colors.primary.regular} />
+					<Ionicons
+						name="notifications-outline"
+						size={30}
+						color={Colors.primary.regular}
+					/>
 				)}
+				onValueChange={triggerNotifications}
+				value={notificationsEnabled}
 			/>
 			<OptionContainer
 				onPress={navigateToLanguages}
@@ -76,6 +100,7 @@ const Profile = ({ navigation }) => {
 						color={Colors.primary.regular}
 					/>
 				)}
+				onPress={navigateToAbout}
 			/>
 		</Container>
 	);
