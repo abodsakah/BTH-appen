@@ -157,3 +157,8 @@ export async function addExpoPushToken(pushToken) {
 		}
 	);
 }
+
+export async function fetchNews() {
+	const url = `${API_URL}/list-news`;
+	return await sendGETRequest(url);
+}
