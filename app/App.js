@@ -62,6 +62,10 @@ async function registerForPushNotificationsAsync() {
 export default function App() {
 	const [expoPushToken, setExpoPushToken] = useState();
 	const [notification, setNotification] = useState(false);
+
+	const [notificationPermission, setNotificationPermission] = useState(null);
+	const [notificationsEnabled, setNotificationsEnabled] = useState(null);
+
 	const [user, setUser] = useState(null);
 
 	const notificationListener = useRef();
@@ -93,35 +97,89 @@ export default function App() {
 		}
 	};
 
+	const getNotificationsEnabled = async () => {
+		const status = await AsyncStorage.getItem('notificationsEnabled');
+		if (status) {
+			setNotificationsEnabled(status);
+		}
+	};
+
 	useEffect(() => {
 		getPreferredLanguageAndApply();
+		getUserFromSecureStorage();
+		getNotificationsEnabled();
 	}, []);
+
+	const getNotificationPermission = async () => {
+		const { status: existingStatus } =
+			await Notifications.getPermissionsAsync();
+		let finalStatus = existingStatus;
+
+		if (existingStatus !== 'granted') {
+			const { status } = await Notifications.requestPermissionsAsync();
+			finalStatus = status;
+		}
+
+		if (finalStatus !== 'granted') {
+			// ask for permission
+			const { status } = await Notifications.requestPermissionsAsync();
+
+			if (status === 'denied') {
+				const channel = await Notifications.setNotificationChannelAsync(
+					'default',
+					{
+						name: 'default',
+						importance: Notifications.AndroidImportance.MAX,
+						vibrationPattern: [0, 250, 250, 250],
+						lightColor: Colors.primary.regular,
+					}
+				);
+			}
+		}
+
+		setNotificationPermission(finalStatus);
+	};
 
 	useEffect(() => {
 		if (user) {
-			// Expo push notifications
-			registerForPushNotificationsAsync().then((token) =>
-				setExpoPushToken(token)
-			);
+			getNotificationPermission();
 
-			// This listener is fired whenever a notification is received while the app is foregrounded
-			notificationListener.current =
-				Notifications.addNotificationReceivedListener((notification) => {
-					setNotification(notification);
+			if (
+				notificationPermission === 'granted' &&
+				notificationsEnabled !== 'false'
+			) {
+				// set a notification channel
+				Notifications.setNotificationChannelAsync('default', {
+					name: 'default',
+					importance: Notifications.AndroidImportance.MAX,
+					vibrationPattern: [0, 250, 250, 250],
+					lightColor: Colors.primary.regular,
 				});
 
-			// This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
-			responseListener.current =
-				Notifications.addNotificationResponseReceivedListener((response) => {
-					console.log(response);
-				});
+				// Expo push notifications
+				registerForPushNotificationsAsync().then((token) =>
+					setExpoPushToken(token)
+				);
 
-			getUserFromSecureStorage();
+				// This listener is fired whenever a notification is received while the app is foregrounded
+				notificationListener.current =
+					Notifications.addNotificationReceivedListener((notification) => {
+						setNotification(notification);
+					});
 
-			return () => {
-				Notifications.removeNotificationSubscription(notificationListener);
-				Notifications.removeNotificationSubscription(responseListener);
-			};
+				// This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
+				responseListener.current =
+					Notifications.addNotificationResponseReceivedListener((response) => {
+						console.log(response);
+					});
+
+				getUserFromSecureStorage();
+
+				return () => {
+					Notifications.removeNotificationSubscription(notificationListener);
+					Notifications.removeNotificationSubscription(responseListener);
+				};
+			}
 		}
 	}, [user]);
 
