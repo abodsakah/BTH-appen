@@ -1,0 +1,28 @@
+{
+  "cli": {
+    "version": ">= 0.54.1"
+  },
+  "build": {
+    "apk": {
+      "android": {
+        "buildType": "apk",
+        "gradleCommand": ":app:assembleRelease",
+        "developmentClient": true
+      }
+    },
+    "aab": {
+      "android": {
+        "gradleCommand": "bundleRelease"
+      }
+    },
+    "production": {}
+  },
+  "submit": {
+    "production": {
+      "android": {
+        "serviceAccountKeyPath": "./google-play-service-account-key.json",
+        "track": "internal"
+      }
+    }
+  }
+}
