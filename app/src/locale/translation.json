@@ -37,7 +37,7 @@
     "search_ph": {
         "en": "Search for a hall...",
         "sv-sv": "Sök efter en sal...",
-        "ar": "ابحث عن قاعة ..."
+        "ar": "أبحث عن قاعة ..."
     },
     "map_not_found": {
         "en": "The hall could not be found, please check that you entered the hall number correctly",
@@ -47,7 +47,7 @@
     "go_to_building": {
         "en": "Go to building",
         "sv-sv": "Gå till byggnad",
-        "ar": "اذهب إلى المبنى"
+        "ar": "أذهب إلى المبنى"
     },
     "room_in": {
         "en": "the room is going to be on floor",
@@ -57,7 +57,7 @@
     "news": {
         "en": "News",
         "sv-sv": "Nyheter",
-        "ar": "الاخبار"
+        "ar": "الأخبار"
     },
     "map": {
         "en": "Map",
@@ -67,7 +67,7 @@
     "exams": {
         "en": "Exams",
         "sv-sv": "Tentor",
-        "ar": "الامتحانات"
+        "ar": "الأمتحانات"
     },
     "profile": {
         "en": "Profile",
@@ -102,12 +102,12 @@
     "registered_exams": {
         "en": "Registered exams",
         "sv-sv": "Registrerade tentamen",
-        "ar": "الامتحانات المسجلة"
+        "ar": "الأمتحانات المسجلة"
     },
     "coming_exams": {
         "en": "Coming exams",
         "sv-sv": "kommande tentor",
-        "ar": "الامتحانات القادمة"
+        "ar": "الأمتحانات القادمة"
     },
     "date": {
         "en": "Date",
@@ -138,5 +138,25 @@
         "en": "Permission to access the location was denied",
         "sv-sv": "Tillstånd att komma åt platsen nekades",
         "ar": "تم رفض إذن الوصول إلى الموقع"
+    },
+    "aboutText": {
+        "en": "This app is made by students for students. It is a free and open-source app to help students navigate their university life.",
+        "sv-sv": "Denna app är gjord av studenter för studenter. Det är en gratis app med öppen källkod som hjälper studenter att navigera i sitt universitetsliv.",
+        "ar": "تم إنشاء هذا التطبيق من قبل الطلاب للطلاب. إنه تطبيق مجاني ومفتوح المصدر لمساعدة الطلاب على التنقل في حياتهم الجامعية."
+    },
+    "developedBy": {
+        "en": "This application was developed by:",
+        "sv-sv": "Appen är utvecklad av:",
+        "ar": "تم تطوير التطبيق بواسطة:"
+    },
+    "logout": {
+        "en": "Logout",
+        "sv-sv": "Logga ut",
+        "ar": "تسجيل الخروج"
+    },
+    "noNews": {
+        "en": "There are no news for the time being",
+        "sv-sv": "Det finns inga nyheter för tillfället",
+        "ar": "لا توجد أخبار في الوقت الراهن"
     }
 }
