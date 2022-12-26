@@ -29,9 +29,17 @@
       "package": "com.abodsakka.bthstudent",
       "config": {
         "googleMaps": {
-          "apiKey": "[api-key]"
+          "apiKey": "[api key]"
         }
-      }
+      },
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_BACKGROUND_LOCATION",
+        "FOREGROUND_SERVICE",
+        "VIBRATE",
+        "RECEIVE_BOOT_COMPLETED"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
