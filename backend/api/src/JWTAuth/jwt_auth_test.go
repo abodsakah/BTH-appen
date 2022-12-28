@@ -22,23 +22,23 @@ func TestDatabaseJwtAuth(t *testing.T) {
 
 func TestGenerateJWT(t *testing.T) {
 	_ = helpers.FixtureWrapCreate(t, &helpers.TestUser)
-  _, err := GenerateJWT(helpers.TestEntryIndex)
+	_, err := GenerateJWT(helpers.TestEntryIndex)
 	assert.Nil(t, err, "After calling generateJWT with valid user id, it shall not return an error")
 	_ = helpers.FixtureWrapNonCreate(t)
 }
 
 func TestValidateJWT1(t *testing.T) {
 	_ = helpers.FixtureWrapCreate(t, &helpers.TestUser)
-  token, _ := GenerateJWT(helpers.TestEntryIndex)
-  _, err := ValidateJWT(token)
+	token, _ := GenerateJWT(helpers.TestEntryIndex)
+	_, err := ValidateJWT(token)
 	assert.Nil(t, err, "After calling validateJWT with valid token, it shall not return an error")
 	_ = helpers.FixtureWrapNonCreate(t)
 }
 
 func TestValidateJWT2(t *testing.T) {
 	_ = helpers.FixtureWrapCreate(t, &helpers.TestUser)
-  token := "incorrect-token"
-  _, err := ValidateJWT(token)
+	token := "incorrect-token"
+	_, err := ValidateJWT(token)
 	assert.NotNil(t, err, "After calling validateJWT with valid token, it shall not return an error")
 	_ = helpers.FixtureWrapNonCreate(t)
 }
