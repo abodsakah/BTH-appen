@@ -36,18 +36,19 @@ func SetupRoutes(gormObj *gorm.DB) (*gin.Engine, error) {
 	r.POST("/api/login", login)
 	r.GET("/api/list-exams", listExams)
 	r.GET("/api/list-news", listNews)
-	r.GET("/api/list-due-exams", listDueExams)
 	// auth protected routes
 	auth := r.Group("/", authMiddleware)
 	{
 		auth.GET("/api/auth-hello", hello)
 		auth.GET("/api/list-user-exams", listUserExams)
+		auth.POST("/api/refresh-jwt", refreshJWT)
 		auth.POST("/api/register-exam", registerToExam)
 		auth.POST("/api/unregister-exam", unregisterFromExam)
 		auth.POST("/api/add-user-expo-push-token", addUserExpoPushToken)
 		adminAuth := auth.Group("/", adminMiddleware)
 		{
 			adminAuth.GET("/api/list-exam-users", listExamUsers)
+			adminAuth.GET("/api/list-due-exams", listDueExams)
 			adminAuth.POST("/api/create-user", createUser)
 			adminAuth.POST("/api/create-exam", createExam)
 			adminAuth.DELETE("/api/delete-exam", deleteExam)
@@ -309,6 +310,36 @@ func createUser(c *gin.Context) {
 	}
 
 	c.JSON(200, gin.H{"username": user.Username, "creation-date": user.CreatedAt})
+}
+
+// returns a new fresh JWT if the user already has a valid JWT
+func refreshJWT(c *gin.Context) {
+	// get userID from set by middleware
+	userID := c.Keys["UserID"].(uint)
+	// generate a JWT for the user with user ID
+	token, err := jwtauth.GenerateJWT(userID)
+	if err != nil {
+		log.Println(err.Error())
+		c.JSON(500, gin.H{"error": "Internal server error"})
+		return
+	}
+
+	// create JSON to send to client.
+	userInfo, err := db.GetUser(gormDB, userID)
+	if err != nil {
+		log.Println(err.Error())
+		c.JSON(500, gin.H{"error": "Internal server error"})
+		return
+	}
+	jsonUserInfo := gin.H{
+		"status": "success",
+		"jwt":    token,
+		"user":   userInfo,
+	}
+
+	// create a cookie that's valid for 2 hours to match the JWT 2 hour expiration time
+	c.SetCookie("BTH-app", token, 60*60*2, "/", "localhost", true, true)
+	c.JSON(200, jsonUserInfo)
 }
 
 func login(c *gin.Context) {

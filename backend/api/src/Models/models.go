@@ -1,4 +1,5 @@
-package db
+// Package models provides models
+package models
 
 import (
 	"time"
