@@ -20,12 +20,12 @@ func TestDatabaseNews(t *testing.T) {
 }
 
 func TestCreateNews1(t *testing.T) {
-  err := helpers.FixtureWrapCreate(t, &helpers.TestNews)
+	err := helpers.FixtureWrapCreate(t, &helpers.TestNews)
 	assert.Nil(t, err, "After calling create, with no duplicates, no errors shall be returned")
 }
 
 func TestCreateNews2(t *testing.T) {
-  _ = helpers.FixtureWrapCreate(t, &helpers.TestNews)
+	_ = helpers.FixtureWrapCreate(t, &helpers.TestNews)
 	err := CreateNews(helpers.DbGorm, helpers.TestNews)
 	assert.NotNil(t, err, "After calling create, with duplicates, errors shall be returned")
 }
@@ -43,7 +43,7 @@ func TestGetNews1(t *testing.T) {
 }
 
 func TestGetNews2(t *testing.T) {
-  _ = helpers.FixtureWrapNonCreate(t)
+	_ = helpers.FixtureWrapNonCreate(t)
 	_, _ = DeleteNews(helpers.DbGorm, helpers.TestEntryIndex)
 	res, _ := GetNews(helpers.DbGorm)
 	assert.Equal(t, 0, len(res), "When calling getNews with no entries it shall return an array of size 0")

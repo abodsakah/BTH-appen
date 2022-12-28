@@ -17,12 +17,10 @@ var (
 )
 
 const (
-  // TestEntryIndex variable
-  // Index used for all tables in tests where no more than one entry is present/table
-  TestEntryIndex = 1
+	// TestEntryIndex variable
+	// Index used for all tables in tests where no more than one entry is present/table
+	TestEntryIndex = 1
 )
-
-
 
 // TestUser variable
 // User entry for test-enviorment

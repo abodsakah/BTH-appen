@@ -25,7 +25,7 @@ func TestCreateExam1(t *testing.T) {
 }
 
 func TestCreateExam2(t *testing.T) {
-  _ = helpers.FixtureWrapCreate(t, &helpers.TestExam)
+	_ = helpers.FixtureWrapCreate(t, &helpers.TestExam)
 	err := CreateExam(helpers.DbGorm, helpers.TestExam)
 	assert.NotNil(t, err, "Trying to create a duplicate exam shall return an error")
 }
@@ -67,7 +67,7 @@ func TestRemoveUserFromExam2(t *testing.T) {
 }
 
 func TestGetExamsDueSoon(t *testing.T) {
-  _ = helpers.FixtureWrapCreate(t, &helpers.TestExam)
+	_ = helpers.FixtureWrapCreate(t, &helpers.TestExam)
 	exams, _ := GetExamsDueSoon(helpers.DbGorm)
 	assert.Less(t, 0, len(exams), "After an exam has been created with the current date plus one day, it should come up in the array of due exams")
 }

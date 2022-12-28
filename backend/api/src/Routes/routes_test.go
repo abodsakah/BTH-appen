@@ -27,8 +27,8 @@ func startTest(t *testing.T) {
 	_ = helpers.FixtureWrapCreate(t, helpers.TestExam, helpers.TestNews)
 	temp := *helpers.TestUser
 	_ = db.CreateUser(helpers.DbGorm, &temp)
-  temp = *helpers.TestAdmin
-  _ = db.CreateUser(helpers.DbGorm, &temp)
+	temp = *helpers.TestAdmin
+	_ = db.CreateUser(helpers.DbGorm, &temp)
 }
 
 func setupContext() (*gin.Context, *httptest.ResponseRecorder) {
@@ -341,7 +341,7 @@ func TestAuthMiddleware1(t *testing.T) {
 
 	login(c)
 
-  authMiddleware(c)
+	authMiddleware(c)
 	assert.Equal(t, 200, w.Code, "When trying to call on Auth Middleware API with user being logged in, it should return status: 200")
 }
 
@@ -350,7 +350,7 @@ func TestAuthMiddleware2(t *testing.T) {
 	c, w := setupContext()
 	// Set Body, Header and Content-Type
 
-  authMiddleware(c)
+	authMiddleware(c)
 	assert.NotEqual(t, 200, w.Code, "When trying to call on Auth Middleware API with user not logged in, it should not return status: 200")
 }
 
@@ -359,8 +359,8 @@ func TestAdminMiddleware1(t *testing.T) {
 	c, w := setupContext()
 	// Set Body, Header and Content-Type
 
-	c.Set("UserID", uint(helpers.TestEntryIndex + 1))
-  adminMiddleware(c)
+	c.Set("UserID", uint(helpers.TestEntryIndex+1))
+	adminMiddleware(c)
 	assert.Equal(t, 200, w.Code, "When trying to call on Admin Middleware API with right ID for admin, it should return status: 200")
 }
 
@@ -370,6 +370,6 @@ func TestAdminMiddleware2(t *testing.T) {
 	// Set Body, Header and Content-Type
 
 	c.Set("UserID", uint(helpers.TestEntryIndex))
-  adminMiddleware(c)
+	adminMiddleware(c)
 	assert.NotEqual(t, 200, w.Code, "When trying to call on Admin Middleware API with wrong ID for admin, it should not return status: 200")
 }

@@ -25,7 +25,7 @@ func TestUserCreate1(t *testing.T) {
 }
 
 func TestUserCreate2(t *testing.T) {
-  _ = helpers.FixtureWrapCreate(t, helpers.TestUser)
+	_ = helpers.FixtureWrapCreate(t, helpers.TestUser)
 	temp := *helpers.TestUser
 	err := CreateUser(helpers.DbGorm, &temp)
 	assert.NotNil(t, err, "When calling create, with duplicates, it shall return errors")
