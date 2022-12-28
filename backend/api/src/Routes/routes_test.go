@@ -24,9 +24,11 @@ import (
 var router *gin.Engine
 
 func startTest(t *testing.T) {
-	_, _ = helpers.FixtureWrapCreate(t, helpers.TestExam, helpers.TestNews)
+	_ = helpers.FixtureWrapCreate(t, helpers.TestExam, helpers.TestNews)
 	temp := *helpers.TestUser
 	_ = db.CreateUser(helpers.DbGorm, &temp)
+  temp = *helpers.TestAdmin
+  _ = db.CreateUser(helpers.DbGorm, &temp)
 }
 
 func setupContext() (*gin.Context, *httptest.ResponseRecorder) {
@@ -141,7 +143,7 @@ func TestExamDelete1(t *testing.T) {
 	c, w := setupContext()
 	// Set Body, Header and Content-Type
 	mockJSONPost(c, &gin.H{
-		"exam_id": 1,
+		"exam_id": helpers.TestEntryIndex,
 	})
 
 	// call API endpoint
@@ -154,7 +156,7 @@ func TestExamDelete2(t *testing.T) {
 	c, w := setupContext()
 	// Set Body, Header and Content-Type
 	mockJSONPost(c, &gin.H{
-		"exam_id": 1,
+		"exam_id": helpers.TestEntryIndex,
 	})
 
 	// call API endpoint
@@ -167,7 +169,7 @@ func TestListExams1(t *testing.T) {
 	c, w := setupContext()
 	// Set Body, Header and Content-Type
 	mockJSONPost(c, &gin.H{
-		"exam_id": 1,
+		"exam_id": helpers.TestEntryIndex,
 	})
 
 	// call API endpoint
@@ -180,7 +182,7 @@ func TestListDueExams1(t *testing.T) {
 	c, w := setupContext()
 	// Set Body, Header and Content-Type
 	mockJSONPost(c, &gin.H{
-		"exam_id": 1,
+		"exam_id": helpers.TestEntryIndex,
 	})
 
 	// call API endpoint
@@ -190,14 +192,14 @@ func TestListDueExams1(t *testing.T) {
 
 func TestListUserExams(t *testing.T) {
 	startTest(t)
-	_, _ = db.AddUserToExam(helpers.DbGorm, 1, 1)
+	_, _ = db.AddUserToExam(helpers.DbGorm, helpers.TestEntryIndex, helpers.TestEntryIndex)
 	c, w := setupContext()
 	// Set Body, Header and Content-Type
 	mockJSONPost(c, &gin.H{
-		"userID":  1,
-		"exam_id": 1,
+		"userID":  helpers.TestEntryIndex,
+		"exam_id": helpers.TestEntryIndex,
 	})
-	c.Set("UserID", uint(1))
+	c.Set("UserID", uint(helpers.TestEntryIndex))
 	// call API endpoint
 	listUserExams(c)
 	assert.Equal(t, 200, w.Code, "When trying to call on list User Exams API with exams present for user, it should return status: 200")
@@ -205,14 +207,169 @@ func TestListUserExams(t *testing.T) {
 
 func TestListExamUser(t *testing.T) {
 	startTest(t)
-	_, _ = db.AddUserToExam(helpers.DbGorm, 1, 1)
+	_, _ = db.AddUserToExam(helpers.DbGorm, helpers.TestEntryIndex, helpers.TestEntryIndex)
 	c, w := setupContext()
 	// Set Body, Header and Content-Type
 	mockJSONPost(c, &gin.H{
-		"exam_id": 1,
+		"exam_id": helpers.TestEntryIndex,
 	})
-	c.Set("UserID", uint(1))
+	c.Set("UserID", uint(helpers.TestEntryIndex))
 	// call API endpoint
 	listExamUsers(c)
 	assert.Equal(t, 200, w.Code, "When trying to call on list Exam Users API with users present for user, it should return status: 200")
+}
+
+func TestRegisterToExam1(t *testing.T) {
+	startTest(t)
+	c, w := setupContext()
+	// Set Body, Header and Content-Type
+	mockJSONPost(c, &gin.H{
+		"exam_id": helpers.TestEntryIndex,
+	})
+	c.Set("UserID", uint(helpers.TestEntryIndex))
+	// call API endpoint
+	registerToExam(c)
+	assert.Equal(t, 200, w.Code, "When trying to call on registerToExam API with user present, it should return status: 200")
+}
+
+func TestRegisterToExam2(t *testing.T) {
+	_ = helpers.FixtureWrapNonCreate(t)
+	c, w := setupContext()
+	// Set Body, Header and Content-Type
+	mockJSONPost(c, &gin.H{
+		"exam_id": helpers.TestEntryIndex,
+	})
+	c.Set("UserID", uint(helpers.TestEntryIndex))
+	// call API endpoint
+	registerToExam(c)
+	assert.NotEqual(t, 200, w.Code, "When trying to call on registerToExam API with no user present, it should not return status: 200")
+}
+
+func TestUnregisterFromExam1(t *testing.T) {
+	startTest(t)
+	_, _ = db.AddUserToExam(helpers.DbGorm, helpers.TestEntryIndex, helpers.TestEntryIndex)
+	c, w := setupContext()
+	// Set Body, Header and Content-Type
+	mockJSONPost(c, &gin.H{
+		"exam_id": helpers.TestEntryIndex,
+	})
+	c.Set("UserID", uint(helpers.TestEntryIndex))
+	// call API endpoint
+	unregisterFromExam(c)
+	assert.Equal(t, 200, w.Code, "When trying to call on Unregister from Exam API with user present in exam2user table, it should return status: 200")
+}
+
+func TestUnregisterFromExam2(t *testing.T) {
+	_ = helpers.FixtureWrapNonCreate(t)
+	c, w := setupContext()
+	// Set Body, Header and Content-Type
+	mockJSONPost(c, &gin.H{
+		"exam_id": helpers.TestEntryIndex,
+	})
+	c.Set("UserID", uint(helpers.TestEntryIndex))
+	// call API endpoint
+	unregisterFromExam(c)
+	assert.NotEqual(t, 200, w.Code, "When trying to call on Unregister from Exam API with no user present in exam2user table, it should not return status: 200")
+}
+
+func TestListNews1(t *testing.T) {
+	startTest(t)
+	c, w := setupContext()
+	c.Set("UserID", uint(helpers.TestEntryIndex))
+	// call API endpoint
+	assert.Equal(t, 200, w.Code, "When trying to call on ListNews API with news present in news table, it should return status: 200")
+}
+
+func TestListNews2(t *testing.T) {
+	_ = helpers.FixtureWrapNonCreate(t)
+	c, w := setupContext()
+	c.Set("UserID", uint(helpers.TestEntryIndex))
+	// call API endpoint
+	assert.Equal(t, 200, w.Code, "When trying to call on ListNews API with no news present in news table, it should not return status: 200")
+}
+
+func TestCreateUser1(t *testing.T) {
+	_ = helpers.FixtureWrapNonCreate(t)
+	c, w := setupContext()
+	// Set Body, Header and Content-Type
+	mockJSONPost(c, &gin.H{
+		"Name":     "Admin Adminsson",
+		"Username": "admin",
+		"Password": "pass",
+		"Role":     "admin",
+	})
+
+	assert.Equal(t, 200, w.Code, "When trying to call on Create User API with correct credentials, it should return status: 200")
+}
+
+func TestCreateUser2(t *testing.T) {
+	_ = helpers.FixtureWrapNonCreate(t)
+	c, w := setupContext()
+	// Set Body, Header and Content-Type
+	mockJSONPost(c, &gin.H{
+		"Name":     "Admin Adminsson",
+		"Username": "admin",
+		"Password": "too-loooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong-password",
+		"Role":     "admin",
+	})
+	createUser(c)
+	assert.NotEqual(t, 200, w.Code, "When trying to call on Create User API with correct credentials except a password which is too long, it should not return status: 200")
+}
+
+func TestCreateUser3(t *testing.T) {
+	_ = helpers.FixtureWrapNonCreate(t)
+	c, w := setupContext()
+	// Set Body, Header and Content-Type
+	mockJSONPost(c, &gin.H{
+		"Name":     "Admin Adminsson",
+		"Password": "pass",
+		"Role":     "admin",
+	})
+	createUser(c)
+	assert.NotEqual(t, 200, w.Code, "When trying to call on Create User API with missing username, it should not return status: 200")
+}
+
+// Middlewares
+func TestAuthMiddleware1(t *testing.T) {
+	startTest(t)
+	c, w := setupContext()
+	// Set Body, Header and Content-Type
+	mockJSONPost(c, &gin.H{
+		"Username": "test",
+		"Password": "pass",
+	})
+
+	login(c)
+
+  authMiddleware(c)
+	assert.Equal(t, 200, w.Code, "When trying to call on Auth Middleware API with user being logged in, it should return status: 200")
+}
+
+func TestAuthMiddleware2(t *testing.T) {
+	startTest(t)
+	c, w := setupContext()
+	// Set Body, Header and Content-Type
+
+  authMiddleware(c)
+	assert.NotEqual(t, 200, w.Code, "When trying to call on Auth Middleware API with user not logged in, it should not return status: 200")
+}
+
+func TestAdminMiddleware1(t *testing.T) {
+	startTest(t)
+	c, w := setupContext()
+	// Set Body, Header and Content-Type
+
+	c.Set("UserID", uint(helpers.TestEntryIndex + 1))
+  adminMiddleware(c)
+	assert.Equal(t, 200, w.Code, "When trying to call on Admin Middleware API with right ID for admin, it should return status: 200")
+}
+
+func TestAdminMiddleware2(t *testing.T) {
+	startTest(t)
+	c, w := setupContext()
+	// Set Body, Header and Content-Type
+
+	c.Set("UserID", uint(helpers.TestEntryIndex))
+  adminMiddleware(c)
+	assert.NotEqual(t, 200, w.Code, "When trying to call on Admin Middleware API with wrong ID for admin, it should not return status: 200")
 }

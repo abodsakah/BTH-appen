@@ -16,6 +16,14 @@ var (
 	additionalTables = []string{"exam_users"}
 )
 
+const (
+  // TestEntryIndex variable
+  // Index used for all tables in tests where no more than one entry is present/table
+  TestEntryIndex = 1
+)
+
+
+
 // TestUser variable
 // User entry for test-enviorment
 var TestUser = &models.User{
@@ -23,6 +31,15 @@ var TestUser = &models.User{
 	Username: "test",
 	Password: "pass",
 	Role:     "student",
+}
+
+// TestAdmin variable
+// Admin entry for test-enviorment
+var TestAdmin = &models.User{
+	Name:     "Admin Testsson",
+	Username: "admin",
+	Password: "pass",
+	Role:     "admin",
 }
 
 // TestExam variable
@@ -55,7 +72,7 @@ func SetupTables(entries ...interface{}) error {
 }
 
 // FixtureWrapCreate function
-func FixtureWrapCreate(t *testing.T, entries ...interface{}) (uint, error) {
+func FixtureWrapCreate(t *testing.T, entries ...interface{}) error {
 	err := fixture.CleanUp(DbGorm, additionalTables, &models.User{}, &models.Exam{}, &models.News{}, &models.Token{})
 	if err != nil {
 		t.Fatal(err)
@@ -64,7 +81,7 @@ func FixtureWrapCreate(t *testing.T, entries ...interface{}) (uint, error) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	return 1, nil
+	return nil
 }
 
 // FixtureWrapNonCreate function
