@@ -15,8 +15,10 @@ import TextField from '../Components/TextField';
 import { useState, useRef } from 'react';
 import Button from '../Components/Button';
 import { t } from '../locale/translate';
+import { loginUser } from '../helpers/APIManager';
+import * as SecureStore from 'expo-secure-store';
 
-const Login = () => {
+const Login = ({ setUser }) => {
 	const [login, setLogin] = useState('');
 	const [password, setPassword] = useState('');
 	const [error, setError] = useState(false);
@@ -33,13 +35,18 @@ const Login = () => {
 		setError(false);
 	};
 
-	const handleLogin = () => {
+	const handleLogin = async () => {
 		if (login.length < 1 || password.length < 1) {
 			setError(true);
 			return;
 		}
-		console.log('Login: ', login);
-		console.log('Password: ', password);
+
+		let res = await loginUser(login.toLowerCase(), password);
+
+		if (res?.status === 200) {
+			setUser(res.data);
+			await SecureStore.setItemAsync('user', JSON.stringify(res.data));
+		}
 	};
 
 	const goToRestartPassword = () => {

@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import React, { useState, useRef } from 'react';
 import Container from '../Components/Container';
-import MapView, { Marker } from 'react-native-maps';
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import Title from '../Components/Title';
 import { AntDesign } from '@expo/vector-icons';
 import { Colors, Fonts } from '../style';
@@ -24,7 +24,7 @@ const Map = () => {
 	const [search, setSearch] = useState('');
 	const [searchFound, setSearchFound] = useState(false);
 	const [searchResults, setSearchResults] = useState('');
-	const [userLocation, setUserLocation] = useState(null);
+	const [userLocation, setUserLocation] = useState({});
 
 	const expandAnimation = useRef(new Animated.Value(0)).current;
 
@@ -87,7 +87,7 @@ const Map = () => {
 		}
 
 		let location = await Location.getCurrentPositionAsync({});
-		setUserLocation(location);
+		setUserLocation(location.coords);
 	};
 
 	useEffect(() => {
@@ -136,6 +136,7 @@ const Map = () => {
 				</View>
 				<MapView
 					style={styles.map}
+					provider={PROVIDER_GOOGLE}
 					initialRegion={{
 						latitude: 56.182252,
 						longitude: 15.591309,
@@ -165,14 +166,16 @@ const Map = () => {
 							<CustomMarker title={i.toUpperCase()} />
 						</Marker>
 					))}
-					<Marker
-						coordinate={{
-							latitude: userLocation?.coords.latitude,
-							longitude: userLocation?.coords.longitude,
-						}}
-					>
-						<UserMarker />
-					</Marker>
+					{userLocation.latitude && userLocation.longitude && (
+						<Marker
+							coordinate={{
+								latitude: userLocation?.latitude,
+								longitude: userLocation?.longitude,
+							}}
+						>
+							<UserMarker />
+						</Marker>
+					)}
 				</MapView>
 			</View>
 		</Container>

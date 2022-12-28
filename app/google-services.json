@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "800403612111",
+    "project_id": "bth-app-de9bd",
+    "storage_bucket": "bth-app-de9bd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:800403612111:android:322a0f0ce1f01428b432ba",
+        "android_client_info": {
+          "package_name": "com.abodsakka.bthstudent"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "800403612111-3fc3namtrfuplucdrn0f6skc81l7889b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDnoJpXEljyIuDB2Wk1ulr5YX0tbtZnkGc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "800403612111-3fc3namtrfuplucdrn0f6skc81l7889b.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
