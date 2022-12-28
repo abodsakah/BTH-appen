@@ -61,7 +61,7 @@ func mockJSONPost(c *gin.Context, content interface{}) {
 func TestDatabaseRoutes(t *testing.T) {
 	err := godotenv.Load("../../../.env")
 	if err != nil {
-		t.Log(err)
+		t.Log("DEV: Could not load .env file")
 	}
 	dbP, err := db.SetupDatabase()
 	if dbP == nil {
@@ -76,6 +76,7 @@ func TestSetupRoutes(t *testing.T) {
 	var err error
 	router, err = SetupRoutes(helpers.DbGorm)
 	assert.Nil(t, err, "Trying to set up routes shall not cause any errors")
+	_ = helpers.FixtureWrapNonCreate(t)
 }
 
 func TestLogin1(t *testing.T) {
@@ -90,6 +91,7 @@ func TestLogin1(t *testing.T) {
 	// call API endpoint
 	login(c)
 	assert.Equal(t, 200, w.Code, "When trying to log in with correct admin credentials it shall return status: 200")
+	_ = helpers.FixtureWrapNonCreate(t)
 }
 
 func TestLogin2(t *testing.T) {
@@ -104,6 +106,7 @@ func TestLogin2(t *testing.T) {
 	// call API endpoint
 	login(c)
 	assert.NotEqual(t, 200, w.Code, "When trying to log in with incorrect admin credentials it shall not return status: 200")
+	_ = helpers.FixtureWrapNonCreate(t)
 }
 
 func TestExamCreate1(t *testing.T) {
@@ -120,6 +123,7 @@ func TestExamCreate1(t *testing.T) {
 	// call API endpoint
 	createExam(c)
 	assert.Equal(t, 200, w.Code, "When trying to call on create Exam API with no duplicates present, it should return status: 200")
+	_ = helpers.FixtureWrapNonCreate(t)
 }
 
 func TestExamCreate2(t *testing.T) {
@@ -136,6 +140,7 @@ func TestExamCreate2(t *testing.T) {
 	// call API endpoint
 	createExam(c)
 	assert.NotEqual(t, 200, w.Code, "When trying to call on create Exam API with duplicates present, it should not return status: 200")
+	_ = helpers.FixtureWrapNonCreate(t)
 }
 
 func TestExamDelete1(t *testing.T) {
@@ -149,6 +154,7 @@ func TestExamDelete1(t *testing.T) {
 	// call API endpoint
 	deleteExam(c)
 	assert.Equal(t, 200, w.Code, "When trying to call on delete Exam API with entry present, it should return status: 200")
+	_ = helpers.FixtureWrapNonCreate(t)
 }
 
 func TestExamDelete2(t *testing.T) {
@@ -162,6 +168,7 @@ func TestExamDelete2(t *testing.T) {
 	// call API endpoint
 	deleteExam(c)
 	assert.NotEqual(t, 200, w.Code, "When trying to call on delete Exam API with no entry present, it should not return status: 200")
+	_ = helpers.FixtureWrapNonCreate(t)
 }
 
 func TestListExams1(t *testing.T) {
@@ -175,6 +182,7 @@ func TestListExams1(t *testing.T) {
 	// call API endpoint
 	listExams(c)
 	assert.Equal(t, 200, w.Code, "When trying to call on list Exams API with entries present, it should return status: 200")
+	_ = helpers.FixtureWrapNonCreate(t)
 }
 
 func TestListDueExams1(t *testing.T) {
@@ -188,6 +196,7 @@ func TestListDueExams1(t *testing.T) {
 	// call API endpoint
 	listDueExams(c)
 	assert.Equal(t, 200, w.Code, "When trying to call on list due Exams API with due exams present, it should return status: 200")
+	_ = helpers.FixtureWrapNonCreate(t)
 }
 
 func TestListUserExams(t *testing.T) {
@@ -203,6 +212,7 @@ func TestListUserExams(t *testing.T) {
 	// call API endpoint
 	listUserExams(c)
 	assert.Equal(t, 200, w.Code, "When trying to call on list User Exams API with exams present for user, it should return status: 200")
+	_ = helpers.FixtureWrapNonCreate(t)
 }
 
 func TestListExamUser(t *testing.T) {
@@ -217,6 +227,7 @@ func TestListExamUser(t *testing.T) {
 	// call API endpoint
 	listExamUsers(c)
 	assert.Equal(t, 200, w.Code, "When trying to call on list Exam Users API with users present for user, it should return status: 200")
+	_ = helpers.FixtureWrapNonCreate(t)
 }
 
 func TestRegisterToExam1(t *testing.T) {

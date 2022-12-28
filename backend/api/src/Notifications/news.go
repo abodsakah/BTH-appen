@@ -2,30 +2,41 @@
 package notifications
 
 import (
+	"errors"
 	"fmt"
 	"log"
 
 	"github.com/abodsakah/BTH-appen/backend/api/src/DB"
-	models "github.com/abodsakah/BTH-appen/backend/api/src/Models"
+	"github.com/abodsakah/BTH-appen/backend/api/src/Models"
 	expo "github.com/noahhakansson/exponent-server-sdk-golang/sdk"
 	"gorm.io/gorm"
 )
 
 // SendNewsPushMessage function
-func SendNewsPushMessage(gormDB *gorm.DB, news models.News) error {
-	pushMsg, err := createNewsPushMessage(gormDB, news)
-	if err != nil {
-		return err
+func SendNewsPushMessage(gormDB *gorm.DB, news []models.News) error {
+	var pushMessages []expo.PushMessage
+	// create all push messages and append to slice
+	for _, article := range news {
+		pushMsg, err := createNewsPushMessage(gormDB, article)
+		if err != nil {
+			continue
+		}
+		pushMessages = append(pushMessages, pushMsg)
 	}
+	// return error if there are new messages to send
+	if len(pushMessages) < 1 {
+		return errors.New("Notifications; news; no news push messages to send")
+	}
+	// send messages
 	var tryNumber uint = 1
-	err = sendExpoPushMessages([]expo.PushMessage{pushMsg}, tryNumber)
+	err := sendExpoPushMessages(pushMessages, tryNumber)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-// createNewsPushMessages function
+// createNewsPushMessage function
 // Makes a `expo.PushMessage` for a news object and
 // send it to all users that have expo push tokens.
 //
@@ -47,6 +58,10 @@ func createNewsPushMessage(gormDB *gorm.DB, news models.News) (expo.PushMessage,
 		} else {
 			expoPushTokens = append(expoPushTokens, pushToken)
 		}
+	}
+
+	if len(expoPushTokens) < 1 {
+		return expo.PushMessage{}, errors.New("notifications; news; No expoPushTokens found, no one to send too")
 	}
 
 	// create expo.PushMessage
