@@ -20,13 +20,13 @@ func TestDatabaseUser(t *testing.T) {
 }
 
 func TestUserCreate1(t *testing.T) {
-	_, err := helpers.FixtureWrapCreate(t, helpers.TestUser)
+	err := helpers.FixtureWrapCreate(t, helpers.TestUser)
 	assert.Nil(t, err, "When calling create, with no duplicates, it shall return no errors")
 	_ = helpers.FixtureWrapNonCreate(t)
 }
 
 func TestUserCreate2(t *testing.T) {
-	_, _ = helpers.FixtureWrapCreate(t, helpers.TestUser)
+	_ = helpers.FixtureWrapCreate(t, helpers.TestUser)
 	temp := *helpers.TestUser
 	err := CreateUser(helpers.DbGorm, &temp)
 	assert.NotNil(t, err, "When calling create, with duplicates, it shall return errors")
@@ -34,15 +34,15 @@ func TestUserCreate2(t *testing.T) {
 }
 
 func TestUserIsRole1(t *testing.T) {
-	id, _ := helpers.FixtureWrapCreate(t, helpers.TestUser)
-	res, _ := IsRole(helpers.DbGorm, id, "student")
+	_ = helpers.FixtureWrapCreate(t, helpers.TestUser)
+	res, _ := IsRole(helpers.DbGorm, helpers.TestEntryIndex, "student")
 	assert.Equal(t, true, res, "User with role \"student\" shall make the function return true when its given \"student\"")
 	_ = helpers.FixtureWrapNonCreate(t)
 }
 
 func TestUserIsRole2(t *testing.T) {
-	id, _ := helpers.FixtureWrapCreate(t, helpers.TestUser)
-	res, _ := IsRole(helpers.DbGorm, id, "admin")
+	_ = helpers.FixtureWrapCreate(t, helpers.TestUser)
+	res, _ := IsRole(helpers.DbGorm, helpers.TestEntryIndex, "admin")
 	assert.NotEqual(t, true, res, "User with role \"student\" shall make function return false when its given admin")
 	_ = helpers.FixtureWrapNonCreate(t)
 }
