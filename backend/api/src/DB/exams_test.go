@@ -39,6 +39,13 @@ func TestDeleteExam1(t *testing.T) {
 	_ = helpers.FixtureWrapNonCreate(t)
 }
 
+func TestGetExamsDueSoon(t *testing.T) {
+	_ = helpers.FixtureWrapCreate(t, &helpers.TestExam)
+	exams, _ := GetExamsDueSoon(helpers.DbGorm)
+	assert.Less(t, 0, len(exams), "After an exam has been created with the current date plus one day, it should come up in the array of due exams")
+	_ = helpers.FixtureWrapNonCreate(t)
+}
+
 func TestAddUserToExam1(t *testing.T) {
 	_ = helpers.FixtureWrapCreate(t, &helpers.TestExam)
 	helpers.DbGorm.Create(&helpers.TestUser)
