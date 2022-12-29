@@ -39,6 +39,6 @@ func TestValidateJWT2(t *testing.T) {
 	_ = helpers.FixtureWrapCreate(t, &helpers.TestUser)
 	token := "incorrect-token"
 	_, err := ValidateJWT(token)
-	assert.NotNil(t, err, "After calling validateJWT with valid token, it shall not return an error")
+	assert.NotNil(t, err, "After calling validateJWT with an invalid token, it should return an error")
 	_ = helpers.FixtureWrapNonCreate(t)
 }
