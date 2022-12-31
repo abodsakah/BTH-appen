@@ -337,8 +337,8 @@ func refreshJWT(c *gin.Context) {
 		"user":   userInfo,
 	}
 
-	// create a cookie that's valid for 2 hours to match the JWT 2 hour expiration time
-	c.SetCookie("BTH-app", token, 60*60*2, "/", "localhost", true, true)
+	// create a cookie that's valid for one week to match the JWT one week expiration time
+	c.SetCookie("BTH-app", token, 60*60*24*7, "/", "localhost", true, true)
 	c.JSON(200, jsonUserInfo)
 }
 
