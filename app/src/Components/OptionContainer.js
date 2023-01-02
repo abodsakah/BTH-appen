@@ -8,18 +8,27 @@ const OptionContainer = ({
 	text = '',
 	Icon = () => {},
 	onPress = () => {},
+	disabled = false,
+	showChevron = true,
 }) => {
 	return (
 		<View style={styles.container}>
-			<TouchableRipple borderless onPress={onPress} style={styles.rippleEffect}>
+			<TouchableRipple
+				disabled={disabled}
+				borderless
+				onPress={onPress}
+				style={styles.rippleEffect}
+			>
 				<>
 					<Icon />
 					<Text>{text}</Text>
-					<Entypo
-						name="chevron-thin-right"
-						size={24}
-						color={Colors.primary.regular}
-					/>
+					{showChevron && (
+						<Entypo
+							name="chevron-thin-right"
+							size={24}
+							color={Colors.primary.regular}
+						/>
+					)}
 				</>
 			</TouchableRipple>
 		</View>

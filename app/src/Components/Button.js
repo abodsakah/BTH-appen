@@ -9,14 +9,16 @@ const Button = ({
 	children,
 	type = 'primary',
 	onPress = () => {},
+	disabled = false,
 }) => {
 	return (
 		<TouchableRipple
 			onPress={onPress}
+			disabled={disabled}
 			style={[
 				styles.container,
 				style,
-				{ backgroundColor: Colors[type].regular },
+				{ backgroundColor: Colors[type].regular, opacity: disabled ? 0.5 : 1 },
 			]}
 		>
 			<Text style={[styles.text, textStyle]}>{children}</Text>
