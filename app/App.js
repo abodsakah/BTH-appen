@@ -24,7 +24,7 @@ import { setLanguage, t } from './src/locale/translate';
 import { useEffect, useState, useRef } from 'react';
 import { Colors } from './src/style';
 import * as Notifications from 'expo-notifications';
-import { addExpoPushToken } from './src/helpers/APIManager';
+import { addExpoPushToken, refreshJWT } from './src/helpers/APIManager';
 import * as SecureStore from 'expo-secure-store';
 
 async function registerForPushNotificationsAsync() {
@@ -93,7 +93,10 @@ export default function App() {
 	const getUserFromSecureStorage = async () => {
 		let res = await SecureStore.getItemAsync('user');
 		if (res) {
-			setUser(JSON.parse(res));
+			let user = await refreshJWT();
+			if (user) {
+				setUser(user);
+			}
 		}
 	};
 
