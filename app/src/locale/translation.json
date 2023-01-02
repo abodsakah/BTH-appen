@@ -12,7 +12,7 @@
     "student_acronym_ph": {
         "en": "Your student acronym",
         "sv-sv": "Ditt student akronym",
-        "ar": "أاسمك المختصر"
+        "ar": "اسمك المختصر"
     },
     "password": {
         "en": "Password",
@@ -158,5 +158,15 @@
         "en": "There are no news for the time being",
         "sv-sv": "Det finns inga nyheter för tillfället",
         "ar": "لا توجد أخبار في الوقت الراهن"
+    },
+    "wrongLogin": {
+        "en": "The student acronym and/or password you entered are wrong",
+        "sv-sv": "Studentakronymen och/eller lösenordet du angav är fel",
+        "ar": "اسم الطالب و / أو كلمة المرور التي أدخلتها خاطئة"
+    },
+    "notifications": {
+        "en": "Notifications",
+        "sv-sv": "Meddelanden",
+        "ar": "الإشعارات"
     }
 }

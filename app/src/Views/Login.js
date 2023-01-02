@@ -1,4 +1,5 @@
 import {
+	ActivityIndicator,
 	Image,
 	Linking,
 	StyleSheet,
@@ -17,11 +18,13 @@ import Button from '../Components/Button';
 import { t } from '../locale/translate';
 import { loginUser } from '../helpers/APIManager';
 import * as SecureStore from 'expo-secure-store';
+import { MaterialIcons } from '@expo/vector-icons';
 
 const Login = ({ setUser }) => {
 	const [login, setLogin] = useState('');
 	const [password, setPassword] = useState('');
 	const [error, setError] = useState(false);
+	const [loading, setLoading] = useState(false);
 
 	const passwordRef = useRef();
 
@@ -36,17 +39,22 @@ const Login = ({ setUser }) => {
 	};
 
 	const handleLogin = async () => {
+		setLoading(true);
 		if (login.length < 1 || password.length < 1) {
 			setError(true);
 			return;
 		}
 
 		let res = await loginUser(login.toLowerCase(), password);
+		console.log(res);
 
 		if (res?.status === 200) {
 			setUser(res.data);
 			await SecureStore.setItemAsync('user', JSON.stringify(res.data));
+		} else {
+			setError(true);
 		}
+		setLoading(false);
 	};
 
 	const goToRestartPassword = () => {
@@ -64,6 +72,16 @@ const Login = ({ setUser }) => {
 			</View>
 			<View style={styles.content}>
 				<Text style={styles.title}>{t('login')}</Text>
+				{error && (
+					<View style={styles.errorContainer}>
+						<MaterialIcons
+							name="error-outline"
+							size={24}
+							color={Colors.snowWhite}
+						/>
+						<Text style={styles.error}>{t('wrongLogin')}</Text>
+					</View>
+				)}
 				<View style={styles.form}>
 					<View style={styles.input}>
 						<Text
@@ -76,7 +94,7 @@ const Login = ({ setUser }) => {
 								},
 							]}
 						>
-							{t('username')}
+							{t('student_acronym_ph')}
 						</Text>
 						<TextField
 							value={login}
@@ -123,8 +141,9 @@ const Login = ({ setUser }) => {
 					style={styles.button}
 					onPress={handleLogin}
 					textStyle={styles.buttonText}
+					disabled={loading}
 				>
-					{t('login')}
+					{loading ? <ActivityIndicator color={Colors.white} /> : t('login')}
 				</Button>
 			</View>
 		</Container>
@@ -140,7 +159,7 @@ const styles = StyleSheet.create({
 	},
 	header: {
 		width: '100%',
-		height: '50%',
+		height: '40%',
 	},
 	image: {
 		width: '100%',
@@ -191,5 +210,18 @@ const styles = StyleSheet.create({
 	buttonText: {
 		fontSize: Fonts.size.h3,
 		fontFamily: Fonts.Inter_Light,
+	},
+	errorContainer: {
+		width: '100%',
+		alignItems: 'center',
+		backgroundColor: Colors.danger.regular,
+		paddingVertical: 10,
+		borderRadius: 5,
+		flexDirection: 'row',
+		justifyContent: 'center',
+	},
+	error: {
+		color: Colors.snowWhite,
+		marginLeft: 10,
 	},
 });

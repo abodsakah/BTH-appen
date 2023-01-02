@@ -56,13 +56,20 @@ const Profile = ({ navigation }) => {
 	return (
 		<Container style={styles.container}>
 			<Text style={styles.heading}>{t('profile')}</Text>
-			<OptionContainer
-				text={user?.user.name}
-				Icon={() => <Ionicons name="md-person" size={30}></Ionicons>}
-			/>
+
+			<View style={styles.profile}>
+				<Ionicons
+					name="md-person"
+					size={30}
+					color={Colors.primary.regular}
+				></Ionicons>
+				<Text style={styles.name}>{user?.user.name}</Text>
+			</View>
+
+			<View style={styles.separator}></View>
 			<Text style={styles.heading}>{t('more')}</Text>
 			<TriggerContainer
-				text={t('Notifications')}
+				text={t('notifications')}
 				Icon={() => (
 					<Ionicons
 						name="notifications-outline"
@@ -118,5 +125,27 @@ const styles = StyleSheet.create({
 		fontFamily: Fonts.Inter_Bold,
 		padding: 5,
 		margin: 3,
+	},
+	profile: {
+		borderRadius: 10,
+		elevation: 2,
+		padding: 15,
+		marginVertical: 5,
+		backgroundColor: Colors.snowWhite,
+		width: '100%',
+		alignItems: 'center',
+		flexDirection: 'row',
+		justifyContent: 'flex-start',
+	},
+	name: {
+		width: '80%',
+		textAlign: 'center',
+	},
+	separator: {
+		width: '100%',
+		height: 1,
+		backgroundColor: Colors.primary.regular,
+		marginVertical: 10,
+		opacity: 0.2,
 	},
 });
