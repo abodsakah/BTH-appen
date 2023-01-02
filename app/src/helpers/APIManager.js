@@ -16,12 +16,12 @@ async function sendGETRequest(url, headers) {
 	}
 }
 
-async function sendPOSTRequest(url, data, headers) {
+async function sendPOSTRequest(url, data, headers, handle401 = true) {
 	try {
 		return await axios.post(url, data, headers);
 	} catch (error) {
 		console.log(error);
-		if (error.response.status === 401) {
+		if (error.response.status === 401 && handle401) {
 			await SecureStore.deleteItemAsync('user');
 			Updates.reloadAsync();
 		}
@@ -63,7 +63,7 @@ export async function loginUser(username, password) {
 		username,
 		password,
 	};
-	return await sendPOSTRequest(url, data);
+	return await sendPOSTRequest(url, data, null, false);
 }
 
 export async function listAllExams() {
@@ -161,4 +161,13 @@ export async function addExpoPushToken(pushToken) {
 export async function fetchNews() {
 	const url = `${API_URL}/list-news`;
 	return await sendGETRequest(url);
+}
+
+export async function refreshJWT() {
+	const url = `${API_URL}/refresh-jwt`;
+	return await sendGETRequest(url, {
+		headers: {
+			Jwt: JSON.parse(await SecureStore.getItemAsync('user'))?.jwt,
+		},
+	});
 }
